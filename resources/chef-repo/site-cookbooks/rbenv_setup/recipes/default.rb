@@ -9,7 +9,11 @@
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
 
-rbenv_ruby "2.1.1" do
-  ruby_version "2.1.1"
-  global true
+rbenv_ruby node['rbenv_setup']['ruby_version'] do
+  ruby_version node['rbenv_setup']['ruby_version']
+  global node['rbenv_setup']['global']
+end
+
+rbenv_gem "bundler" do
+  ruby_version node['rbenv_setup']['ruby_version']
 end

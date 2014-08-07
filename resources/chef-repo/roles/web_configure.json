@@ -1,0 +1,12 @@
+{
+  'nginx': {
+    'pid':'/var/run/nginx.pid',
+    'dir':'/etc/nginx',
+    'log_dir':'/var/log/nginx',
+    'default_root':'/var/www/nginx-default',
+  },
+  'run_list': [
+    'recipe[mysql::server]'
+  ]
+}
+

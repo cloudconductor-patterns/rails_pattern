@@ -1,0 +1,8 @@
+{
+  'mysql': [
+    'new_root_password': 'qawsedrftgyhujikolp'
+  ],
+  'run_list': [
+    'recipe[mysql_cookbook]'
+  ]
+}

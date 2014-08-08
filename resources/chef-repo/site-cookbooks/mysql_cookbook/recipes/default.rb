@@ -13,7 +13,6 @@ mysql_connection_info = {
   :password => node['mysql']['server_root_password']
 }
 
-
 include_recipe "database::mysql"
 
 mysql_database "change_pass" do

@@ -15,9 +15,9 @@ mysql_connection_info = {
 
 include_recipe "database::mysql"
 
-mysql_database "change_pass" do
+mysql_database "delete_unknown_user" do
   connection mysql_connection_info
-  sql        "UPDATE mysql.user SET Password = #{node['mysql']['new_root_password']} where User = #{node['mysql']['server_root_password']}"
+  sql        "DELETE from mysql.user where User = ''"
   action     :query
 end
 

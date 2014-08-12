@@ -56,9 +56,10 @@ class UserActionBase
         @path_dictionary[:node_file_path] = "%{temp_path}/%{node_file_name}" % @path_dictionary
         @path_dictionary[:log_path] = "%{temp_path}/%{log_directory_name}" % @path_dictionary
         @path_dictionary[:file_cache_path] = "%{temp_path}/%{file_cache_directory_name}" % @path_dictionary
-        @path_dictionary[:role_file_path] = "%{pattern_path}/chef-repo/roles" % @path_dictionary
-        @path_dictionary[:cookbooks_path] = "%{pattern_path}/chef-repo/cookbooks" % @path_dictionary
-        @path_dictionary[:site_cookbooks_path] = "%{pattern_path}/chef-repo/site-cookbooks" % @path_dictionary
+        @path_dictionary[:chef_repo_path] = "%{pattern_path}/resources/chef-repo" % @path_dictionary
+        @path_dictionary[:role_file_path] = "%{chef_repo_path}/roles" % @path_dictionary
+        @path_dictionary[:cookbooks_path] = "%{chef_repo_path}/cookbooks" % @path_dictionary
+        @path_dictionary[:site_cookbooks_path] = "%{chef_repo_path}/site-cookbooks" % @path_dictionary
         FileUtils.mkdir_p(@path_dictionary[:log_path])
         FileUtils.mkdir_p(@path_dictionary[:file_cache_path])
     end
@@ -75,8 +76,11 @@ class UserActionBase
                 prepare_path path
                 create_config_file
                 create_node_file
-                out, err, status = Open3.capture3("cd %{pattern_path}/chef-repo; berks vendor --path=%{cookbooks_path}" % @path_dictionary)
-                out, err, status = Open3.capture3("cd %{pattern_path}/chef-repo; chef-solo -c %{config_file_path} -j %{node_file_path}" % @path_dictionary)
+                out, err, status = Open3.capture3("cd %{chef_repo_path}; berks vendor ./cookbooks -d > /tmp/1 2>&1" % @path_dictionary)
+                puts out
+                puts err
+                puts status
+                out, err, status = Open3.capture3("chef-solo -c %{config_file_path} -j %{node_file_path}" % @path_dictionary)
             end
         end
     end

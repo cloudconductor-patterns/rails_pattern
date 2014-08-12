@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require 'find'
+require 'open3'
+
+class EventHandler
+
+    @@patterns_path = '/opt/cloudconductor/patterns'
+    @@pluginhook_path = '/usr/local/bin/pluginhook'
+
+    def exec
+        Dir.entries(@@patterns_path).select do |entry|
+            path = File.join(@@patterns_path, entry)
+            if (File.directory? path) and !((entry =='.') || (entry == '..')) then
+                event = ENV['SERF_EVENT']
+                if event == "user"
+                    event = "user-#{ENV['SERF_USER_EVENT']}"
+                elsif  event == "quesy"
+                    event = "query-#{ENV['SERF_QUERY']}"
+                end
+                ENV['PLUGIN_PATH'] = "#{path}/events"
+                out, err, status = Open3.capture3("#{@@pluginhook_path} -x #{event}")
+            end
+        end
+    end
+end
+
+EventHandler.new().exec

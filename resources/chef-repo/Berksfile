@@ -1,0 +1,4 @@
+source "https://supermarket.getchef.com"
+
+cookbook 'serf', git: 'https://github.com/bbaugher/serf.git', tag: '0.7.0'
+cookbook 'yum-epel'

@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../', File.dirname(__FILE__))
+require 'user_action_base'
+
+class InitUserSetup < UserActionBase
+    def initialize
+        super File.expand_path(File.dirname(__FILE__)).split('/').last, File.basename(__FILE__).split('-').last
+    end
+
+    def fetch_node_attributes
+        node_attributes = {}
+        node_attributes[:default_attributes] = {}
+        node_attributes[:default_attributes][:serf] = {}
+        node_attributes[:default_attributes][:serf][:agent] = {}
+        node_attributes[:default_attributes][:serf][:agent][:tags] = {}
+        node_attributes[:default_attributes][:serf][:agent][:tags][:role] = ENV['SERF_TAG_ROLE']
+        node_attributes[:default_attributes][:serf][:agent][:node_name] = 'testnode'
+        node_attributes
+    end
+
+    def target?
+        true
+    end
+
+end
+
+InitUserSetup.new().exec

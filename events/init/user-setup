@@ -10,12 +10,10 @@ class InitUserSetup < UserActionBase
 
     def fetch_node_attributes
         node_attributes = {}
-        node_attributes[:default_attributes] = {}
-        node_attributes[:default_attributes][:serf] = {}
-        node_attributes[:default_attributes][:serf][:agent] = {}
-        node_attributes[:default_attributes][:serf][:agent][:tags] = {}
-        node_attributes[:default_attributes][:serf][:agent][:tags][:role] = ENV['SERF_TAG_ROLE']
-        node_attributes[:default_attributes][:serf][:agent][:node_name] = 'testnode'
+        node_attributes[:serf] = {}
+        node_attributes[:serf][:agent] = {}
+        node_attributes[:serf][:agent][:tags] = {}
+        node_attributes[:serf][:agent][:tags][:role] = ENV['SERF_TAG_ROLE']
         node_attributes
     end
 

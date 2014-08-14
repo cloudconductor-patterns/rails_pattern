@@ -77,9 +77,6 @@ class UserActionBase
                 create_config_file
                 create_node_file
                 out, err, status = Open3.capture3("cd %{chef_repo_path}; berks vendor ./cookbooks -d > /tmp/1 2>&1" % @path_dictionary)
-                puts out
-                puts err
-                puts status
                 out, err, status = Open3.capture3("chef-solo -c %{config_file_path} -j %{node_file_path}" % @path_dictionary)
             end
         end

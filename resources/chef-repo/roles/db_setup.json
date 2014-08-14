@@ -1,0 +1,12 @@
+{
+  "json_class":"Chef::Role",
+  "run_list": [
+    "recipe[mysql::server]"
+  ],
+  "default_attributes":{
+    "mysql":{
+      "version":"5.6"
+    }
+  }
+}
+

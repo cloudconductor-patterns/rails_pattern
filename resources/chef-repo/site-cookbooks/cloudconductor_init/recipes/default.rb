@@ -1,5 +1,8 @@
 include_recipe 'yum-epel'
 include_recipe 'serf'
+#override template
+r = resources(template: '/etc/init.d/serf')
+r.cookbook 'cloudconductor_init'
 
 #install golang
 yum_package 'golang' do
@@ -7,11 +10,12 @@ yum_package 'golang' do
     options '--enablerepo=epel'
 end
 
+#install mercurial
 yum_package 'mercurial' do
-
     action :install
 end
 
+# install pluginhook
 git '/opt/cloudconductor/temp/pluginhook' do
     repository 'https://github.com/progrium/pluginhook.git'
     revision "master"
@@ -29,7 +33,7 @@ bash 'install pluginhook' do
 end
 
 #install event-handler
-cookbook_file '/opt/cloudconductor/patterns/event-handler' do
+cookbook_file node['serf']['agent']['event_handlers'] do
     source 'event-handler'
     mode 0755
 end

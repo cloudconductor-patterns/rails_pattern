@@ -19,7 +19,7 @@ class EventHandler
                     event = "query-#{ENV['SERF_QUERY']}"
                 end
                 ENV['PLUGIN_PATH'] = "#{path}/events"
-                out, err, status = Open3.capture3("#{@@pluginhook_path} -x #{event}")
+                out, err, status = Open3.capture3("#{@@pluginhook_path} #{event}")
             end
         end
     end

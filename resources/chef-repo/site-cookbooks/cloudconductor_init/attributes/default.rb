@@ -3,6 +3,7 @@ default['yum']['epel']['enabled'] = false
 
 
 include_attribute 'serf'
+default['serf']['version'] = '0.6.3'
 default['serf']['agent']['bind'] = '0.0.0.0'
 default['serf']['agent']['rpc_addr'] = '0.0.0.0:7373'
 default['serf']['agent']['enable_syslog'] = true

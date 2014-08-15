@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path('../', File.dirname(__FILE__))
+require 'user_action_base'
+
+class WebUserConfigure < UserActionBase
+    def initialize
+        super File.expand_path(File.dirname(__FILE__)).split('/').last, File.basename(__FILE__).split('-').last
+    end
+end
+
+WebUserConfigure.new().exec
+

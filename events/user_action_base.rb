@@ -9,6 +9,8 @@ class UserActionBase
 
     def initialize(script_role, script_event)
         @path_dictionary = {
+            cloudconductor_root_path: '/opt/cloudconductor',
+            parameters_file_name: 'parameters.json',
             pattern_root_path: '/opt/cloudconductor/patterns',
             temp_directory_name: 'temp',
             log_directory_name: 'logs',
@@ -34,7 +36,14 @@ class UserActionBase
     end
 
     def fetch_node_attributes
-        {}
+        parameters = {}
+        begin
+            parameters = open("%{cloudconductor_root_path}/%{parameters_file_name}" % @path_dictionary) do |io|
+                JSON.load(io)
+            end
+        rescue
+        end
+        parameters
     end
 
     def create_run_list
@@ -76,7 +85,7 @@ class UserActionBase
                 prepare_path path
                 create_config_file
                 create_node_file
-                out, err, status = Open3.capture3("cd %{chef_repo_path}; berks vendor ./cookbooks -d > /tmp/1 2>&1" % @path_dictionary)
+                out, err, status = Open3.capture3("cd %{chef_repo_path}; berks vendor ./cookbooks" % @path_dictionary)
                 out, err, status = Open3.capture3("chef-solo -c %{config_file_path} -j %{node_file_path}" % @path_dictionary)
             end
         end

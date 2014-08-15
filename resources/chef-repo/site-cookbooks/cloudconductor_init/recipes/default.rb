@@ -33,7 +33,7 @@ bash 'install pluginhook' do
 end
 
 #install event-handler
-cookbook_file node['serf']['agent']['event_handlers'] do
+cookbook_file node['serf']['agent']['event_handlers'].first do
     source 'event-handler'
     mode 0755
 end

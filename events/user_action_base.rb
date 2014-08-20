@@ -37,8 +37,8 @@ class UserActionBase
     @roles = ENV['SERF_TAG_ROLE'].split(',')
     @script_role = script_role
     @script_event = script_event
-    module_dir = File.realpath(File.dirname(__FILE__))
-    @pattern_name = module_dir.slice(%r{#{CONDUCTOR_PATTERNS_ROOT_DIR}/(?<pattern_name>[^/]*)}, 'pattern_name')
+    script_file = File.expand_path(__FILE__)
+    @pattern_name = script_file.slice(%r{#{CONDUCTOR_PATTERNS_ROOT_DIR}/(?<pattern_name>[^/]*)}, 'pattern_name')
   end
 
   def execute
@@ -107,7 +107,6 @@ class UserActionBase
         }
       }
     )
-    puts parameters
     File.write(parameters_file, parameters.to_json)
     parameters
   end

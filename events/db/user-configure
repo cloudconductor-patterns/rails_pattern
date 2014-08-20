@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require_relative '../user_action_base'
-
-current_directory = File.expand_path(File.dirname(__FILE__))
-role = current_directory.split('/').last
-event_name = File.basename(__FILE__).split('-').last
-
-UserActionBase.new(role, event_name).execute
+if __FILE__ == $PROGRAM_NAME
+  require_relative '../user_action_base'
+  current_directory = File.expand_path(File.dirname(__FILE__))
+  role = current_directory.split('/').last
+  event_name = File.basename(__FILE__).split('-').last
+  UserActionBase.new(role, event_name).execute
+end

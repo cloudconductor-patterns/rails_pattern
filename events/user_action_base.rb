@@ -37,47 +37,35 @@ class UserActionBase
     @roles = ENV['SERF_TAG_ROLE'].split(',')
     @script_role = script_role
     @script_event = script_event
-    module_dir = File.realpath(File.dirname(__FILE__)).split(File::SEPARATOR)
-    pattern_name_index = module_dir.index('patterns') + 1
-    @pattern_name = module_dir[pattern_name_index]
+    module_dir = File.realpath(File.dirname(__FILE__))
+    @pattern_name = module_dir.slice(%r{#{CONDUCTOR_PATTERNS_ROOT_DIR}/(?<pattern_name>[^/]*)}, 'pattern_name')
   end
 
   def execute
     return unless target?
     pattern_dir = File.join(CONDUCTOR_PATTERNS_ROOT_DIR, @pattern_name)
-    chefsolo_log_dir, chefsolo_filecache_dir = create_chefsolo_directories(pattern_dir)
-    chefrepo_dir, chefsolo_config_file = create_chefsolo_config_file(pattern_dir, chefsolo_log_dir, chefsolo_filecache_dir)
-    chefsolo_node_file = create_chefsolo_node_file(pattern_dir)
-    system("cd #{chefrepo_dir}; berks vendor ./cookbooks")
-    system("chef-solo -c #{chefsolo_config_file} -j #{chefsolo_node_file}")
+    create_chefsolo_directories(pattern_dir)
+    create_chefsolo_config_file(pattern_dir)
+    create_chefsolo_node_file(pattern_dir)
+    run_chefsolo(pattern_dir)
   end
 
   private
 
-  def update_and_read_parameters_file(pattern_dir)
-    payload_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CONDUCTOR_SERF_PAYLOAD_FILENAME)
-    parameters_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CONDUCTOR_PARAMETERS_FILENAME)
-    payload = {}
-    parameters = {}
-    payload = JSON.parse(File.read(payload_file)) if File.exist?(payload_file)
-    parameters = JSON.parse(File.read(parameters_file)) if File.exist?(parameters_file)
-    parameters.merge!(payload)
-    parameters.merge!(
-
-        serf: {
-          agent: {
-            tags: {
-              role: ENV['SERF_TAG_ROLE']
-            }
-          }
-        }
-
-    )
-    File.write(parameters_file, parameters.to_json)
-    parameters
+  def target?
+    @roles.include?(@script_role)
   end
 
-  def create_chefsolo_config_file(pattern_dir, chefsolo_log_dir, chefsolo_filecache_dir)
+  def create_chefsolo_directories(pattern_dir)
+    chefsolo_log_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_LOG_DIR)
+    chefsolo_filecache_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_FILECACHE_DIR)
+    FileUtils.mkdir_p(chefsolo_log_dir)
+    FileUtils.mkdir_p(chefsolo_filecache_dir)
+  end
+
+  def create_chefsolo_config_file(pattern_dir)
+    chefsolo_log_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_LOG_DIR)
+    chefsolo_filecache_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_FILECACHE_DIR)
     chefsolo_config_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_CONFIG_FILENAME)
     chefrepo_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_RESOURCES_DIR, CONDUCTOR_PATTERN_CHEFREPO_DIR)
     roles_dir = File.join(chefrepo_dir, 'roles')
@@ -92,11 +80,6 @@ class UserActionBase
       file.write("file_cache_path '#{chefsolo_filecache_dir}'\n")
       file.write("cookbook_path ['#{cookbooks_dir}', '#{site_cookbooks_dir}']\n")
     end
-    [chefrepo_dir, chefsolo_config_file]
-  end
-
-  def create_chefsolo_run_list
-    ["role[#{@script_role}_#{@script_event}]"]
   end
 
   def create_chefsolo_node_file(pattern_dir)
@@ -107,15 +90,37 @@ class UserActionBase
     chefsolo_node_file
   end
 
-  def create_chefsolo_directories(pattern_dir)
-    chefsolo_log_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_LOG_DIR)
-    chefsolo_filecache_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_FILECACHE_DIR)
-    FileUtils.mkdir_p(chefsolo_log_dir)
-    FileUtils.mkdir_p(chefsolo_filecache_dir)
-    [chefsolo_log_dir, chefsolo_filecache_dir]
+  def update_and_read_parameters_file(pattern_dir)
+    payload_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CONDUCTOR_SERF_PAYLOAD_FILENAME)
+    parameters_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CONDUCTOR_PARAMETERS_FILENAME)
+    payload = {}
+    parameters = {}
+    payload = JSON.parse(File.read(payload_file), symbolize_names: true) if File.exist?(payload_file)
+    parameters = JSON.parse(File.read(parameters_file), symbolize_names: true) if File.exist?(parameters_file)
+    parameters.merge!(payload)
+    parameters.merge!(
+      serf: {
+        agent: {
+          tags: {
+            role: ENV['SERF_TAG_ROLE']
+          }
+        }
+      }
+    )
+    puts parameters
+    File.write(parameters_file, parameters.to_json)
+    parameters
   end
 
-  def target?
-    @roles.include? @script_role
+  def create_chefsolo_run_list
+    ["role[#{@script_role}_#{@script_event}]"]
+  end
+
+  def run_chefsolo(pattern_dir)
+    chefrepo_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_RESOURCES_DIR, CONDUCTOR_PATTERN_CHEFREPO_DIR)
+    chefsolo_config_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_CONFIG_FILENAME)
+    chefsolo_node_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_NODE_FILENAME)
+    system("cd #{chefrepo_dir}; berks vendor ./cookbooks")
+    system("chef-solo -c #{chefsolo_config_file} -j #{chefsolo_node_file}")
   end
 end

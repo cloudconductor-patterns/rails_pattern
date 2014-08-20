@@ -1,28 +1,44 @@
-#!/usr/bin/env ruby
+#!/bin/sh
+# Copyright 2014 TIS Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-require 'find'
-require 'open3'
+CONDUCTOR_ROOT_DIR="/opt/cloudconductor"
+CONDUCTOR_PATTERNS_ROOT_DIR="${CONDUCTOR_ROOT_DIR}/patterns"
+CONDUCTOR_PATTERN_EVENTS_DIR="events"
+PAYLOAD_DIR="tmp"
+PAYLOAD_FILE="payload.json"
+PLUGINHOOK_FILE="/usr/local/bin/pluginhook"
+CONFIG_FILE="/etc/profile.d/chef.sh"
 
-class EventHandler
+if [ -f ${CONFIG_FILE} ]; then
+  source ${CONFIG_FILE}  
+fi
 
-    @@patterns_path = '/opt/cloudconductor/patterns'
-    @@pluginhook_path = '/usr/local/bin/pluginhook'
+if [ "${SERF_EVENT}" = "user" ]; then
+  EVENT="user-${SERF_USER_EVENT}"
+elif [ "${SERF_EVENT}" = "query" ]; then
+  EVENT="query-${SERF_QUERY_NAME}"
+else
+  EVENT=${SERF_EVENT}
+fi
 
-    def exec
-        Dir.entries(@@patterns_path).select do |entry|
-            path = File.join(@@patterns_path, entry)
-            if (File.directory? path) and !((entry =='.') || (entry == '..')) then
-                event = ENV['SERF_EVENT']
-                if event == "user"
-                    event = "user-#{ENV['SERF_USER_EVENT']}"
-                elsif  event == "quesy"
-                    event = "query-#{ENV['SERF_QUERY']}"
-                end
-                ENV['PLUGIN_PATH'] = "#{path}/events"
-                out, err, status = Open3.capture3("#{@@pluginhook_path} #{event}")
-            end
-        end
-    end
-end
+payload="`cat /dev/stdin`"
 
-EventHandler.new().exec
+pattern_dirs=(`find ${CONDUCTOR_PATTERNS_ROOT_DIR} -mindepth 1 -maxdepth 1 -type d`)
+for pattern_dir in ${pattern_dirs[@]}; do
+  mkdir -p ${pattern_dir}/${PAYLOAD_DIR}
+  echo "${payload}" > ${pattern_dir}/${PAYLOAD_DIR}/${PAYLOAD_FILE}
+  export PLUGIN_PATH=${pattern_dir}/${CONDUCTOR_PATTERN_EVENTS_DIR}
+  ${PLUGINHOOK_FILE} ${EVENT}
+done

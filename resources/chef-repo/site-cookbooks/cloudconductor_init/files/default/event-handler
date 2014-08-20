@@ -16,7 +16,7 @@
 CONDUCTOR_ROOT_DIR="/opt/cloudconductor"
 CONDUCTOR_PATTERNS_ROOT_DIR="${CONDUCTOR_ROOT_DIR}/patterns"
 CONDUCTOR_PATTERN_EVENTS_DIR="events"
-PAYLOAD_DIR="temp"
+PAYLOAD_DIR="tmp"
 PAYLOAD_FILE="payload.json"
 PLUGINHOOK_FILE="/usr/local/bin/pluginhook"
 CONFIG_FILE="/etc/profile.d/chef.sh"
@@ -25,24 +25,20 @@ if [ -f ${CONFIG_FILE} ]; then
   source ${CONFIG_FILE}  
 fi
 
-function read_payload() {
-  while read payload; do
-    echo "${payload}"
-  done
-}
+if [ "${SERF_EVENT}" = "user" ]; then
+  EVENT="user-${SERF_USER_EVENT}"
+elif [ "${SERF_EVENT}" = "query" ]; then
+  EVENT="query-${SERF_QUERY_NAME}"
+else
+  EVENT=${SERF_EVENT}
+fi
 
-payload="`read_payload`"
+payload="`cat /dev/stdin`"
 
-find ${CONDUCTOR_PATTERNS_ROOT_DIR} -maxdepth 1 -type d | egrep -v "^${CONDUCTOR_PATTERNS_ROOT_DIR}$" | while read pattern; do
-  if [ "${SERF_EVENT}" = "user" ]; then
-    EVENT="user-${SERF_USER_EVENT}"
-  elif [ "${SERF_EVENT}" = "query" ]; then
-    EVENT="query-${SERF_QUERY_NAME}"
-  else
-    EVENT=${SERF_EVENT}
-  fi
-  mkdir -p ${pattern}/${PAYLOAD_DIR}
-  echo "${payload}" > ${pattern}/${PAYLOAD_DIR}/${PAYLOAD_FILE}
-  export PLUGIN_PATH=${pattern}/${CONDUCTOR_PATTERN_EVENTS_DIR}
+pattern_dirs=(`find ${CONDUCTOR_PATTERNS_ROOT_DIR} -mindepth 1 -maxdepth 1 -type d`)
+for pattern_dir in ${pattern_dirs[@]}; do
+  mkdir -p ${pattern_dir}/${PAYLOAD_DIR}
+  echo "${payload}" > ${pattern_dir}/${PAYLOAD_DIR}/${PAYLOAD_FILE}
+  export PLUGIN_PATH=${pattern_dir}/${CONDUCTOR_PATTERN_EVENTS_DIR}
   ${PLUGINHOOK_FILE} ${EVENT}
 done

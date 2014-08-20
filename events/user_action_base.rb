@@ -20,12 +20,10 @@ class UserActionBase
   CONDUCTOR_ROOT_DIR = '/opt/cloudconductor'
   CONDUCTOR_PATTERNS_ROOT_DIR = File.join(CONDUCTOR_ROOT_DIR, 'patterns')
   CONDUCTOR_PARAMETERS_FILENAME = 'parameters.json'
-  CONDUCTOR_PATTERN_TEMP_DIR = 'temp'
+  CONDUCTOR_PATTERN_TEMP_DIR = 'tmp'
   CONDUCTOR_PATTERN_RESOURCES_DIR = 'resources'
   CONDUCTOR_PATTERN_CHEFREPO_DIR = 'chef-repo'
   CONDUCTOR_PATTERN_ROLES_DIR = 'roles'
-  CONDUCTOR_PATTERN_COOKBOOKS_DIR = 'cookbooks'
-  CONDUCTOR_PATTERN_SITE_COOKBOOKS_DIR = 'site-cookbooks'
   CONDUCTOR_SERF_PAYLOAD_FILENAME = 'payload.json'
 
   CHEFSOLO_LOG_DIR = 'logs'
@@ -44,6 +42,18 @@ class UserActionBase
     @pattern_name = module_dir[pattern_name_index]
   end
 
+  def execute
+    return unless target?
+    pattern_dir = File.join(CONDUCTOR_PATTERNS_ROOT_DIR, @pattern_name)
+    chefsolo_log_dir, chefsolo_filecache_dir = create_chefsolo_directories(pattern_dir)
+    chefrepo_dir, chefsolo_config_file = create_chefsolo_config_file(pattern_dir, chefsolo_log_dir, chefsolo_filecache_dir)
+    chefsolo_node_file = create_chefsolo_node_file(pattern_dir)
+    system("cd #{chefrepo_dir}; berks vendor ./cookbooks")
+    system("chef-solo -c #{chefsolo_config_file} -j #{chefsolo_node_file}")
+  end
+
+  private
+
   def update_and_read_parameters_file(pattern_dir)
     payload_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CONDUCTOR_SERF_PAYLOAD_FILENAME)
     parameters_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CONDUCTOR_PARAMETERS_FILENAME)
@@ -52,6 +62,17 @@ class UserActionBase
     payload = JSON.parse(File.read(payload_file)) if File.exist?(payload_file)
     parameters = JSON.parse(File.read(parameters_file)) if File.exist?(parameters_file)
     parameters.merge!(payload)
+    parameters.merge!(
+
+        serf: {
+          agent: {
+            tags: {
+              role: ENV['SERF_TAG_ROLE']
+            }
+          }
+        }
+
+    )
     File.write(parameters_file, parameters.to_json)
     parameters
   end
@@ -59,10 +80,10 @@ class UserActionBase
   def create_chefsolo_config_file(pattern_dir, chefsolo_log_dir, chefsolo_filecache_dir)
     chefsolo_config_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_CONFIG_FILENAME)
     chefrepo_dir = File.join(pattern_dir, CONDUCTOR_PATTERN_RESOURCES_DIR, CONDUCTOR_PATTERN_CHEFREPO_DIR)
-    roles_dir = File.join(chefrepo_dir, CONDUCTOR_PATTERN_ROLES_DIR)
+    roles_dir = File.join(chefrepo_dir, 'roles')
     chefsolo_log_file = File.join(chefsolo_log_dir, "#{@script_role}_#{CHEFSOLO_LOG_FILENAME}")
-    cookbooks_dir = File.join(chefrepo_dir, CONDUCTOR_PATTERN_COOKBOOKS_DIR)
-    site_cookbooks_dir = File.join(chefrepo_dir, CONDUCTOR_PATTERN_SITE_COOKBOOKS_DIR)
+    cookbooks_dir = File.join(chefrepo_dir, 'cookbooks')
+    site_cookbooks_dir = File.join(chefrepo_dir, 'site-cookbooks')
 
     File.open(chefsolo_config_file, 'w') do |file|
       file.write("role_path '#{roles_dir}'\n")
@@ -74,10 +95,6 @@ class UserActionBase
     [chefrepo_dir, chefsolo_config_file]
   end
 
-  def fetch_chefsolo_node_attributes
-    {}
-  end
-
   def create_chefsolo_run_list
     ["role[#{@script_role}_#{@script_event}]"]
   end
@@ -85,7 +102,6 @@ class UserActionBase
   def create_chefsolo_node_file(pattern_dir)
     chefsolo_node_file = File.join(pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_NODE_FILENAME)
     attributes = update_and_read_parameters_file(pattern_dir)
-    attributes.merge!(fetch_chefsolo_node_attributes)
     attributes[:run_list] = create_chefsolo_run_list
     File.write(chefsolo_node_file, attributes.to_json)
     chefsolo_node_file
@@ -101,15 +117,5 @@ class UserActionBase
 
   def target?
     @roles.include? @script_role
-  end
-
-  def execute
-    return unless target?
-    pattern_dir = File.join(CONDUCTOR_PATTERNS_ROOT_DIR, @pattern_name)
-    chefsolo_log_dir, chefsolo_filecache_dir = create_chefsolo_directories(pattern_dir)
-    chefrepo_dir, chefsolo_config_file = create_chefsolo_config_file(pattern_dir, chefsolo_log_dir, chefsolo_filecache_dir)
-    chefsolo_node_file = create_chefsolo_node_file(pattern_dir)
-    system("cd #{chefrepo_dir}; berks vendor #{CONDUCTOR_PATTERN_COOKBOOKS_DIR}")
-    system("chef-solo -c #{chefsolo_config_file} -j #{chefsolo_node_file}")
   end
 end

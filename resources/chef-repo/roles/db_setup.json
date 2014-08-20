@@ -1,7 +1,9 @@
 {
   "json_class":"Chef::Role",
   "run_list": [
-    "recipe[mysql::server]"
+    "recipe[mysql::server]",
+    "recipe[db::create_user]",
+    "recipe[db::create_database]"
   ],
   "default_attributes":{
     "mysql":{

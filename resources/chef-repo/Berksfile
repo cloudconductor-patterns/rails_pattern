@@ -5,4 +5,7 @@ cookbook 'yum-epel'
 cookbook 'nginx'
 cookbook 'rbenv'
 cookbook "mysql"
-
+cookbook 'application'
+cookbook 'application_ruby'
+cookbook 'git'
+cookbook 'puma'

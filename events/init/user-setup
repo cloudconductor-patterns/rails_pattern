@@ -19,5 +19,14 @@ if __FILE__ == $PROGRAM_NAME
   current_directory = File.expand_path(File.dirname(__FILE__))
   role = current_directory.split('/').last
   event_name = File.basename(__FILE__).split('-').last
-  UserActionBase.new(role, event_name).execute
+  additional_parameters = {
+    serf: {
+      agent: {
+        tags: {
+          role: ENV['SERF_TAG_ROLE']
+        }
+      }
+    }
+  }
+  UserActionBase.new(role, event_name, additional_parameters).execute(true)
 end

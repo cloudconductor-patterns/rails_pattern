@@ -1,16 +1,25 @@
 include_recipe 'yum-epel'
 include_recipe 'serf'
-#override template
+
+# delete 70-persistent-net.rules extra lines
+file '/etc/udev/rules.d/70-persistent-net.rules' do
+  _file = Chef::Util::FileEdit.new(path)
+  _file.search_file_replace_line('^SUBSYSTEM.*', '')
+  _file.search_file_replace_line('^# PCI device .*', '')
+  content _file.send(:editor).lines.join
+end
+
+# override template
 r = resources(template: '/etc/init.d/serf')
 r.cookbook 'cloudconductor_init'
 
-#install golang
+# install golang
 yum_package 'golang' do
     action :install
     options '--enablerepo=epel'
 end
 
-#install mercurial
+# install mercurial
 yum_package 'mercurial' do
     action :install
 end
@@ -32,7 +41,7 @@ bash 'install pluginhook' do
     creates '/usr/local/bin/pluginhook'
 end
 
-#install event-handler
+# install event-handler
 cookbook_file node['serf']['agent']['event_handlers'].first do
     source 'event-handler'
     mode 0755

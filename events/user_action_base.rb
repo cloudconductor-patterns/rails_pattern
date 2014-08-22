@@ -83,9 +83,11 @@ class UserActionBase
   end
 
   def update_parameters_file(new_parameters)
-    parameters_file = File.join(@pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CONDUCTOR_PARAMETERS_FILENAME)
+    parameters_dir = File.join(@pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR)
+    parameters_file = File.join(parameters_dir, CONDUCTOR_PARAMETERS_FILENAME)
     parameters = read_parameters_file
     parameters.merge!(new_parameters)
+    FileUtils.mkdir_p(parameters_dir) unless Dir.exist?(parameters_dir)
     File.write(parameters_file, parameters.to_json)
   end
 

@@ -24,30 +24,30 @@
       "Description" : "Domain name to publish web contents",
       "Type" : "String"
     },
-    "WebInstanceType" : {
+    "webInstanceType" : {
       "Description" : "WebServer instance type",
       "Type" : "String",
       "Default" : "t2.small"
     },
-    "APInstanceType" : {
+    "apInstanceType" : {
       "Description" : "APServer instance type",
       "Type" : "String",
       "Default" : "t2.small"
     },
-    "DBInstanceType" : {
+    "dbInstanceType" : {
       "Description" : "DBServer instance type",
       "Type" : "String",
       "Default" : "t2.small"
     },
-    "WebImageId" : {
+    "webImageId" : {
       "Description" : "WebServer Image Id. This parameter is automatically filled by CloudConductor.",
       "Type" : "String"
     },
-    "APImageId" : {
+    "apImageId" : {
       "Description" : "APServer Image Id. This parameter is automatically filled by CloudConductor.",
       "Type" : "String"
     },
-    "DBImageId" : {
+    "dbImageId" : {
       "Description" : "DBServer Image Id. This parameter is automatically filled by CloudConductor.",
       "Type" : "String"
     },

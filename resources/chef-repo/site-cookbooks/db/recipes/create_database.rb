@@ -18,6 +18,7 @@ mysql_connection_info = {
 
 mysql_database node['create_user']['database_name'] do
   connection mysql_connection_info
+  encoding node['create_database']['encoding']
   action :create
 end
 

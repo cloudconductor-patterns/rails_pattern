@@ -8,6 +8,9 @@
   "default_attributes":{
     "mysql":{
       "version":"5.6"
+    },
+    "create_database":{
+      "encoding":"utf8"
     }
   }
 }

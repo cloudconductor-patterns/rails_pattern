@@ -115,8 +115,8 @@
         "Role" : "web"
       },
       "Properties" : {
-        "ImageId" : { "Ref" : "WebImageId" },
-        "InstanceType" : { "Ref" : "WebInstanceType" },
+        "ImageId" : { "Ref" : "webImageId" },
+        "InstanceType" : { "Ref" : "webInstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "NetworkInterfaces" : [{
            "DeviceIndex" : "0",
@@ -183,8 +183,8 @@
         "Role" : "ap"
       },
       "Properties" : {
-        "ImageId" : { "Ref" : "APImageId" },
-        "InstanceType" : { "Ref" : "APInstanceType" },
+        "ImageId" : { "Ref" : "apImageId" },
+        "InstanceType" : { "Ref" : "apInstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "NetworkInterfaces" : [{
            "DeviceIndex" : "0",
@@ -230,8 +230,8 @@
         "Role" : "db"
       },
       "Properties" : {
-        "ImageId" : { "Ref" : "DBImageId" },
-        "InstanceType" : { "Ref" : "DBInstanceType" },
+        "ImageId" : { "Ref" : "dbImageId" },
+        "InstanceType" : { "Ref" : "dbInstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "NetworkInterfaces" : [{
            "DeviceIndex" : "0",

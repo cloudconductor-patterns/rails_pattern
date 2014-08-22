@@ -19,5 +19,12 @@ if __FILE__ == $PROGRAM_NAME
   current_directory = File.expand_path(File.dirname(__FILE__))
   role = current_directory.split('/').last
   event_name = File.basename(__FILE__).split('-').last
-  UserActionBase.new(role, event_name).execute
+  db_hosts = UserActionBase.select_hosts('db')
+  db_hosts.empty? ? db_host = '' : db_host = db_hosts.first
+  additional_parameters = {
+    app_deploy: {
+      db_host: db_host
+    }
+  }
+  UserActionBase.new(role, event_name, additional_parameters).execute
 end

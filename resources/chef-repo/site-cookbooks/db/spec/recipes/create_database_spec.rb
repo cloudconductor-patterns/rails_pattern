@@ -20,7 +20,7 @@ describe 'db::create_database' do
 
 end
 
-
+# prepare 1 node setting
 describe 'db::create_data' do
   let( :chef_run ) do
     chef_run = ChefSpec::ChefRunner.new do |node|
@@ -29,9 +29,13 @@ describe 'db::create_data' do
       node.set['create_user']['pass'] = 'ilikerundompasswords'
     end.converge 'db::create_database'
   end
+end
 
-  it "run mysql_database create" do
-    test
+# prepare 2 environment setting
+
+# prepare 3 add cookbook_path
+describe 'db::cookbook_path' do
+  let( :chef_run ) do
+    ChefSpec::ChefRunner.new(:cookbook_path
   end
-
 end

@@ -10,5 +10,4 @@ default['create_user']['privileges']    = [
   :update,
   :insert
 ]
-default['create_user']['reuire_ssl']    = 'ture'
-
+default['create_user']['require_ssl']    = 'ture'

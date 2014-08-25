@@ -1,32 +1,16 @@
 require_relative '../spec_helper'
+require 'chefspec'
 
-describe 'db::create_database' do
-  subject { ChefSpec::Runner.new.converge(described_recipe) }
-
-  # install Database Package
-  it 'install package' do
-    expect(chef_run).to install_package('mysql')
-  end
-
-  # Create Database
-#    it 'create database' do
-#    expect(chef_run).to
-#  end
-  it 'create db 1' do
-
-  end
-
-  # Flush privileges
-
-end
-
+# Start spec test
 # prepare 1 node setting
-describe 'db::create_data' do
-  let( :chef_run ) do
-    chef_run = ChefSpec::ChefRunner.new do |node|
+describe 'node setting' do
+  let(:chef_run) do
+    ChefSpec::ChefRunner.new do |node|
       node.set['create_user']['host'] = 'root'
       node.set['create_user']['username'] = 'root'
       node.set['create_user']['pass'] = 'ilikerundompasswords'
+      node.set['create_user']['database_name'] = 'app'
+      node.set['create_database']['encoding'] = 'utf8'
     end.converge 'db::create_database'
   end
 end
@@ -35,7 +19,25 @@ end
 
 # prepare 3 add cookbook_path
 describe 'db::cookbook_path' do
-  let( :chef_run ) do
-    ChefSpec::ChefRunner.new(:cookbook_path
+  let(:chef_run) do
+    ChefSpec::ChefRunner.new(
+      cookbook_path: ['cookbooks', 'site-cookbooks']
+    ).converge 'db::create_database'
+  end
+end
+
+# chef_run db::create_database
+describe 'chef_run db::create_database' do
+  # Create Database
+  it 'create mysql_database' do
+    ChefSpec::Matchers::ResourceMatcher.new(
+      :mysql_database, :create, 'app'
+    ).with(encoding: 'utf8')
+  end
+  # run sql
+  it 'flush the privileges' do
+    ChefSpec::Matchers::ResourceMatcher.new(
+      :mysql_database, :query, 'flush the privileges'
+    ).with(sql: 'flush privileges')
   end
 end

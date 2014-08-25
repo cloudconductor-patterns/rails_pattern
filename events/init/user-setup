@@ -15,6 +15,7 @@
 # limitations under the License.
 
 if __FILE__ == $PROGRAM_NAME
+  require 'pathname'
   require_relative '../user_action_base'
   current_directory = File.expand_path(File.dirname(__FILE__))
   role = current_directory.split('/').last
@@ -29,4 +30,11 @@ if __FILE__ == $PROGRAM_NAME
     }
   }
   UserActionBase.new(role, event_name, additional_parameters).execute(true)
+
+  script_name = File.expand_path(__FILE__)
+  parent_directory = Pathname.new(current_directory).parent
+  Dir.glob("#{parent_directory}/**/user-setup") do |user_setup_script|
+    next if user_setup_script == script_name
+    system(user_setup_script)
+  end
 end

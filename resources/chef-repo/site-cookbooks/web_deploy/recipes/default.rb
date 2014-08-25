@@ -26,11 +26,11 @@ git node['web_deploy']['app_path'] do
   not_if {Dir.exists?(node['web_deploy']['app_path'])}
 end
 
-directory node['app']['log'] do
+directory node['nginx_app']['log'] do
   owner "root"
   group "root"
   recursive true
-  not_if {Dir.exists?(node['app']['log'])}
+  not_if {Dir.exists?(node['nginx_app']['log'])}
   action :create
 end
 

@@ -3,20 +3,20 @@
 #    server unix:/var/run/unicorn/unicorn_unitest.sock fail_timeout=0;
 #}
 #Tcp
-upstream <%= node["app"]["name"] %> {
-  server <%= node["app"]["host"] %>:<%= node["app"]["port"] %>;
+upstream <%= node["nginx_app"]["name"] %> {
+  server <%= node["nginx_app"]["host"] %>:<%= node["nginx_app"]["port"] %>;
 }
 
 server {
   listen       <%= node["nginx"]["port"] %>;
   server_name  <%= node["nginx"]["host"] %>;
 
-  access_log  <%= node["app"]["log"] %>/<%= node["app"]["name"] %>.access.log;
-  error_log   <%= node["app"]["log"] %>/<%= node["app"]["name"] %>.error.log debug;
+  access_log  <%= node["nginx_app"]["log"] %>/<%= node["nginx_app"]["name"] %>.access.log;
+  error_log   <%= node["nginx_app"]["log"] %>/<%= node["nginx_app"]["name"] %>.error.log debug;
 
-  index <%= node["app"]["index"] %>;
+  index <%= node["nginx_app"]["index"] %>;
 
-  location  <%= node["app"]["url"] %> {
+  location  <%= node["nginx_app"]["url"] %> {
     if (-f $request_filename) {
       break;
     }
@@ -27,7 +27,7 @@ server {
     #UnixDomainSocket
     #  proxy_pass http://unicorn-unix-domain-socket;
     #Tcp
-    proxy_pass http://<%= node["app"]["name"] %>;
+    proxy_pass http://<%= node["nginx_app"]["name"] %>;
   }
 
   #Static File responce setting

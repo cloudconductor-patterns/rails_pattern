@@ -14,12 +14,12 @@ default['web_deploy']['app_conf_path'] = '/etc/nginx/conf.d'
 default['web_deploy']['app_conf_name'] = 'test.conf'
 
 # create template
-default['app']['name']   = 'app'
-default['app']['host']   = '0.0.0.0'
-default['app']['port']   = '8080'
-default['app']['index']  = 'index.html'
-default['app']['log']    = '/var/log/nginx/log'
-default['app']['url']    = '/'
+default['nginx_app']['name']   = 'app'
+default['nginx_app']['host']   = '0.0.0.0'
+default['nginx_app']['port']   = '8080'
+default['nginx_app']['index']  = 'index.html'
+default['nginx_app']['log']    = '/var/log/nginx/log'
+default['nginx_app']['url']    = '/'
 
 default['nginx']['port'] = '80'
 default['nginx']['host'] = '0.0.0.0'

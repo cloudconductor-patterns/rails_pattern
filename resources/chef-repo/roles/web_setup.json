@@ -2,6 +2,11 @@
   "json_class":"Chef::Role",
   "run_list":[
     "recipe[nginx]"
-  ]
+  ],
+  "default_attributes": {
+    "nginx": {
+      "repo_source":"nginx"
+    }
+  }
 }
 

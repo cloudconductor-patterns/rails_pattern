@@ -18,7 +18,7 @@ if __FILE__ == $PROGRAM_NAME
   require 'logger'
   require 'pathname'
   require_relative '../user_action_base'
-  logger = Logger.new('../../tmp/user-action.log')
+  logger = Logger.new('/tmp/user-action.log')
   current_directory = File.expand_path(File.dirname(__FILE__))
   role = current_directory.split('/').last
   event_name = File.basename(__FILE__).split('-').last

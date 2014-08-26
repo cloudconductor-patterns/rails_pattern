@@ -2,7 +2,7 @@
 default['web_deploy']['default_root'] = '/var/www'
 default['web_deploy']['owner']        = 'root'
 default['web_deploy']['group']        = 'root'
-default['web_deploy']['mode']         = '00775'
+default['web_deploy']['mode']         = '0775'
 
 # application download
 default['web_deploy']['app_path']   = '/var/www/bousaiz'
@@ -25,3 +25,8 @@ default['nginx']['port'] = '80'
 default['nginx']['host'] = '0.0.0.0'
 default['nginx']['url']  = '/static'
 default['nginx']['root'] = '/var/www/app'
+
+# create log directory
+default['nginx_log']['owner'] = 'nginx'
+default['nginx_log']['group'] = 'nginx'
+default['nginx_log']['mode'] = '0775'

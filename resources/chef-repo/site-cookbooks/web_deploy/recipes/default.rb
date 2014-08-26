@@ -7,9 +7,9 @@
 # All rights reserved - Do Not Redistribute
 #
 directory node['web_deploy']['default_root'] do
-  owner "root"
-  group "root"
-  mode 00775
+  owner node['web_deploy']['owner']
+  group node['web_deploy']['group']
+  mode node['web_deploy']['mode']
   recursive true
   not_if {Dir.exists?(node['web_deploy']['default_root'])}
   action :create
@@ -27,8 +27,9 @@ git node['web_deploy']['app_path'] do
 end
 
 directory node['nginx_app']['log'] do
-  owner "root"
-  group "root"
+  owner node['nginx_log']['owner']
+  group node['nginx_log']['group']
+  mode node['nginx_log']['mode']
   recursive true
   not_if {Dir.exists?(node['nginx_app']['log'])}
   action :create

@@ -2,7 +2,7 @@
   "json_class":"Chef::Role",
   "run_list": [
     "recipe[rbenv_setup]",
-    "recipe[iptables-disabled]",
+    "recipe[iptables::disabled]",
     "recipe[create_user]"
   ]
 }

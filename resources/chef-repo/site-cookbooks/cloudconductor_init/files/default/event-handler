@@ -38,7 +38,9 @@ payload="`cat /dev/stdin`"
 pattern_dirs=(`find ${CONDUCTOR_PATTERNS_ROOT_DIR} -mindepth 1 -maxdepth 1 -type d`)
 for pattern_dir in ${pattern_dirs[@]}; do
   mkdir -p ${pattern_dir}/${PAYLOAD_DIR}
-  echo "${payload}" > ${pattern_dir}/${PAYLOAD_DIR}/${PAYLOAD_FILE}
+  if [ "${SERF_EVENT}" == "user" -o "${SERF_EVENT}" == "query" ]
+    echo "${payload}" > ${pattern_dir}/${PAYLOAD_DIR}/${PAYLOAD_FILE}
+  fi
   export PLUGIN_PATH=${pattern_dir}/${CONDUCTOR_PATTERN_EVENTS_DIR}
   ${PLUGINHOOK_FILE} ${EVENT}
 done

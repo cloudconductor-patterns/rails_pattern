@@ -50,7 +50,8 @@ if __FILE__ == $PROGRAM_NAME
     else
       logger.debug("execute #{user_setup_script}.")
     end
-    user_setup_script_result = system(user_setup_script)
+    system("echo '----- #{user_setup_script} -----' >> /tmp/execute.log")
+    user_setup_script_result = system("#{user_setup_script} >> /tmp/execute.log 2>&1")
     logger.debug("user_setup_script_result = #{user_setup_script_result}")
   end
 end

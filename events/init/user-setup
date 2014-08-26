@@ -18,6 +18,13 @@ if __FILE__ == $PROGRAM_NAME
   require 'logger'
   require 'pathname'
   require_relative '../user_action_base'
+
+  chef_env_file = '/etc/profile.d/chef.sh'
+  chef_env = ''
+  chef_env = File.open(chef_env_file).read.strip if File.exist?(chef_env_file)
+  chef_path = chef_env.split(':')[1]
+  ENV['PATH'] = "#{ENV['PATH']}:#{chef_path}"
+
   logger = Logger.new('/tmp/user-action.log')
   current_directory = File.expand_path(File.dirname(__FILE__))
   role = current_directory.split('/').last
@@ -31,6 +38,7 @@ if __FILE__ == $PROGRAM_NAME
       }
     }
   }
+  logger.debug("ENV['PATH'] = #{ENV['PATH']}")
   logger.debug("role = #{role}")
   logger.debug("event_name = #{event_name}")
   logger.debug("additional_parameters = #{additional_parameters}")

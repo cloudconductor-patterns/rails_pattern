@@ -15,8 +15,10 @@
 # limitations under the License.
 
 if __FILE__ == $PROGRAM_NAME
+  require 'logger'
   require 'pathname'
   require_relative '../user_action_base'
+  logger = Logger.new('../../tmp/user-action.log')
   current_directory = File.expand_path(File.dirname(__FILE__))
   role = current_directory.split('/').last
   event_name = File.basename(__FILE__).split('-').last
@@ -29,12 +31,26 @@ if __FILE__ == $PROGRAM_NAME
       }
     }
   }
+  logger.debug("role = #{role}")
+  logger.debug("event_name = #{event_name}")
+  logger.debug("additional_parameters = #{additional_parameters}")
+
   UserActionBase.new(role, event_name, additional_parameters).execute(true)
 
   script_name = File.expand_path(__FILE__)
+  logger.debug("script_name = #{script_name}")
+
   parent_directory = Pathname.new(current_directory).parent
+  logger.debug("parent_directory = #{parent_directory}")
   Dir.glob("#{parent_directory}/**/user-setup") do |user_setup_script|
-    next if user_setup_script == script_name
-    system(user_setup_script)
+    logger.debug("user_setup_script = #{user_setup_script}")
+    if user_setup_script == script_name
+      logger.debug("#{user_setup_script} is itself. skipped.")
+      next
+    else
+      logger.debug("execute #{user_setup_script}.")
+    end
+    user_setup_script_result = system(user_setup_script)
+    logger.debug("user_setup_script_result = #{user_setup_script_result}")
   end
 end

@@ -1,0 +1,24 @@
+{
+  "json_class":"Chef::Role",
+  "run_list": [
+    "recipe[web_deploy]"
+  ],
+  "default_attributes":{
+    "web_deploy":{
+      "app_path":"/var/www/app",
+      "repository":"https://github.com/cloudconductor-patterns/rails_pattern.git",
+      "revision":"master",
+      "app_conf_name":"app.conf"
+    },
+    "app":{
+      "name":"app",
+      "host":"127.0.0.1",
+      "url":"/"
+    },
+    "nginx":{
+      "host":"127.0.0.1",
+      "root":"/var/www/app",
+      "url":"/static"
+    }
+  }
+}

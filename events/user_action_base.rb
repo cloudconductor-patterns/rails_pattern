@@ -40,8 +40,18 @@ class UserActionBase
     pattern_name = script_file.slice(%r{#{CONDUCTOR_PATTERNS_ROOT_DIR}/(?<pattern_name>[^/]*)}, 'pattern_name')
     @pattern_dir = File.join(CONDUCTOR_PATTERNS_ROOT_DIR, pattern_name)
     parameters = read_payload_file
-    parameters.merge!(additional_parameters)
-    update_parameters_file(parameters)
+    user_parameters = parameters[:parameters].nil? ? {} : parameters[:parameters]
+    application_url = parameters[:url].nil? ? '' : parameters[:url]
+    application_revision = parameters[:revision].nil? ? '' : parameters[:revision]
+    application_parameters = {
+      cloudconductor: {
+        application_url: application_url,
+        application_revision: application_revision
+      }
+    }
+    user_parameters.merge!(application_parameters)
+    user_parameters.merge!(additional_parameters)
+    update_parameters_file(user_parameters)
   end
 
   def execute(forced = false)

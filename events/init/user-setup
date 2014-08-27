@@ -59,8 +59,13 @@ if __FILE__ == $PROGRAM_NAME
       logger.debug("execute #{user_setup_script}.")
     end
     logger.debug("----- #{user_setup_script} -----")
-    user_setup_script_output = `#{user_setup_script} 2>&1`
-    logger.debug("user_setup_script_output = #{user_setup_script_output}")
-    logger.debug("user_setup_script_result = #{$?}")
+    begin
+      user_setup_script_output = `#{user_setup_script} 2>&1`
+      logger.debug("user_setup_script_output = #{user_setup_script_output}")
+    rescue => exception
+      logger.debug("an exception occured while executing #{user_setup_script}.")
+      logger.debug("#{exception.message}")
+    end
+    logger.debug("user_setup_script_result = #{$CHILD_STATUS}")
   end
 end

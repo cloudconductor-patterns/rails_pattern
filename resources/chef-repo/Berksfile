@@ -6,4 +6,7 @@ cookbook 'nginx'
 cookbook 'rbenv'
 cookbook "mysql"
 cookbook 'iptables'
-
+cookbook 'application'
+cookbook 'application_ruby'
+cookbook 'git'
+cookbook 'puma'

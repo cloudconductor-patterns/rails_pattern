@@ -5,4 +5,5 @@ cookbook 'yum-epel'
 cookbook 'nginx'
 cookbook 'rbenv'
 cookbook "mysql"
+cookbook 'iptables'
 

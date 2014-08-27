@@ -11,19 +11,17 @@ directory node['web_deploy']['default_root'] do
   group node['web_deploy']['group']
   mode node['web_deploy']['mode']
   recursive true
-  not_if {Dir.exists?(node['web_deploy']['default_root'])}
   action :create
 end
 
-package "git" do
+package 'git' do
   action :install
 end
 
 git node['web_deploy']['app_path'] do
   repository node['web_deploy']['repository']
+  revision node['web_deploy']['revision']
   action :sync
-  revision node['web_deploy']['version']
-  not_if {Dir.exists?(node['web_deploy']['app_path'])}
 end
 
 directory node['nginx_app']['log'] do
@@ -31,16 +29,20 @@ directory node['nginx_app']['log'] do
   group node['nginx_log']['group']
   mode node['nginx_log']['mode']
   recursive true
-  not_if {Dir.exists?(node['nginx_app']['log'])}
   action :create
 end
 
-template "#{node['web_deploy']['app_conf_path']}/#{node['web_deploy']['app_conf_name']}" do
+template \
+  "#{ \
+    node['web_deploy']['app_conf_path'] \
+  }/#{ \
+    node['web_deploy']['app_conf_name'] \
+  }" do
   source 'app.conf.erb'
   mode '0644'
   action :create
 end
 
-service "nginx" do
+service 'nginx' do
   action :restart
 end

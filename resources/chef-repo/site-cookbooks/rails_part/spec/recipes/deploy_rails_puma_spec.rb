@@ -1,12 +1,12 @@
 require_relative '../spec_helper'
 
-describe 'deploy_rails_puma::default' do
-  let( :chef_run ) do
-    chef_run = ChefSpec::Runner.new({
-      cookbook_path: ['site-cookbooks','cookbooks'],
+describe 'rails_part::deploy_rails_puma' do
+  let(:chef_run) do
+    ChefSpec::Runner.new(
+      cookbook_path: ['site-cookbooks', 'cookbooks'],
       platform:      'centos',
       version:       '6.5'
-    }) do |node|
+    ) do |node|
 
       node.set['deploy_rails_puma'] =  {
         app_name:  'app',
@@ -32,20 +32,20 @@ describe 'deploy_rails_puma::default' do
           password: 'ilikerandompassword'
         }
       }
-    end.converge('deploy_rails_puma::default')
+    end.converge('rails_part::deploy_rails_puma')
 
   end
 
   it 'include recipe git' do
-    expect(chef_run).to include_recipe "git::default"
+    expect(chef_run).to include_recipe 'git::default'
   end
 
   it 'include recipe build-essential:[platform_family]' do
-    expect(chef_run).to include_recipe "build-essential::_rhel"
+    expect(chef_run).to include_recipe 'build-essential::_rhel'
   end
 
   it 'include recipe pre_script' do
-    expect(chef_run).to include_recipe "deploy_rails_puma::pre_script"
+    expect(chef_run).to include_recipe 'rails_part::pre_script'
   end
 
   it 'deploy rails application' do
@@ -57,7 +57,7 @@ describe 'deploy_rails_puma::default' do
       repository: 'http://172.0.0.1/app.git',
       revision:   'HEAD',
       migrate:    true,
-      migration_command: '/opt/rbenv/shims/bundle exec rake db:migrate RAILS_ENV=production',
+      migration_command: '/opt/rbenv/shims/bundle exec rake db:migrate RAILS_ENV=production'
     )
   end
 
@@ -81,7 +81,7 @@ describe 'deploy_rails_puma::default' do
   end
 
   it 'include recipe post_script' do
-    expect(chef_run).to include_recipe "deploy_rails_puma::post_script"
+    expect(chef_run).to include_recipe 'rails_part::post_script'
   end
 
 end

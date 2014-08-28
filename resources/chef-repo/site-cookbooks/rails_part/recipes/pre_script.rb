@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: deploy_rails_puma
-# Recipe:: default
+# Cookbook Name:: rails_part
+# Recipe:: pre_script
 #
 # Copyright 2014, YOUR_COMPANY_NAME
 #

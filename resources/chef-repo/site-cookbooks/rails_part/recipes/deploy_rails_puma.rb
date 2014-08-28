@@ -1,6 +1,6 @@
 #
-# Cookbook Name:: deploy_rails_puma
-# Recipe:: default
+# Cookbook Name:: rails_part
+# Recipe:: deploy_rails_puma
 #
 # Copyright 2014, YOUR_COMPANY_NAME
 #
@@ -11,7 +11,7 @@ include_recipe "build-essential::_#{node['platform_family']}"
 
 db_params = node['deploy_rails_puma']['db']
 
-include_recipe "deploy_rails_puma::pre_script"
+include_recipe "rails_part::pre_script"
 
 application node['deploy_rails_puma']['app_name'] do
   action :deploy
@@ -73,4 +73,4 @@ bash "post_script" do
   code "#{node['deploy_rails_puma']['post_script']}"
 end
 
-include_recipe "deploy_rails_puma::post_script"
+include_recipe "rails_part::post_script"

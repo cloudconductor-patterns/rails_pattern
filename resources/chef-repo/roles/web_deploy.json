@@ -1,24 +1,20 @@
 {
   "json_class":"Chef::Role",
   "run_list": [
-    "recipe[web_deploy]"
+    "recipe[nginx_part::deploy]"
   ],
   "default_attributes":{
-    "web_deploy":{
+    "nginx_part":{
       "app_path":"/var/www/app",
-      "repository":"https://github.com/cloudconductor-patterns/rails_pattern.git",
-      "revision":"master",
-      "app_conf_name":"app.conf"
-    },
-    "app":{
-      "name":"app",
-      "host":"127.0.0.1",
-      "url":"/"
-    },
-    "nginx":{
-      "host":"127.0.0.1",
-      "root":"/var/www/app",
-      "url":"/static"
+      "app_repository":"https://github.com/cloudconductor-patterns/rails_pattern.git",
+      "app_revision":"master",
+      "app_conf_name":"app.conf",
+      "app_name":"app",
+      "ap_svr_host":"127.0.0.1",
+      "ap_svr_url_path":"/",
+      "wev_svr_host":"127.0.0.1",
+      "web_svr_root":"/var/www/app",
+      "web_svr_url":"/static"
     }
   }
 }

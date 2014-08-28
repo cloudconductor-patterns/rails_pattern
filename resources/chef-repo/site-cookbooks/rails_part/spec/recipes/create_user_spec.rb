@@ -2,7 +2,11 @@ require_relative '../spec_helper'
 
 describe 'rails_part::create_user' do
   let(:chef_run) do
-    ChefSpec::Runner.new do |node|
+    ChefSpec::Runner.new(
+      cookbook_path:  ['site-cookbooks', 'cookbooks'],
+      platform:       'centos',
+      version:        '6.5'
+    ) do |node|
       node.set['rails_part'] = {
         user: {
           user:         'rails',

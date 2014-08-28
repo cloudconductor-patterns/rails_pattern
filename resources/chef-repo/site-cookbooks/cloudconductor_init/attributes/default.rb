@@ -12,3 +12,8 @@ default['serf']['agent']['tags']['role'] = node['serf']['agent']['tags']['role']
 default['serf']['user'] = 'root'
 default['serf']['group'] = 'root'
 
+include_attribute 'consul'
+default['consul']['service_mode'] = 'server'
+default['consul']['service_user'] = 'root'
+default['consul']['service_group'] = 'root'
+default['consul']['bind_addr'] = '0.0.0.0'

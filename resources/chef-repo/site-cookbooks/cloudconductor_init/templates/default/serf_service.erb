@@ -16,7 +16,9 @@
 ### END INIT INFO
 
 # load config
-source /opt/cloudconductor/config
+if [ -f /opt/cloudconductor/config ]; then
+  source /opt/cloudconductor/config
+fi
 
 NAME="Serf Agent"
 SERF_BINARY=<%= @helper.getSerfBinary %>

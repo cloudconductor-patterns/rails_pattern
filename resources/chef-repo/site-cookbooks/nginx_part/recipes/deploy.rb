@@ -18,9 +18,9 @@ package 'git' do
   action :install
 end
 
-git node['nginx_part']['app_path'] do
-  repository node['nginx_part']['app_repository']
-  revision node['nginx_part']['app_revision']
+git "#{node['nginx_part']['static_root']}/#{node['nginx_part']['app_name']}" do
+  repository node['cloudconductor']['application_url']
+  revision node['cloudconductor']['application_rivision']
   action :sync
 end
 
@@ -40,9 +40,10 @@ template \
   }" do
   source 'app.conf.erb'
   mode '0644'
-  action :create
+  notifies :restart, 'service[nginx]'
 end
 
 service 'nginx' do
-  action :restart
+  action :nothing
+  supports restart: true, reload: true, status: true
 end

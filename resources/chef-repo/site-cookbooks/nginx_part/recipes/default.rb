@@ -6,4 +6,4 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-include_recipe "nginx_part::setup"
+include_recipe 'nginx_part::setup'

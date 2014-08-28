@@ -2,10 +2,5 @@
   "json_class":"Chef::Role",
   "run_list":[
     "recipe[nginx_part::setup]"
-  ],
-  "default_attributes": {
-    "nginx": {
-      "repo_source":"nginx"
-    }
-  }
+  ]
 }

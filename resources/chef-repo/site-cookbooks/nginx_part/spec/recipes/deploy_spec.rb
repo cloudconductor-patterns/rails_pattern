@@ -4,17 +4,15 @@ require 'rspec'
 describe 'nginx_part::deploy' do
   # attribute node.set
   let(:chef_run) do
-    ChefSpec::Runner.new(\
-      cookbook_path: ['cookbooks', 'site-cookbooks']\
-    ) do |node|
+    ChefSpec::Runner.new(cookbook_path: ['cookbooks', 'site-cookbooks']) do |node|
       node.set['nginx_part']['static_root'] = '/var/www'
       node.set['nginx_part']['static_owner'] = 'root'
       node.set['nginx_part']['static_group'] = 'root'
       node.set['nginx_part']['static_mode'] = '0775'
       node.set['nginx_part']['app_name'] = 'app'
       node.set['nginx_part']['app_path'] = '/var/www/app'
-      node.set['nginx_part']['app_repository'] = 'http://172.0.0.1/application/app.git'
-      node.set['nginx_part']['app_revision'] = 'master'
+      node.set['cloudconductor']['application_url'] = 'http://172.0.0.1/application/app.git'
+      node.set['cloudconductor']['application_revision'] = 'master'
       node.set['nginx_part']['app_conf_path'] = '/etc/nginx/conf.d'
       node.set['nginx_part']['app_conf_name'] = 'app.conf'
       node.set['nginx_part']['app_log_dir'] = '/var/log/nginx/log'
@@ -60,14 +58,9 @@ describe 'nginx_part::deploy' do
   end
 
   # Create app.conf for nginx from template
+  let(:template) { chef_run.template('/etc/nginx/conf.d/app.conf') }
   it 'Create application config file from template' do
-    expect(chef_run).to create_template(
-      '/etc/nginx/conf.d/app.conf'
-    ).with(source: 'app.conf.erb')
-  end
-
-  # Nginx restart
-  it 'Nginx service restart' do
-    expect(chef_run).to restart_service('nginx')
+    expect(chef_run).to create_template('/etc/nginx/conf.d/app.conf').with(mode: '0644')
+    expect(template).to notify('service[nginx]')
   end
 end

@@ -2,11 +2,14 @@ include_recipe 'yum-epel'
 include_recipe 'serf'
 
 # delete 70-persistent-net.rules extra lines
-file '/etc/udev/rules.d/70-persistent-net.rules' do
-  _file = Chef::Util::FileEdit.new(path)
-  _file.search_file_replace_line('^SUBSYSTEM.*', '')
-  _file.search_file_replace_line('^# PCI device .*', '')
-  content _file.send(:editor).lines.join
+ruby_block "delete 70-persistent-net.rules extra line" do
+  block do
+    _file = Chef::Util::FileEdit.new('/etc/udev/rules.d/70-persistent-net.rules')
+    _file.search_file_replace_line('^SUBSYSTEM.*', '')
+    _file.search_file_replace_line('^# PCI device .*', '')
+    _file.write_file
+  end
+  only_if {File.exist?('/etc/udev/rules.d/70-persistent-net.rules')}
 end
 
 # override template

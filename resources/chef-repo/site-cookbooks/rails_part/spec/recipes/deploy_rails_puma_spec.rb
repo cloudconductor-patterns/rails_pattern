@@ -6,34 +6,7 @@ describe 'rails_part::deploy_rails_puma' do
       cookbook_path: ['site-cookbooks', 'cookbooks'],
       platform:      'centos',
       version:       '6.5'
-    ) do |node|
-
-      node.set['deploy_rails_puma'] =  {
-        app_name:  'app',
-        app_path:  '/var/www/app',
-        app_user:  'rails',
-        app_group: 'rails',
-        deploy: {
-          repository: 'http://172.0.0.1/app.git',
-          revision:   'HEAD',
-          migrate:    true,
-          migration_command: '/opt/rbenv/shims/bundle exec rake db:migrate',
-          rails_env:  'production'
-        },
-        rails: {
-          bundler: true,
-          bundle_command: '/opt/rbenv/shims/bundle'
-        },
-        db: {
-          adapter:  'mysql2',
-          host:     'localhost',
-          database: 'database',
-          user:     'dbuser',
-          password: 'ilikerandompassword'
-        }
-      }
-    end.converge('rails_part::deploy_rails_puma')
-
+    ).converge('rails_part::deploy_rails_puma')
   end
 
   it 'include recipe git' do

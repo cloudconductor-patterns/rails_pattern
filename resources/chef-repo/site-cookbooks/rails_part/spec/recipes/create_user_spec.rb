@@ -6,16 +6,7 @@ describe 'rails_part::create_user' do
       cookbook_path:  ['site-cookbooks', 'cookbooks'],
       platform:       'centos',
       version:        '6.5'
-    ) do |node|
-      node.set['rails_part'] = {
-        user: {
-          user:         'rails',
-          passwd:       '$1$ID1d8IuR$oyeSAB1Z5gHptbJimJ8Fr/',
-          manage_home:  true,
-          group:        'rails'
-        }
-      }
-    end.converge 'rails_part::create_user'
+    ).converge 'rails_part::create_user'
   end
 
   it 'create user' do

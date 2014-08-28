@@ -6,12 +6,7 @@ describe 'rails_part::rbenv_setup' do
       cookbook_path:  ['site-cookbooks', 'cookbooks'],
       platform:       'centos',
       version:        '6.5'
-    ) do |node|
-      node.set['rbenv_setup'] = {
-        ruby_version: '2.1.1',
-        global:       true
-      }
-    end.converge('rails_part::rbenv_setup')
+    ).converge('rails_part::rbenv_setup')
   end
 
   it 'include recipes' do

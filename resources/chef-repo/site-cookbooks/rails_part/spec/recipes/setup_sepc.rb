@@ -17,6 +17,14 @@ describe 'rails_part::setup' do
     expect(chef_run).to include_recipe('build-essential::_rhel')
   end
 
+  it 'install mysql-devel' do
+    expect(chef_run).to install_package('sql-devel')
+  end
+
+  it 'install sqlite-devel' do
+    expect(chef_run).to install_package('sqlite-devel')
+  end
+
   it 'rbenv setup' do
     expect(chef_run).to include_recipe 'rails_part::rbenv_setup'
   end

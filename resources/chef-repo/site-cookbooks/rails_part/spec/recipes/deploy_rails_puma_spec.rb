@@ -9,14 +9,6 @@ describe 'rails_part::deploy_rails_puma' do
     ).converge('rails_part::deploy_rails_puma')
   end
 
-  it 'include recipe git' do
-    expect(chef_run).to include_recipe 'git::default'
-  end
-
-  it 'include recipe build-essential:[platform_family]' do
-    expect(chef_run).to include_recipe 'build-essential::_rhel'
-  end
-
   it 'include recipe pre_script' do
     expect(chef_run).to include_recipe 'rails_part::pre_script'
   end

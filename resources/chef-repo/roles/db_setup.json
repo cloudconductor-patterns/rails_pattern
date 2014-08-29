@@ -1,11 +1,16 @@
 {
   "json_class":"Chef::Role",
   "run_list": [
-    "recipe[mysql::server]"
+    "recipe[mysql::server]",
+    "recipe[db::create_user]",
+    "recipe[db::create_database]"
   ],
   "default_attributes":{
     "mysql":{
       "version":"5.6"
+    },
+    "create_database":{
+      "encoding":"utf8"
     }
   }
 }

@@ -6,8 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-include_recipe "git"
-include_recipe "build-essential::_#{node['platform_family']}"
 
 db_params = node['rails_part']['db']
 

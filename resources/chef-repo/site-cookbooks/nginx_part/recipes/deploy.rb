@@ -6,6 +6,15 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+file '/etc/nginx/conf.d/default.conf' do
+  action :delete
+end
+
+link '/etc/nginx/sites-enabled/000-default' do
+  link_type :symbolic
+  action :delete
+end
+
 directory node['nginx_part']['static_root'] do
   owner node['nginx_part']['static_owner']
   group node['nginx_part']['static_group']

@@ -30,6 +30,15 @@ describe 'nginx_part::deploy' do
   end
 
   # Chef_run nginx_part::deploy
+  # Delete /etc/nginx/conf.d/default.conf
+  it 'Delete /etc/nginx/conf.d/default.conf' do
+    expect(chef_run).to delete_file('/etc/nginx/conf.d/default.conf')
+  end
+
+  # Delete symbolic link
+  it 'Delete /etc/nginx/sites-enabled/000-default' do
+    expect(chef_run).to delete_link('/etc/nginx/sites-enabled/000-default')
+  end
   # Create default_root
   it 'Create Directory' do
     expect(chef_run).to create_directory('/var/www').with(

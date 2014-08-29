@@ -1,12 +1,12 @@
 require_relative '../spec_helper'
 
-describe 'rails_part::deploy_rails_puma' do
+describe 'rails_part::deploy' do
   let(:chef_run) do
     ChefSpec::Runner.new(
       cookbook_path: ['site-cookbooks', 'cookbooks'],
       platform:      'centos',
       version:       '6.5'
-    ).converge('rails_part::deploy_rails_puma')
+    ).converge('rails_part::deploy')
   end
 
   it 'include recipe pre_script' do

@@ -1,6 +1,6 @@
 {
   "json_class": "Chef::Role",
   "run_list": [
-    "recipe[deploy_rails_puma]"
+    "recipe[rails_part::deploy]"
   ]
 }

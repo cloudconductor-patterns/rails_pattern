@@ -14,9 +14,7 @@ describe 'create_user spec' do
       node.set['mysql_part']['new_username'] = 'appuser'
       node.set['mysql_part']['new_password'] = 'ilikerandompasswords'
       node.set['mysql_part']['database_name'] = 'app'
-      node.set['mysql_part']['privileges'] = [ \
-        :select, :update, :insert, :delete \
-      ]
+      node.set['mysql_part']['privileges'] = [:all]
       node.set['mysql_part']['require_ssl'] = 'ture'
     end.converge 'mysql_part::create_user'
   end

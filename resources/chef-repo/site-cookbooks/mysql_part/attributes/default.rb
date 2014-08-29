@@ -9,7 +9,7 @@ default['mysql_part']['password'] = 'ilikerandompasswords'
 default['mysql_part']['new_username'] = 'appuser'
 default['mysql_part']['new_password'] = 'ilikerandompasswords'
 default['mysql_part']['database_name'] = 'app'
-default['mysql_part']['privileges'] = [:select, :update, :insert, :delete]
+default['mysql_part']['privileges'] = [:all]
 default['mysql_part']['require_ssl'] = 'ture'
 
 # create database attribute

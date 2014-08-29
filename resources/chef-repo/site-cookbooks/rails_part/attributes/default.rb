@@ -1,3 +1,9 @@
+default['cloudconductor'] = {
+  repository: 'http://172.0.0.1/app.git',
+  revision:   'HEAD',
+  ap_host:    'localhost',
+  db_host:    'localhost'
+}
 default['rails_part'] = {
   ruby: {
     version: '2.1.1',
@@ -12,8 +18,6 @@ default['rails_part'] = {
   app: {
     name:       'app',
     path:       '/var/www/app',
-    repository: 'http://172.0.0.1/app.git',
-    revision:   'HEAD',
     migrate:    true,
     migration_command: '/opt/rbenv/shims/bundle exec rake db:migrate',
     rails_env:  'production',
@@ -22,7 +26,6 @@ default['rails_part'] = {
   },
   db: {
     adapter:  'mysql2',
-    host:     'localhost',
     database: 'database',
     user:     'dbuser',
     password: 'ilikerandompassword'

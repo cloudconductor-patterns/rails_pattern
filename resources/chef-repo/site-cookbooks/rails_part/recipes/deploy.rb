@@ -7,6 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
+cc_params = node['cloudconductor']
 db_params = node['rails_part']['db']
 
 include_recipe "rails_part::pre_script"
@@ -16,8 +17,8 @@ application node['rails_part']['app']['name'] do
   path       node['rails_part']['app']['path']
   owner      node['rails_part']['user']['name']
   group      node['rails_part']['user']['group']
-  repository node['rails_part']['app']['repository']
-  revision   node['rails_part']['app']['revision']
+  repository node['cloudconductor']['repository']
+  revision   node['cloudconductor']['revision']
   migrate    node['rails_part']['app']['migrate']
 #  migration_command node['deploy_rails_puma']['deploy']['migration_command']
   migration_command "#{node['rails_part']['app']['migration_command']} RAILS_ENV=#{node['rails_part']['app']['rails_env']}"
@@ -25,7 +26,7 @@ application node['rails_part']['app']['name'] do
   rails do
     database do
       adapter  db_params['adapter']
-      host     db_params['host']
+      host     cc_params['db_host']
       database db_params['database']
       username db_params['user']
       password db_params['password']

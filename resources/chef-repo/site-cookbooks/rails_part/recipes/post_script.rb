@@ -8,5 +8,5 @@
 #
 bash "post_script" do
   action :run
-  code "#{node['deploy_rails_puma']['post_script']}"
+  code "#{node['rails_part']['post_script']}"
 end

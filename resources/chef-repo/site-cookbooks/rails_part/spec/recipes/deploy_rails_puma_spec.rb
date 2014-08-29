@@ -36,7 +36,7 @@ describe 'rails_part::deploy_rails_puma' do
 
   it 'create init.d file of puma' do
     expect(chef_run).to create_template('/etc/init.d/app').with(
-      source: 'puma.erb',
+      source: 'puma_init_script.erb',
       owner:  'root',
       group:  'root',
       mode:   '0755'

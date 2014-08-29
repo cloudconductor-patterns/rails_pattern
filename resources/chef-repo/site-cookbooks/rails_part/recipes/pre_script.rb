@@ -8,5 +8,5 @@
 #
 bash "pre_script" do
   action :run
-  code "#{node['deploy_rails_puma']['pre_script']}"
+  code "#{node['rails_part']['pre_script']}"
 end

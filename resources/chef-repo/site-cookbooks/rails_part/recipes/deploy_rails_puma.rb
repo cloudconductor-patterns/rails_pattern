@@ -9,68 +9,66 @@
 include_recipe "git"
 include_recipe "build-essential::_#{node['platform_family']}"
 
-db_params = node['deploy_rails_puma']['db']
+db_params = node['rails_part']['db']
 
 include_recipe "rails_part::pre_script"
 
-application node['deploy_rails_puma']['app_name'] do
+application node['rails_part']['app']['name'] do
   action :deploy
-  path node['deploy_rails_puma']['app_path']
-  owner node['deploy_rails_puma']['app_user']
-  group node['deploy_rails_puma']['app_group']
-
-  repository node['deploy_rails_puma']['deploy']['repository']
-  revision node['deploy_rails_puma']['deploy']['revision']
-
-  migrate node['deploy_rails_puma']['deploy']['migrate']
-  migration_command node['deploy_rails_puma']['deploy']['migration_command']
-  migration_command "#{node['deploy_rails_puma']['deploy']['migration_command']} RAILS_ENV=#{node['deploy_rails_puma']['deploy']['rails_env']}"
+  path       node['rails_part']['app']['path']
+  owner      node['rails_part']['user']['name']
+  group      node['rails_part']['user']['group']
+  repository node['rails_part']['app']['repository']
+  revision   node['rails_part']['app']['revision']
+  migrate    node['rails_part']['app']['migrate']
+#  migration_command node['deploy_rails_puma']['deploy']['migration_command']
+  migration_command "#{node['rails_part']['app']['migration_command']} RAILS_ENV=#{node['rails_part']['app']['rails_env']}"
 
   rails do
     database do
-      adapter db_params['adapter']
-      host db_params['host']
+      adapter  db_params['adapter']
+      host     db_params['host']
       database db_params['database']
       username db_params['user']
       password db_params['password']
     end
-    bundler node['deploy_rails_puma']['rails']['bundler']
-    bundle_command node['deploy_rails_puma']['rails']['bundle_command']
+    bundler        node['rails_part']['app']['bundler']
+    bundle_command node['rails_part']['app']['bundle_command']
   end
 end
 
-puma_config node['deploy_rails_puma']['app_name'] do
-  directory node['deploy_rails_puma']['app_path']
-  environment node['deploy_rails_puma']['deploy']['rails_env']
-  bind node['deploy_rails_puma']['puma']['bind']
-  daemonize true
-  output_append node['deploy_rails_puma']['puma']['output_append']
-  monit false
-  logrotate node['deploy_rails_puma']['puma']['logrotate']
-  thread_min node['deploy_rails_puma']['puma']['thread_min']
-  thread_max node['deploy_rails_puma']['puma']['thread_max']
-  workers node['deploy_rails_puma']['puma']['workers']
+puma_config node['rails_part']['app']['name'] do
+  directory     node['rails_part']['app']['path']
+  environment   node['rails_part']['app']['rails_env']
+  bind          node['rails_part']['puma']['bind']
+  daemonize     true
+  output_append node['rails_part']['puma']['output_append']
+  monit         false
+  logrotate     node['rails_part']['puma']['logrotate']
+  thread_min    node['rails_part']['puma']['thread_min']
+  thread_max    node['rails_part']['puma']['thread_max']
+  workers       node['rails_part']['puma']['workers']
 end
 
-template "/etc/init.d/#{node['deploy_rails_puma']['app_name']}" do
-  source "puma.erb"
+template "/etc/init.d/#{node['rails_part']['app']['name']}" do
+  source "puma_init_script.erb"
   owner "root"
   group "root"
   mode "0755"
 end
 
 bash "add_puma_service" do
-  code "chkconfig --add #{node['deploy_rails_puma']['app_name']}"
+  code "chkconfig --add #{node['rails_part']['app']['name']}"
 end
 
-service node['deploy_rails_puma']['app_name'] do
+service node['rails_part']['app']['name'] do
   action :start
   notifies :run, "bash[post_script]", :delayed
 end
 
 bash "post_script" do
   action :nothing
-  code "#{node['deploy_rails_puma']['post_script']}"
+  code "#{node['rails_part']['post_script']}"
 end
 
 include_recipe "rails_part::post_script"

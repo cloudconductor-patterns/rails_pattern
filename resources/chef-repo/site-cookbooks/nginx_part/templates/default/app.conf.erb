@@ -9,7 +9,7 @@ upstream <%= node["nginx_part"]["app_name"] %> {
 
 server {
   listen       <%= node["nginx_part"]["web_svr_port"] %>;
-  server_name  <%= node["nginx"]["web_svr_host"] %>;
+  server_name  <%= node["nginx_part"]["web_svr_host"] %>;
 
   access_log  <%= node["nginx_part"]["app_log_dir"] %>/<%= node["nginx_part"]["app_name"] %>.access.log;
   error_log   <%= node["nginx_part"]["app_log_dir"] %>/<%= node["nginx_part"]["app_name"] %>.error.log debug;
@@ -31,7 +31,7 @@ server {
   }
 
   #Static File responce setting
-  location <%= node["nginx_part"]["app_url"] %> {
+  location <%= node["nginx_part"]["web_svr_url"] %> {
     root <%= node["nginx_part"]["static_root"] %>/public;
   }
 

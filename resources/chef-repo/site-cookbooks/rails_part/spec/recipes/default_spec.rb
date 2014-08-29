@@ -1,20 +1,15 @@
 require_relative '../spec_helper'
 
-describe 'rails_part::default' do
-  subject { ChefSpec::Runner.new.converge(described_recipe) }
-
-  # Write quick specs using `it` blocks with implied subjects
-  it { should do_something('...') }
-
-  # Write full examples using the `expect` syntax
-  it 'does something' do
-    expect(subject).to do_something('...')
+describe 'rails_part::setup' do
+  let(:chef_run) do
+    ChefSpec::Runner.new(
+      cookbook_path: ['site-cookbooks', 'cookbooks'],
+      platform:      'centos',
+      version:       '6.5'
+    ).converge('rails_part::setup')
   end
 
-  # Use an explicit subject
-  let(:chef_run) { ChefSpec::Runner.new.converge(described_recipe) }
-
-  it 'does something' do
-    expect(chef_run).to do_something('...')
+  it 'include setup' do
+    expect(chef_run).to include_recipe 'rails_part::setup'
   end
 end

@@ -22,7 +22,7 @@ if __FILE__ == $PROGRAM_NAME
   db_hosts = UserActionBase.select_hosts('db')
   db_hosts.empty? ? db_host = '' : db_host = db_hosts.first
   additional_parameters = {
-    app_deploy: {
+    cloudconductor: {
       db_host: db_host
     }
   }

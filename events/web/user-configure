@@ -19,12 +19,5 @@ if __FILE__ == $PROGRAM_NAME
   current_directory = File.expand_path(File.dirname(__FILE__))
   role = current_directory.split('/').last
   event_name = File.basename(__FILE__).split('-').last
-  ap_hosts = UserActionBase.select_hosts('ap')
-  ap_hosts.empty? ? ap_host = '' : ap_host = ap_hosts.first
-  additional_parameters = {
-    web_config: {
-      ap_host: ap_host
-    }
-  }
-  UserActionBase.new(role, event_name, additional_parameters).execute
+  UserActionBase.new(role, event_name).execute
 end

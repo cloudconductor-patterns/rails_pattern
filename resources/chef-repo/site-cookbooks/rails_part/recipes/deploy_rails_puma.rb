@@ -63,12 +63,6 @@ end
 
 service node['rails_part']['app']['name'] do
   action :start
-  notifies :run, "bash[post_script]", :delayed
-end
-
-bash "post_script" do
-  action :nothing
-  code "#{node['rails_part']['post_script']}"
 end
 
 include_recipe "rails_part::post_script"

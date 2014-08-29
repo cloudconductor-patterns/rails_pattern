@@ -6,12 +6,7 @@ describe 'rails_part::post_script' do
       cookbook_path: ['site-cookbooks', 'cookbooks'],
       platform:      'centos',
       version:       '6.5'
-    ) do |node|
-      node.set['deploy_rails_puma'] = {
-        pre_script:  'echo hogehoge',
-        post_script: 'echo foobar'
-      }
-    end.converge('rails_part::post_script')
+    ).converge('rails_part::post_script')
   end
 
   it 'bash post_script' do
@@ -20,7 +15,7 @@ describe 'rails_part::post_script' do
       :run,
       'post_script'
     ).with(
-      code: 'echo foobar'
+      code: 'echo finish deploy'
     )
 
     expect(chef_run).to_not ChefSpec::Matchers::ResourceMatcher.new(
@@ -28,7 +23,7 @@ describe 'rails_part::post_script' do
       :run,
       'post_script'
     ).with(
-      code: 'echo hogehoge'
+      code: 'echo start deploy'
     )
   end
 end

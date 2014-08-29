@@ -23,7 +23,6 @@ describe 'nginx_part::deploy' do
       node.set['nginx_part']['web_svr_port'] = '80'
       node.set['nginx_part']['web_svr_host'] = '0.0.0.0'
       node.set['nginx_part']['web_svr_url'] = '/static'
-      node.set['nginx_part']['web_svr_root'] = '/var/www/app'
       node.set['nginx_part']['log_owner'] = 'nginx'
       node.set['nginx_part']['log_group'] = 'nginx'
       node.set['nginx_part']['log_mode'] = '0775'

@@ -22,7 +22,7 @@ if __FILE__ == $PROGRAM_NAME
   ap_hosts = UserActionBase.select_hosts('ap')
   ap_hosts.empty? ? ap_host = '' : ap_host = ap_hosts.first
   additional_parameters = {
-    web_config: {
+    cloudconductor: {
       ap_host: ap_host
     }
   }

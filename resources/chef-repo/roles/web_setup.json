@@ -1,7 +1,6 @@
 {
   "json_class":"Chef::Role",
   "run_list":[
-    "recipe[nginx]"
+    "recipe[nginx_part::setup]"
   ]
 }
-

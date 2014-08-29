@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: db
+# Cookbook Name:: mysql_part
 # Recipe:: create_database
 #
 # Copyright 2014, YOUR_COMPANY_NAME
@@ -10,14 +10,14 @@
 include_recipe 'database::mysql'
 
 mysql_connection_info = {
-  host:     node['create_user']['host'],
-  username: node['create_user']['username'],
-  password: node['create_user']['pass']
+  host:     node['mysql_part']['host'],
+  username: node['mysql_part']['username'],
+  password: node['mysql_part']['passwprd']
 }
 
-mysql_database node['create_user']['database_name'] do
+mysql_database node['mysql_part']['database_name'] do
   connection mysql_connection_info
-  encoding node['create_database']['encoding']
+  encoding node['mysql_part']['encoding']
   action :create
 end
 

@@ -16,8 +16,6 @@
 CONDUCTOR_ROOT_DIR="/opt/cloudconductor"
 CONDUCTOR_PATTERNS_ROOT_DIR="${CONDUCTOR_ROOT_DIR}/patterns"
 CONDUCTOR_PATTERN_EVENTS_DIR="events"
-PAYLOAD_DIR="tmp"
-PAYLOAD_FILE="payload.json"
 PLUGINHOOK_FILE="/usr/local/bin/pluginhook"
 CONFIG_FILE="/etc/profile.d/chef.sh"
 LOG_FILE="${CONDUCTOR_ROOT_DIR}/event-handler.log"
@@ -43,20 +41,10 @@ log "SERF_EVENT = ${SERF_EVENT}"
 log "SERF_USER_EVENT = ${SERF_USER_EVENT}"
 log "EVENT = ${EVENT}"
 
-payload="`cat /dev/stdin`"
-log "payload = ${payload}"
-
 pattern_dirs=(`find ${CONDUCTOR_PATTERNS_ROOT_DIR} -mindepth 1 -maxdepth 1 -type d`)
 for pattern_dir in ${pattern_dirs[@]}; do
-  mkdir -p ${pattern_dir}/${PAYLOAD_DIR}
   log "pattern_dir = ${pattern_dir}"
-  if [ "${SERF_EVENT}" == "user" -o "${SERF_EVENT}" == "query" ]; then
-    echo "${payload}" > ${pattern_dir}/${PAYLOAD_DIR}/${PAYLOAD_FILE}
-    log "payload file is created."
-    export PLUGIN_PATH=${pattern_dir}/${CONDUCTOR_PATTERN_EVENTS_DIR}
-    ${PLUGINHOOK_FILE} ${EVENT}
-    log "pluginhook is called. status = $?"
-  else
-    log "EVENT is not user or query. skipped creating payload file and executing pluginhook."
-  fi
+  export PLUGIN_PATH=${pattern_dir}/${CONDUCTOR_PATTERN_EVENTS_DIR}
+  ${PLUGINHOOK_FILE} ${EVENT}
+  log "pluginhook is called. status = $?"
 done

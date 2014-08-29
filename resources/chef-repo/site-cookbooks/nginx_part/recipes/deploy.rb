@@ -20,7 +20,7 @@ end
 
 git "#{node['nginx_part']['static_root']}/#{node['nginx_part']['app_name']}" do
   repository node['cloudconductor']['application_url']
-  revision node['cloudconductor']['application_rivision']
+  revision node['cloudconductor']['application_revision']
   action :sync
 end
 

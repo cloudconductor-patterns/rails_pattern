@@ -12,7 +12,7 @@ default['nginx_part']['static_mode'] = '0775'
 
 # application download
 default['cloudconductor']['application_url'] = 'http://172.0.0.1/application/app.git'
-default['cloudconductor']['application_rivision'] = 'master'
+default['cloudconductor']['application_revision'] = 'master'
 
 # create config
 default['nginx_part']['app_name'] = 'app'

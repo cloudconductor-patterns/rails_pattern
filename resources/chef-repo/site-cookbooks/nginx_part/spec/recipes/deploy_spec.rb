@@ -16,7 +16,7 @@ describe 'nginx_part::deploy' do
       node.set['nginx_part']['app_conf_path'] = '/etc/nginx/conf.d'
       node.set['nginx_part']['app_conf_name'] = 'app.conf'
       node.set['nginx_part']['app_log_dir'] = '/var/log/nginx/log'
-      node.set['nginx_part']['ap_svr_host'] = '0.0.0.0'
+      node.set['cloudconductor']['ap_host'] = '0.0.0.0'
       node.set['nginx_part']['ap_svr_port'] = '8080'
       node.set['nginx_part']['ap_svr_index'] = 'index.html'
       node.set['nginx_part']['ap_svr_url'] = '/'

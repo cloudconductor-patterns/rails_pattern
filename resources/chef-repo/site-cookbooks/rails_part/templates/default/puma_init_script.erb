@@ -1,27 +1,27 @@
 #!/bin/bash
 #
-# <%= node['deploy_rails_puma']['app_name'] %>
+# <%= node['rails_part']['app']['name'] %>
 
 # chkconfig: 2345 82 55
-# processname: <%= node['deploy_rails_puma']['app_name'] %>
-# description: Runs <%= node['deploy_rails_puma']['app_name'] %> for nginx integration.
+:# processname <%= node['rails_part']['app']['name'] %>
+# description: Runs <%= node['rails_part']['app']['name'] %> for nginx integration.
 
 # Include RedHat function library
 . /etc/rc.d/init.d/functions
 
 # The name of the service
-NAME=<%= node['deploy_rails_puma']['app_name'] %>
+NAME=<%= node['rails_part']['app']['name'] %>
 
 # The username and path to the myapp source
 USER=root
-APP_PATH=<%= node['deploy_rails_puma']['app_path'] %>/current
+APP_PATH=<%= node['rails_part']['app']['path'] %>/current
 
 # The PID and LOCK files used by puma and sidekiq
-UPID=<%= node['deploy_rails_puma']['app_path'] %>/shared/puma/<%= node['deploy_rails_puma']['app_name'] %>.pid
+UPID=<%= node['rails_part']['app']['path'] %>/shared/puma/<%= node['rails_part']['app']['name'] %>.pid
 ULOCK=/var/lock/subsys/$NAME
 
 # The options to use when running puma
-OPTS="-C <%= node['deploy_rails_puma']['app_path'] %>/shared/puma/<%= node['deploy_rails_puma']['app_name'] %>.config -e <%= node['deploy_rails_puma']['deploy']['rails_env'] %>"
+OPTS="-C <%= node['rails_part']['app']['path'] %>/shared/puma/<%= node['rails_part']['app']['name'] %>.config -e <%= node['rails_part']['app']['rails_env'] %>"
 
 # Ruby related path update
 RUBY_PATH_PATCH="PATH=$PATH:/opt/rbenv/shims:/usr/local/lib && export PATH && "
@@ -53,9 +53,9 @@ stop() {
   [ $puma -eq 0 ] && rm -f $ULOCK
   echo
 
-  rm <%= node['deploy_rails_puma']['app_path'] %>/shared/puma/<%= node['deploy_rails_puma']['app_name'] %>.pid
-  rm <%= node['deploy_rails_puma']['app_path'] %>/shared/puma/<%= node['deploy_rails_puma']['app_name'] %>.state
-  rm <%= node['deploy_rails_puma']['app_path'] %>/shared/puma/<%= node['deploy_rails_puma']['app_name'] %>_control.sock
+  rm <%= node['rails_part']['app']['path'] %>/shared/puma/<%= node['rails_part']['app']['name'] %>.pid
+  rm <%= node['rails_part']['app']['path'] %>/shared/puma/<%= node['rails_part']['app']['name'] %>.state
+  rm <%= node['rails_part']['app']['path'] %>/shared/puma/<%= node['rails_part']['app']['name'] %>_control.sock
 
 
   return $puma

@@ -1,7 +1,11 @@
 {
-  "json_class":"Chef::Role",
+  "name": "db_setup",
+  "description": "Setup mysql database and backup tools",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
   "run_list": [
-    "recipe[mysql::server]"
+    "recipe[mysql::server]",
+    "recipe[backup_restore::setup]"
   ],
   "default_attributes":{
     "mysql":{
@@ -9,4 +13,3 @@
     }
   }
 }
-

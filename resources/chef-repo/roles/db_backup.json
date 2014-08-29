@@ -1,0 +1,16 @@
+{
+  "name": "db_backup",
+  "description": "Run backup job immediately",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "backup_restore": {
+      "sources": {
+        "enabled": ["mysql"]
+      }
+    }
+  },
+  "run_list": [
+    "recipe[backup_restore::run_backup]"
+  ]
+}

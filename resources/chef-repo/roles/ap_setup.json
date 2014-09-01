@@ -1,7 +1,6 @@
 {
   "json_class":"Chef::Role",
   "run_list": [
-    "recipe[rbenv_setup]"
+    "recipe[rails_part::setup]"
   ]
 }
-~

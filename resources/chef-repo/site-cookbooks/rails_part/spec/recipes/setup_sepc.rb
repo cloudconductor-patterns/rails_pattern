@@ -18,7 +18,7 @@ describe 'rails_part::setup' do
   end
 
   it 'install mysql-devel' do
-    expect(chef_run).to install_package('sql-devel')
+    expect(chef_run).to install_package('mysql-devel')
   end
 
   it 'install sqlite-devel' do
@@ -31,9 +31,5 @@ describe 'rails_part::setup' do
 
   it 'iptables disabled' do
     expect(chef_run).to include_recipe 'iptables::disabled'
-  end
-
-  it 'create application user' do
-    expect(chef_run).to include_recipe 'rails_part::create_user'
   end
 end

@@ -28,8 +28,8 @@ class UserActionBase
   CONDUCTOR_PATTERN_ROLES_DIR = 'roles'
   CONDUCTOR_SERF_PAYLOAD_FILENAME = 'payload.json'
   CONDUCTOR_CONSUL_KVS_URL = 'http://127.0.0.1:8500/v1/kv'
-  CONDUCTOR_CONSUL_KVS_NEW_PARAMETERS_URL = "#{CONDUCTOR_CONSUL_KVS_URL}/new_parameters"
-  CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL = "#{CONDUCTOR_CONSUL_KVS_URL}/stored_parameters"
+  CONDUCTOR_CONSUL_KVS_PARAMETERS_URL = "#{CONDUCTOR_CONSUL_KVS_URL}/cloudconductor/parameters"
+  CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL = "#{CONDUCTOR_CONSUL_KVS_URL}/cloudconductor/stored_parameters"
   CONDUCTOR_LOG_FILE = '/tmp/user_action_base.log'
 
   CHEFSOLO_LOG_DIR = 'logs'
@@ -50,7 +50,7 @@ class UserActionBase
     pattern_name = script_file.slice(%r{#{CONDUCTOR_PATTERNS_ROOT_DIR}/(?<pattern_name>[^/]*)}, 'pattern_name')
     @pattern_dir = File.join(CONDUCTOR_PATTERNS_ROOT_DIR, pattern_name)
     @logger.debug("pattern_dir = #{@pattern_dir}")
-    parameters = read_parameters(CONDUCTOR_CONSUL_KVS_NEW_PARAMETERS_URL)
+    parameters = read_parameters(CONDUCTOR_CONSUL_KVS_PARAMETERS_URL)
     user_parameters = parameters[:parameters].nil? ? {} : parameters[:parameters]
     application_url = parameters[:url].nil? ? '' : parameters[:url]
     application_revision = parameters[:revision].nil? ? '' : parameters[:revision]
@@ -66,7 +66,6 @@ class UserActionBase
   end
 
   def execute(forced = false)
-    execution_result = false
     @logger.debug("forced = #{forced}")
     node_roles = ENV['SERF_TAG_ROLE'].split(',')
     @logger.debug("node_roles = #{node_roles}")
@@ -77,12 +76,10 @@ class UserActionBase
       create_chefsolo_node_file
       run_chefsolo
       @logger.info('finished successfully.')
-      execution_result = true
     rescue => exception
       @logger.error("finished abnormally. #{exception.message}")
-      execution_result = false
+      fail
     end
-    execution_result
   end
 
   def self.select_hosts(role)
@@ -117,16 +114,17 @@ class UserActionBase
     parameters
   end
 
-  def update_parameters(url, new_parameters)
-    @logger.debug("new_parameters = #{new_parameters}")
+  def update_parameters(url, parameters)
+    @logger.debug("parameters = #{parameters}")
     stored_parameters = read_parameters(url)
     @logger.debug("stored_parameters = #{stored_parameters}")
-    stored_parameters.merge!(new_parameters)
+    stored_parameters.merge!(parameters)
     @logger.debug("mergd_parameters = #{stored_parameters}")
     begin
       RestClient.put(url, stored_parameters.to_json)
     rescue => exception
       @logger.error("failed to put the parameters[#{url}] to Consul KVS. #{exception.message}")
+      fail
     end
   end
 

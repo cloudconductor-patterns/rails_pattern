@@ -23,6 +23,31 @@ directory node['nginx_part']['static_root'] do
   action :create
 end
 
+template \
+  "#{ \
+    node['nginx_part']['conf_path'] \
+  }/sites-available/#{ \
+    node['nginx_part']['app_conf_name'] \
+  }" do
+  source 'server.conf.erb'
+  mode '0644'
+end
+
+link \
+  "#{ \
+    node['nginx_part']['conf_path'] \
+  }/sites-enabled/#{ \
+    node['nginx_part']['app_conf_name'] \
+  }" do
+  to "#{ \
+    node['nginx_part']['conf_path'] \
+  }/sites-available/#{ \
+    node['nginx_part']['app_conf_name'] \
+  }"
+  link_type :symbolic
+  action :create
+end
+
 package 'git' do
   action :install
 end
@@ -43,11 +68,11 @@ end
 
 template \
   "#{ \
-    node['nginx_part']['app_conf_path'] \
-  }/#{ \
-    node['nginx_part']['app_conf_name'] \
+    node['nginx_part']['conf_path'] \
+  }/conf.d/#{ \
+    node['nginx_part']['upstream_conf_name'] \
   }" do
-  source 'app.conf.erb'
+  source 'upstream.conf.erb'
   mode '0644'
   notifies :restart, 'service[nginx]'
 end

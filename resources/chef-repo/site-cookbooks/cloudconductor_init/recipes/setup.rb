@@ -52,6 +52,7 @@ cookbook_file node['serf']['agent']['event_handlers'].first do
 end
 
 include_recipe 'consul::install_binary'
+include_recipe 'consul::_service'
 
 # override Consul service template
 r = resources(template: '/etc/init.d/consul')

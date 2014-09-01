@@ -20,9 +20,9 @@ if [ -f /opt/cloudconductor/config ]; then
 fi
 
 if [ "" == "${SERF_JOIN_ADDRESS}" ]; then
-  CMD="<%= @consul_binary %> agent -server -bootstrap -config-dir <%= @config_dir %>"
+  CMD="<%= @consul_binary %> agent -server -client 0.0.0.0 -bootstrap -config-dir <%= @config_dir %>"
 else
-  CMD="<%= @consul_binary %> agent -server -join ${SERF_JOIN_ADDRESS} -config-dir <%= @config_dir %>"
+  CMD="<%= @consul_binary %> agent -server -client 0.0.0.0 -join ${SERF_JOIN_ADDRESS} -config-dir <%= @config_dir %>"
 fi
 
 NAME="consul"

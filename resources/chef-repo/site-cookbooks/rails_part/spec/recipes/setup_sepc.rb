@@ -32,4 +32,20 @@ describe 'rails_part::setup' do
   it 'iptables disabled' do
     expect(chef_run).to include_recipe 'iptables::disabled'
   end
+
+  it 'create user' do
+    expect(chef_run).to create_user('rails').with(
+      password: '$1$ID1d8IuR$oyeSAB1Z5gHptbJimJ8Fr/',
+      supports: {
+        manage_home: true
+      }
+    )
+  end
+
+  it 'create group' do
+    expect(chef_run).to create_group('rails').with(
+      members: ['rails'],
+      append: true
+    )
+  end
 end

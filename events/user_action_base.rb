@@ -123,8 +123,7 @@ class UserActionBase
     begin
       RestClient.put(url, stored_parameters.to_json)
     rescue => exception
-      @logger.error("failed to put the parameters[#{url}] to Consul KVS. #{exception.message}")
-      fail
+      @logger.warn("failed to put the parameters[#{url}] to Consul KVS. #{exception.message}")
     end
   end
 

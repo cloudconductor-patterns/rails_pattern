@@ -26,7 +26,8 @@ function log() {
 }
 
 if [ -f ${CONFIG_FILE} ]; then
-  source ${CONFIG_FILE}  
+  chefdk_path="`cat ${CONFIG_FILE} | awk -F: '{print $2}'`"
+  export PATH=${chefdk_path}:${PATH}
 fi
 
 if [ "${SERF_EVENT}" = "user" ]; then

@@ -20,7 +20,11 @@ if [ -f /opt/cloudconductor/config ]; then
 fi
 
 if [ -n "${SERF_JOIN_ADDRESS}" ]; then
-  CMD="<%= @consul_binary %> agent -server -client 0.0.0.0 -join ${SERF_JOIN_ADDRESS} -config-dir <%= @config_dir %>"
+  if [ -n "`ip addr | grep " ${SERF_JOIN_ADDRESS}/"`" ]; then
+    CMD="<%= @consul_binary %> agent -server -client 0.0.0.0 -bootstrap -config-dir <%= @config_dir %>"
+  else
+    CMD="<%= @consul_binary %> agent -server -client 0.0.0.0 -join ${SERF_JOIN_ADDRESS} -config-dir <%= @config_dir %>"
+  fi
 else
   CMD="<%= @consul_binary %> agent -server -client 0.0.0.0 -bootstrap -config-dir <%= @config_dir %>"
 fi

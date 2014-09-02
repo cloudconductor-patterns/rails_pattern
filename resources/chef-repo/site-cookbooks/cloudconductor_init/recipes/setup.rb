@@ -56,3 +56,19 @@ ruby_block "delete 70-persistent-net.rules extra line" do
   end
   only_if {File.exist?('/etc/udev/rules.d/70-persistent-net.rules')}
 end
+
+# stop Consul
+ruby_block "stop consul" do
+  block do
+    # do nothing
+  end
+  notifies :stop, 'service[consul]', :immediate
+end
+
+# delete consul data
+ruby_block "delete consul data" do
+  block do
+    require 'fileutils'
+    FileUtils.rm_rf(Dir.glob(File.join(node['consul']['data_dir'], '*')))
+  end
+end

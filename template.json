@@ -174,7 +174,7 @@
           {"IpProtocol" : "tcp", "FromPort" : "7373", "ToPort" : "7373", "CidrIp" : { "Ref" : "CloudConductorLocation" }},
           {"IpProtocol" : "tcp", "FromPort" : "7946", "ToPort" : "7946", "CidrIp" : "10.0.0.0/16"},
           {"IpProtocol" : "tcp", "FromPort" : "8500", "ToPort" : "8500", "CidrIp" : { "Ref" : "CloudConductorLocation" }},
-          {"IpProtocol" : "tcp", "FromPort" : "8300", "ToPort" : "8300", "CidrIp" : "10.0.0.0/16"}
+          {"IpProtocol" : "tcp", "FromPort" : "8300", "ToPort" : "8302", "CidrIp" : "10.0.0.0/16"}
         ]
       }
     },
@@ -223,7 +223,7 @@
           {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "SourceSecurityGroupId" : {"Ref": "WebSecurityGroup"}},
           {"IpProtocol" : "tcp", "FromPort" : "7946", "ToPort" : "7946", "CidrIp" : "10.0.0.0/16"},
           {"IpProtocol" : "tcp", "FromPort" : "8500", "ToPort" : "8500", "CidrIp" : { "Ref" : "CloudConductorLocation" }},
-          {"IpProtocol" : "tcp", "FromPort" : "8300", "ToPort" : "8300", "CidrIp" : "10.0.0.0/16"}
+          {"IpProtocol" : "tcp", "FromPort" : "8300", "ToPort" : "8302", "CidrIp" : "10.0.0.0/16"}
         ]
       }
     },
@@ -272,7 +272,7 @@
           {"IpProtocol" : "tcp", "FromPort" : "3306", "ToPort" : "3306", "SourceSecurityGroupId" : {"Ref": "APSecurityGroup"}},
           {"IpProtocol" : "tcp", "FromPort" : "7946", "ToPort" : "7946", "CidrIp" : "10.0.0.0/16"},
           {"IpProtocol" : "tcp", "FromPort" : "8500", "ToPort" : "8500", "CidrIp" : { "Ref" : "CloudConductorLocation" }},
-          {"IpProtocol" : "tcp", "FromPort" : "8300", "ToPort" : "8300", "CidrIp" : "10.0.0.0/16"}
+          {"IpProtocol" : "tcp", "FromPort" : "8300", "ToPort" : "8302", "CidrIp" : "10.0.0.0/16"}
         ]
       }
     },

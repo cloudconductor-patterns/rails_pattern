@@ -1,7 +1,6 @@
 {
   "json_class":"Chef::Role",
   "run_list": [
-    "recipe[mysql_part::setup]",
+    "recipe[mysql_part::setup]"
   ]
 }
-

@@ -20,7 +20,7 @@ if __FILE__ == $PROGRAM_NAME
   require_relative '../user_action_base'
 
   if File.exist?('/etc/profile.d/chef.sh')
-    chef_env = File.open(chef_env_file).read.strip
+    chef_env = File.open('/etc/profile.d/chef.sh').read.strip
     chef_path = chef_env.split(':')[1]
     ENV['PATH'] = "#{ENV['PATH']}:#{chef_path}"
   end

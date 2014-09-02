@@ -1,16 +1,4 @@
 include_recipe 'yum-epel'
-
-# delete 70-persistent-net.rules extra lines
-ruby_block "delete 70-persistent-net.rules extra line" do
-  block do
-    _file = Chef::Util::FileEdit.new('/etc/udev/rules.d/70-persistent-net.rules')
-    _file.search_file_replace_line('^SUBSYSTEM.*', '')
-    _file.search_file_replace_line('^# PCI device .*', '')
-    _file.write_file
-  end
-  only_if {File.exist?('/etc/udev/rules.d/70-persistent-net.rules')}
-end
-
 include_recipe 'serf'
 
 # override template
@@ -29,7 +17,7 @@ yum_package 'mercurial' do
 end
 
 # install pluginhook
-git '/opt/cloudconductor/temp/pluginhook' do
+git '/opt/cloudconductor/tmp/pluginhook' do
     repository 'https://github.com/progrium/pluginhook.git'
     revision "master"
     action :export
@@ -37,7 +25,7 @@ end
 
 bash 'install pluginhook' do
     environment 'GOPATH' => '/usr/local/golang'
-    cwd         '/opt/cloudconductor/temp/pluginhook'
+    cwd         '/opt/cloudconductor/tmp/pluginhook'
     code <<-EOH
         go get code.google.com/p/go.crypto/ssh/terminal
         go build -o /usr/local/bin/pluginhook
@@ -57,3 +45,14 @@ include_recipe 'consul::_service'
 # override Consul service template
 r = resources(template: '/etc/init.d/consul')
 r.cookbook 'cloudconductor_init'
+
+# delete 70-persistent-net.rules extra lines
+ruby_block "delete 70-persistent-net.rules extra line" do
+  block do
+    _file = Chef::Util::FileEdit.new('/etc/udev/rules.d/70-persistent-net.rules')
+    _file.search_file_replace_line('^SUBSYSTEM.*', '')
+    _file.search_file_replace_line('^# PCI device .*', '')
+    _file.write_file
+  end
+  only_if {File.exist?('/etc/udev/rules.d/70-persistent-net.rules')}
+end

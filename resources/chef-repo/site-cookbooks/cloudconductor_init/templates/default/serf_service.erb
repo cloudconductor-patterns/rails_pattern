@@ -34,10 +34,10 @@ start() {
     findPid
     
     if [ "" = "$FOUND_PID" ]; then
-      if [ "" = "$SERF_JOIN_ADDRESS" ]; then
-        su -l $SERF_USER -c "$SERF_BINARY agent -config-file $SERF_AGENT_CONF_FILE >>$SERF_AGENT_LOG 2>&1 &"
-      else
+      if [ -n "${SERF_JOIN_ADDRESS}" ]; then
         su -l $SERF_USER -c "$SERF_BINARY agent -join $SERF_JOIN_ADDRESS -config-file $SERF_AGENT_CONF_FILE >>$SERF_AGENT_LOG 2>&1 &"
+      else
+        su -l $SERF_USER -c "$SERF_BINARY agent -config-file $SERF_AGENT_CONF_FILE >>$SERF_AGENT_LOG 2>&1 &"
       fi
 
       if [[ $? -ne 0 ]]; then

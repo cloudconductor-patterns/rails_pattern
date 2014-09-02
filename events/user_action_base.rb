@@ -63,6 +63,7 @@ class UserActionBase
     user_parameters.merge!(application_parameters)
     user_parameters.merge!(additional_parameters)
     update_parameters(CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL, user_parameters)
+    @kvs_unavailable_stored_parameters = user_parameters if @role == 'init'
   end
 
   def execute(forced = false)
@@ -78,7 +79,7 @@ class UserActionBase
       @logger.info('finished successfully.')
     rescue => exception
       @logger.error("finished abnormally. #{exception.message}")
-      fail
+      raise
     end
   end
 
@@ -154,7 +155,12 @@ class UserActionBase
 
   def create_chefsolo_node_file
     chefsolo_node_file = File.join(@pattern_dir, CONDUCTOR_PATTERN_TEMP_DIR, CHEFSOLO_NODE_FILENAME)
-    attributes = read_parameters(CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL)
+    if @role == 'init'
+      attributes = @kvs_unavailable_stored_parameters
+    else
+      attributes = read_parameters(CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL)
+    end
+    @logger.debug("attributes = #{attributes}")
     attributes[:run_list] = ["role[#{@role}_#{@event}]"]
     File.write(chefsolo_node_file, attributes.to_json)
     chefsolo_node_file
@@ -168,6 +174,6 @@ class UserActionBase
     @logger.debug("berks result = #{berks_result}")
     chef_solo_result = system("chef-solo -c #{chefsolo_config_file} -j #{chefsolo_node_file}")
     @logger.debug("chef-solo result = #{chef_solo_result}")
-    raise RuntimeError, 'chef-solo finished abnormally.' unless chef_solo_result;
+    fail 'chef-solo finished abnormally.' unless chef_solo_result
   end
 end

@@ -18,6 +18,7 @@ require 'json'
 require 'logger'
 require 'rest-client'
 require 'base64'
+require 'active_support'
 
 # rubocop: disable ClassLength
 class UserActionBase
@@ -44,8 +45,8 @@ class UserActionBase
         application_revision: application_revision
       }
     }
-    user_parameters.merge!(application_parameters)
-    user_parameters.merge!(additional_parameters)
+    user_parameters.deep_merge!(application_parameters)
+    user_parameters.deep_merge!(additional_parameters)
     update_parameters(CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL, user_parameters)
     @kvs_unavailable_stored_parameters = user_parameters if @role == 'init'
   end
@@ -96,7 +97,7 @@ class UserActionBase
 
   def update_parameters(url, parameters)
     stored_parameters = read_parameters(url)
-    stored_parameters.merge!(parameters)
+    stored_parameters.deep_merge!(parameters)
     begin
       RestClient.put(url, stored_parameters.to_json)
       @logger.info("updated parameters successfully.: #{stored_parameters}")

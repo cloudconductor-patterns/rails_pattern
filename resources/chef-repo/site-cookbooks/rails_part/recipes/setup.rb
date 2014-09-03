@@ -19,16 +19,13 @@ package 'sqlite-devel' do
 end
 
 include_recipe 'rails_part::rbenv_setup'
-include_recipe 'iptables::disabled'
 
 user node['rails_part']['user']['name'] do
   password node['rails_part']['user']['passwd']
   supports manage_home: node['rails_part']['user']['manage_home']
-  action :create
 end
 
 group node['rails_part']['user']['group'] do
-  action :create
   members [node['rails_part']['user']['name']]
   append true
 end

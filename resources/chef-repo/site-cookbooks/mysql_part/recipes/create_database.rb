@@ -10,19 +10,36 @@
 include_recipe 'database::mysql'
 
 mysql_connection_info = {
-  host:     node['mysql_part']['host'],
-  username: node['mysql_part']['username'],
-  password: node['mysql_part']['passwprd']
+  host:     '127.0.0.1',
+  username: 'root',
+  password: node['mysql']['server_root_password']
 }
 
-mysql_database node['mysql_part']['database_name'] do
+mysql_database node['mysql_part']['app']['database'] do
   connection mysql_connection_info
-  encoding node['mysql_part']['encoding']
+  encoding node['mysql_part']['app']['encoding']
   action :create
 end
 
+# create database user
+mysql_database_user node['mysql_part']['app']['username'] do
+  connection mysql_connection_info
+  password node['mysql_part']['app']['password']
+  action :create
+end
+
+# Grant database
+mysql_database_user node['mysql_part']['app']['username'] do
+  connection mysql_connection_info
+  database_name node['mysql_part']['app']['database']
+  host '127.0.0.1'
+  privileges node['mysql_part']['app']['privileges']
+  require_ssl node['mysql_part']['app']['require_ssl']
+  action :grant
+end
+
 mysql_database 'flush the privileges' do
-  connection mysql_conneciton_info
+  connection mysql_connection_info
   sql 'flush privileges'
   action :query
 end

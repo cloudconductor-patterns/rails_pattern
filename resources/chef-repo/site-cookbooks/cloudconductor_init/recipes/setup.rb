@@ -1,3 +1,4 @@
+include_recipe 'iptables::disabled'
 include_recipe 'yum-epel'
 
 # delete 70-persistent-net.rules extra lines

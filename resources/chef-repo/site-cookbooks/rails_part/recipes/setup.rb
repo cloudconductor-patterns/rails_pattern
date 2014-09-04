@@ -20,6 +20,8 @@ end
 
 include_recipe 'rails_part::rbenv_setup'
 
+gem_package 'ruby-shadow'
+
 user node['rails_part']['user']['name'] do
   password node['rails_part']['user']['passwd']
   supports manage_home: node['rails_part']['user']['manage_home']

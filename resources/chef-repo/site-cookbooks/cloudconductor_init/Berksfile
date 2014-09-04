@@ -1,0 +1,6 @@
+source 'https://supermarket.getchef.com'
+
+cookbook 'iptables'
+cookbook 'yum-epel'
+cookbook 'serf', git: 'https://github.com/bbaugher/serf.git', tag: '0.7.0'
+cookbook 'consul', git: 'https://github.com/johnbellone/consul-cookbook.git'

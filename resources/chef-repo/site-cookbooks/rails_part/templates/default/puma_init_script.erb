@@ -53,10 +53,8 @@ stop() {
   [ $puma -eq 0 ] && rm -f $ULOCK
   echo
 
-  rm <%= @app_path %>/shared/puma/<%= @app_name %>.pid
   rm <%= @app_path %>/shared/puma/<%= @app_name %>.state
   rm <%= @app_path %>/shared/puma/<%= @app_name %>_control.sock
-
 
   return $puma
 }

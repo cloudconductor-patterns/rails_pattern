@@ -7,12 +7,11 @@
 # All rights reserved - Do Not Redistribute
 #
 
-include_recipe "git"
+include_recipe 'git'
 include_recipe "build-essential::_#{node['platform_family']}"
 
-package 'mysql-devel' do
-  action :install
-end
+include_recipe 'yum-mysql-community::mysql56'
+package 'mysql-community-devel'
 
 package 'sqlite-devel' do
   action :install

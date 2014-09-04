@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-file "#{node['nginx']['dir']}/conf.d/default" do
+file "#{node['nginx']['dir']}/conf.d/default.conf" do
   action :delete
 end
 
@@ -25,17 +25,17 @@ node['cloudconductor']['applications'].each do |app_name, app|
   end
 
   if !Dir.exist?(app_root) || app['force_update']
-    remote_type = app['remote_type'] || 'http'
-    case remote_type
+    protocol = app['protocol'] || 'http'
+    case protocol
     when 'http'
       remote_file 'application_tarball' do
-        source app['remote_url']
+        source app['url']
         path "#{tmp_dir}/#{app_name}.tar.gz"
       end
     when 'git'
       git 'application_repository' do
-        repository app['remote_url']
-        revision app['remote_revision'] || 'HEAD'
+        repository app['url']
+        revision app['revision'] || 'HEAD'
         destination "#{tmp_dir}/#{app_name}"
         action :export
       end
@@ -58,10 +58,10 @@ node['cloudconductor']['applications'].each do |app_name, app|
   end
 
   options = { server_tokens: 'off' }
-  if app['basic_auth']
+  if app['parameters']['basic_auth']
     package 'httpd-tools'
     bash 'create_htpasswd' do
-      code "htpasswd -cb #{node['nginx']['dir']}/htpasswd #{app['auth_user']} #{app['auth_password']}"
+      code "htpasswd -cb #{node['nginx']['dir']}/htpasswd #{app['parameters']['auth_user']} #{app['parameters']['auth_password']}"
     end
     options.merge(
       basic_auth: 'Restricted',
@@ -84,7 +84,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
         'proxy_set_header X-Forwarded-Proto' => '$scheme'
       },
       '/static' => {
-        root: "#{app_root}",
+        'alias' => "#{app_root}",
         index: 'index.html'
       }
     }

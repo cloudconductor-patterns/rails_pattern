@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-file "#{node['nginx']['dir']}/conf.d/default" do
+file "#{node['nginx']['dir']}/conf.d/default.conf" do
   action :delete
 end
 

@@ -33,6 +33,7 @@ default['backup']['git_repo'] = 'https://github.com/meskyanichi/backup'
 default['backup']['dependencies'] = %w(fog s3)
 # 'percona'
 default['percona']['skip_passwords'] = true
+default['percona']['client']['packages'] = []
 # 's3cmd-master'
 default['s3cmd']['user'] = node['backup_restore']['user']
 default['s3cmd']['group'] = node['backup_restore']['group']

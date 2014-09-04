@@ -35,8 +35,6 @@ default['backup_restore']['restore']['target_sources'] = []
 
 # override dependent cookbooks attributes
 # 'backup'
-default['backup']['version_from_git?'] = true
-default['backup']['git_repo'] = 'https://github.com/meskyanichi/backup'
 default['backup']['dependencies'] = %w(fog s3)
 # 'percona'
 default['percona']['skip_passwords'] = true

@@ -84,7 +84,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
         'proxy_set_header X-Forwarded-Proto' => '$scheme'
       },
       '/static' => {
-        root: "#{app_root}",
+        'alias' => "#{app_root}",
         index: 'index.html'
       }
     }

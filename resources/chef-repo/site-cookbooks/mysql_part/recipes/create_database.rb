@@ -32,7 +32,7 @@ end
 mysql_database_user node['mysql_part']['app']['username'] do
   connection mysql_connection_info
   database_name node['mysql_part']['app']['database']
-  host '127.0.0.1'
+  host '%'
   privileges node['mysql_part']['app']['privileges']
   require_ssl node['mysql_part']['app']['require_ssl']
   action :grant

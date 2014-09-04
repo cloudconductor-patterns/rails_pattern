@@ -4,9 +4,16 @@ default['backup_restore']['log_dir'] = '/var/log/backup'
 default['backup_restore']['user'] = 'root'
 default['backup_restore']['group'] = node['backup_restore']['user']
 default['backup_restore']['home'] = '/root'
-default['backup_restore']['config']['use_proxy'] = false
-default['backup_restore']['config']['proxy_host'] = ''
-default['backup_restore']['config']['proxy_port'] = ''
+default['backup_restore']['config']['use_proxy'] = ENV.key?('http_proxy')
+if ENV.key?('http_proxy')
+  require 'uri'
+  proxy_uri = URI.parse(ENV['http_proxy'])
+  default['backup_restore']['config']['proxy_host'] = proxy_uri.host
+  default['backup_restore']['config']['proxy_port'] = proxy_uri.port
+else
+  default['backup_restore']['config']['proxy_host'] = ''
+  default['backup_restore']['config']['proxy_port'] = ''
+end
 # backup sources
 default['backup_restore']['sources']['enabled'] = []
 default['backup_restore']['sources']['mysql']['db_user'] = 'root'

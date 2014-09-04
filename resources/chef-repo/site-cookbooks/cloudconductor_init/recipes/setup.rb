@@ -1,3 +1,4 @@
+include_recipe 'iptables::disabled'
 include_recipe 'yum-epel'
 include_recipe 'serf'
 

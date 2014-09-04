@@ -1,0 +1,8 @@
+#UnixDomainSocket
+#upstream unicorn-unix-domain-socket {
+#    server unix:/var/run/unicorn/unicorn_unitest.sock fail_timeout=0;
+#}
+#Tcp
+upstream <%= node["nginx_part"]["app_name"] %> {
+  server <%= node["cloudconductor"]["ap_host"] %>:<%= node["nginx_part"]["ap_svr_port"] %>;
+}

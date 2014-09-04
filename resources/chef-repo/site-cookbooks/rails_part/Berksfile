@@ -1,0 +1,8 @@
+source 'https://supermarket.getchef.com'
+
+cookbook 'git'
+cookbook 'build-essential'
+cookbook 'rbenv'
+cookbook 'application'
+cookbook 'application_ruby'
+cookbook 'puma'

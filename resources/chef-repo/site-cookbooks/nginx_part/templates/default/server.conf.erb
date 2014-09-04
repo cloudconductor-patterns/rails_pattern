@@ -1,12 +1,3 @@
-#UnixDomainSocket
-#upstream unicorn-unix-domain-socket {
-#    server unix:/var/run/unicorn/unicorn_unitest.sock fail_timeout=0;
-#}
-#Tcp
-upstream <%= node["nginx_part"]["app_name"] %> {
-  server <%= node["cloudconductor"]["ap_host"] %>:<%= node["nginx_part"]["ap_svr_port"] %>;
-}
-
 server {
   listen       <%= node["nginx_part"]["web_svr_port"] %>;
   server_name  <%= node["nginx_part"]["web_svr_host"] %>;
@@ -31,8 +22,8 @@ server {
   }
 
   #Static File responce setting
-  location <%= node["nginx_part"]["web_svr_url"] %> {
-    root <%= node["nginx_part"]["static_root"] %>/public;
+  location <%= node["nginx_part"]["web_svr_url_path"] %>/ {
+  alias <%= node["nginx_part"]["static_root"] %>/<%= node["nginx_part"]["app_name"] %>/public/;
+    index <%= node["nginx_part"]["web_svr_index"] %>
   }
-
 }

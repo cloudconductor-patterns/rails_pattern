@@ -5,7 +5,6 @@ license          'Apache v2.0'
 maintainer       'TIS Inc.'
 maintainer_email 'ccndctr@gmail.com'
 supports         'centos', '= 6.5'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 
 depends          'iptables'
 depends          'yum-epel'

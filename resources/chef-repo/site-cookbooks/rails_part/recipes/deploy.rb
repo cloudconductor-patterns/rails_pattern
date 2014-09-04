@@ -16,15 +16,15 @@ bash "pre_deploy_script" do
   only_if { app['pre_deploy'] && !app['pre_deploy'].empty? }
 end
 
-case app['remote_type']
+case app['protocol']
 when 'git'
   application app_name do
     action :deploy
     path "#{node['rails_part']['app']['base_path']}/#{app_name}"
     owner node['rails_part']['user']['name']
     group node['rails_part']['user']['group']
-    repository app['remote_url']
-    revision app['remote_revision'] || 'HEAD'
+    repository app['url']
+    revision app['revision'] || 'HEAD'
     migrate node['rails_part']['app']['migrate']
     # migration_command node['rails_part']['app']['migration_command']
     migration_command "/opt/rbenv/shims/bundle exec rake db:migrate 2>&1 > /tmp/test.log"
@@ -59,7 +59,7 @@ when 'http'
 
   unless Dir.exist?(app_dir)
     remote_file 'application_tarball' do
-      source app['remote_url']
+      source app['url']
       path "#{tmp_dir}/#{app_name}.tar.gz"
     end
 

@@ -17,7 +17,7 @@ module BackupMySQLHelper
       hour: hour,
       day: day,
       month: month,
-      week: week
+      weekday: week
     }
   end
 

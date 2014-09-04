@@ -2,7 +2,7 @@ default['cloudconductor']['applications'] = []
 default['cloudconductor']['ap_host'] = '127.0.0.1'
 default['cloudconductor']['db_host'] = '127.0.0.1'
 
-default['rails_part']['ruby']['version'] = '2.1.1'
+default['rails_part']['ruby']['version'] = '2.1.2'
 default['rails_part']['ruby']['global'] = true
 
 default['rails_part']['user']['name'] = 'rails'

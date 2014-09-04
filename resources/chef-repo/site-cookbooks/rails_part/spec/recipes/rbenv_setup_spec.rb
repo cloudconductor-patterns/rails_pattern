@@ -18,9 +18,9 @@ describe 'rails_part::rbenv_setup' do
     expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
       :rbenv_ruby,
       :install,
-      '2.1.1'
+      '2.1.2'
     ).with(
-      ruby_version: '2.1.1',
+      ruby_version: '2.1.2',
       global:       true
     )
   end
@@ -30,7 +30,7 @@ describe 'rails_part::rbenv_setup' do
         :install,
         'bundler'
       ).with(
-        ruby_version: '2.1.1'
+        ruby_version: '2.1.2'
       )
   end
 end

@@ -36,19 +36,9 @@ class UserActionBase
     pattern_name = script_file.slice(%r{#{CONDUCTOR_PATTERNS_ROOT_DIR}/(?<pattern_name>[^/]*)}, 'pattern_name')
     @pattern_dir = File.join(CONDUCTOR_PATTERNS_ROOT_DIR, pattern_name)
     parameters = read_parameters(CONDUCTOR_CONSUL_KVS_PARAMETERS_URL)
-    user_parameters = parameters[:parameters].nil? ? {} : parameters[:parameters]
-    application_url = parameters[:url].nil? ? '' : parameters[:url]
-    application_revision = parameters[:revision].nil? ? '' : parameters[:revision]
-    application_parameters = {
-      cloudconductor: {
-        application_url: application_url,
-        application_revision: application_revision
-      }
-    }
-    user_parameters.deep_merge!(application_parameters)
-    user_parameters.deep_merge!(additional_parameters)
-    update_parameters(CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL, user_parameters)
-    @kvs_unavailable_stored_parameters = user_parameters if @role == 'init'
+    parameters.deep_merge!(additional_parameters)
+    update_parameters(CONDUCTOR_CONSUL_KVS_STORED_PARAMETERS_URL, parameters)
+    @kvs_unavailable_stored_parameters = parameters if @role == 'init'
   end
 
   def execute(forced = false)

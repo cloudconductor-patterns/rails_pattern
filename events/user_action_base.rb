@@ -58,7 +58,7 @@ class UserActionBase
 
   def self.select_hosts(role)
     hosts = []
-    serf_member_list = `serf members -tag 'role=[^,]*(,|)#{role}(,.*|)'`.strip
+    serf_member_list = `serf members -tag role="([^,]*,)*#{role}(,[^,]*)*"`.strip
     unless serf_member_list.empty?
       serf_member_list.each_line do |serf_member|
         host_and_port = serf_member.split(' ')[1]

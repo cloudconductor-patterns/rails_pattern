@@ -7,6 +7,10 @@ gem_package 'backup' do
 end
 include_recipe 'backup'
 include_recipe 'percona::backup'
+link '/usr/local/bin/backup' do
+  to '/root/.chefdk/gem/ruby/2.1.0/bin/backup'
+  only_if { File.exist?('/root/.chefdk/gem/ruby/2.1.0/bin/backup') }
+end
 
 # for s3
 include_recipe 'yum-epel'

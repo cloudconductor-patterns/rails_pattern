@@ -38,7 +38,7 @@ start() {
         if [ -n "`ip addr | grep " $SERF_JOIN_ADDRESS/"`" ]; then
           su -l $SERF_USER -c "$SERF_BINARY agent -config-file $SERF_AGENT_CONF_FILE >>$SERF_AGENT_LOG 2>&1 &"
         else
-          su -l $SERF_USER -c "$SERF_BINARY agent -join '$SERF_JOIN_ADDRESS' -config-file $SERF_AGENT_CONF_FILE >>$SERF_AGENT_LOG 2>&1 &"
+          su -l $SERF_USER -c "$SERF_BINARY agent -join $SERF_JOIN_ADDRESS -config-file $SERF_AGENT_CONF_FILE >>$SERF_AGENT_LOG 2>&1 &"
         fi
       else
         su -l $SERF_USER -c "$SERF_BINARY agent -config-file $SERF_AGENT_CONF_FILE >>$SERF_AGENT_LOG 2>&1 &"

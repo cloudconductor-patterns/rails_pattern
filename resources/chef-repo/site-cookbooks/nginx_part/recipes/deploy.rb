@@ -63,9 +63,9 @@ node['cloudconductor']['applications'].each do |app_name, app|
     bash 'create_htpasswd' do
       code "htpasswd -cb #{node['nginx']['dir']}/htpasswd #{app['parameters']['auth_user']} #{app['parameters']['auth_password']}"
     end
-    options.merge(
-      basic_auth: 'Restricted',
-      basic_auth_user_file: 'htpasswd'
+    options.merge!(
+      auth_basic: 'Restricted',
+      auth_basic_user_file: 'htpasswd'
     )
   end
 
@@ -106,7 +106,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
     to app_root
   end
 
-  service "nginx" do
+  service 'nginx' do
     action :restart
   end
 end

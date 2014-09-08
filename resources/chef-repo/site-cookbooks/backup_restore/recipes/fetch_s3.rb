@@ -4,7 +4,6 @@ tmp_dir = "#{node['backup_restore']['tmp_dir']}/restore"
 
 node['backup_restore']['restore']['target_sources'].each do |source_type|
   # Find latest backup on S3
-  source = node['backup_restore']['sources'][source_type]
   backup_name = "#{source_type}_full"
   s3_path = "s3://#{s3['bucket']}#{s3['prefix']}/#{backup_name}/"
   datetime_regexp = '[0-9]\{4\}.[0-9]\{2\}.[0-9]\{2\}.[0-9]\{2\}.[0-9]\{2\}.[0-9]\{2\}/$'
@@ -13,7 +12,7 @@ node['backup_restore']['restore']['target_sources'].each do |source_type|
 
   # Download backup from S3
   bash 'download_backup_files' do
-    code "/usr/bin/s3cmd get -r #{latest_backup_path} #{tmp_dir}"
-    not_if { ::File.exist?("#{tmp_dir}/#{backup_name}.tar") }
+    code "/usr/bin/s3cmd get -r '#{latest_backup_path}' #{tmp_dir}"
+    not_if { ::File.exist?("#{tmp_dir}/#{backup_name}.tar") || latest_backup_path.empty? }
   end
 end

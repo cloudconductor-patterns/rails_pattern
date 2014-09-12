@@ -82,7 +82,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
 
     bash "bundle_install_#{app_name}" do
       cwd app_dir
-      code '/opt/rbenv/shims/bundle install --without test development'
+      code '/opt/rbenv/shims/bundle install --without test development --path=vendor/bundle'
     end
 
     bash "db_migrate_#{app_name}" do

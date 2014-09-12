@@ -1,0 +1,16 @@
+{
+  "name": "ap_backup",
+  "description": "Run application backup job",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "backup_restore": {
+      "sources": {
+        "enabled": ["ruby"]
+      }
+    }
+  },
+  "run_list": [
+    "recipe[backup_restore::run_backup]"
+  ]
+}

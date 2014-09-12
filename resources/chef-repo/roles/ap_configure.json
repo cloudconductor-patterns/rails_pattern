@@ -1,0 +1,19 @@
+{
+  "name": "ap_configure",
+  "description": "Configure setttings of S3 to backup application",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "backup_restore": {
+      "sources": {
+        "enabled": ["ruby"]
+      },
+      "destinations": {
+        "enabled": ["s3"]
+      }
+    }
+  },
+  "run_list": [
+    "recipe[backup_restore::configure]"
+  ]
+}

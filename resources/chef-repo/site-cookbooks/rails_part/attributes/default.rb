@@ -10,7 +10,7 @@ default['rails_part']['user']['group'] = node['rails_part']['user']['name']
 default['rails_part']['user']['passwd'] = [*1..9, *'A'..'Z', *'a'..'z'].sample(8).join
 default['rails_part']['user']['manage_home'] = true
 
-default['rails_part']['app']['base_path'] = '/var/www/app'
+default['rails_part']['app']['base_path'] = '/var/www'
 default['rails_part']['app']['migrate'] = true
 default['rails_part']['app']['migration_command'] = '/opt/rbenv/shims/bundle exec rake db:migrate'
 default['rails_part']['app']['rails_env'] = 'production'

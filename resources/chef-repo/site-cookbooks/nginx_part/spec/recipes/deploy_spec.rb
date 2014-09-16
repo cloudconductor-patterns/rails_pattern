@@ -53,7 +53,7 @@ describe 'nginx_part::deploy' do
 
   # Download static file for application
   it 'syncs a git with attribute' do
-    expect(chef_run).to sync_git('/var/www/app').with(
+    expect(chef_run).to sync_git('/var/www').with(
       repository: 'http://172.0.0.1/application/app.git', revision: 'master'
     )
   end

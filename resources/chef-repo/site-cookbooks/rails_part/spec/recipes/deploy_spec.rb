@@ -16,7 +16,7 @@ describe 'rails_part::deploy' do
   it 'deploy rails application' do
 
     expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(:application, :deploy, 'app').with(
-      path:       '/var/www/app',
+      path:       '/var/www',
       owner:      'rails',
       group:      'rails',
       repository: 'http://172.0.0.1/app.git',

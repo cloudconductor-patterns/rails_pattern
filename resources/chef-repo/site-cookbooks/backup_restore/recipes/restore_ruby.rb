@@ -7,7 +7,7 @@ backup_file = "#{tmp_dir}/#{full_backup_name}.tar"
 bash 'extract_full_backup' do
   code <<-EOF
     tar -xvf #{backup_file} -C #{tmp_dir}
-    tar -zxvf #{tmp_dir}/#{full_backup_name}/archives/ruby.tar.gz -C #{node['rails_part']['app']['base_path']}
+    tar -zxvf #{tmp_dir}/#{full_backup_name}/archives/ruby.tar.gz -C /
   EOF
   only_if { ::File.exist?(backup_file) && !::Dir.exist?("#{tmp_dir}/#{full_backup_name}") }
 end

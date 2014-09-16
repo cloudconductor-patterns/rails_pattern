@@ -1,7 +1,18 @@
 module BackupRubyHelper
+  def dynamic?
+    -> (_, application) { application[:type] == 'dynamic' }
+  end
+
   def application_paths
     applications = node['cloudconductor']['applications']
-    dynamic_applications = applications.select { |_, application| application[:type] == 'dynamic' }
-    dynamic_applications.keys.map { |name| "archive.add '#{node['rails_part']['app']['base_path']}/#{name}/current'" }.join('\n')
+    paths = applications.select(&dynamic?).keys.map do |name|
+      begin
+        Pathname.new("#{node['rails_part']['app']['base_path']}/#{name}/current").realpath
+      rescue Errno::ENOENT
+        nil
+      end
+    end
+
+    paths.compact.map { |path| "archive.add '#{path}'" }.join("\n")
   end
 end

@@ -11,3 +11,12 @@ bash 'extract_full_backup' do
   EOF
   only_if { ::File.exist?(backup_file) && !::Dir.exist?("#{tmp_dir}/#{full_backup_name}") }
 end
+
+ruby_block 'link_to_latest_version' do
+  block do
+    Pathname.new("#{node['rails_part']['app']['base_path']}").children.each do |path|
+      latest = (path + 'releases').children.first
+      (path + 'current').make_symlink(latest)
+    end
+  end
+end

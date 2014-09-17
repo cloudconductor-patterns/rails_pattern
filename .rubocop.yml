@@ -13,3 +13,13 @@ AsciiComments:
 
 Documentation:
   Enabled: false
+
+Style/RegexpLiteral:
+  Enabled: false
+
+Style/SingleSpaceBeforeFirstArg:
+  Enabled: false
+
+Style/FileName:
+  Exclude:
+    - events/**/*

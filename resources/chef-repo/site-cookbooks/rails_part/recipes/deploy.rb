@@ -7,11 +7,11 @@
 # All rights reserved - Do Not Redistribute
 #
 
-app_name, app = node['cloudconductor']['applications'].find { |app_name, app| app['type'] != 'static' }
+app_name, app = node['cloudconductor']['applications'].find { |_app_name, app| app['type'] != 'static' }
 db = node['rails_part']['db']
 cloudconductor = node['cloudconductor']
 
-bash "pre_deploy_script" do
+bash 'pre_deploy_script' do
   code app['pre_deploy']
   only_if { app['pre_deploy'] && !app['pre_deploy'].empty? }
 end
@@ -27,7 +27,7 @@ when 'git'
     revision app['revision'] || 'HEAD'
     migrate node['rails_part']['app']['migrate']
     # migration_command node['rails_part']['app']['migration_command']
-    migration_command "/opt/rbenv/shims/bundle exec rake db:migrate 2>&1 > /tmp/test.log"
+    migration_command '/opt/rbenv/shims/bundle exec rake db:migrate 2>&1 > /tmp/test.log'
     environment_name node['rails_part']['app']['rails_env']
 
     rails do
@@ -74,7 +74,7 @@ when 'http'
 
   template "#{app_dir}/config/database.yml" do
     source 'database.yml.erb'
-    variables ({ db: node['rails_part']['db'], environment: node['rails_part']['app']['rails_env'] })
+    variables db: node['rails_part']['db'], environment: node['rails_part']['app']['rails_env']
   end
 
   bash 'bundle_install' do
@@ -107,22 +107,22 @@ puma_config app_name do
 end
 
 template "/etc/init.d/#{app_name}" do
-  source "puma_init_script.erb"
-  owner "root"
-  group "root"
-  mode "0755"
-  variables ({
+  source 'puma_init_script.erb'
+  owner 'root'
+  group 'root'
+  mode '0755'
+  variables(
     app_name: app_name,
     app_path: "#{node['rails_part']['app']['base_path']}/#{app_name}",
     environment: node['rails_part']['app']['rails_env']
-  })
+  )
 end
 
 service app_name do
   action [:enable, :start]
 end
 
-bash "post_deploy_script" do
+bash 'post_deploy_script' do
   code app['post_deploy']
   only_if { app['post_deploy'] && !app['post_deploy'].empty? }
 end

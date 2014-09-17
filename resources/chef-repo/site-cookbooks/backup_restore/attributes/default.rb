@@ -23,6 +23,9 @@ default['backup_restore']['sources']['mysql']['run_user'] = 'mysql'
 default['backup_restore']['sources']['mysql']['run_group'] = 'mysql'
 default['backup_restore']['sources']['mysql']['schedule']['full'] = '0 2 * * 0'
 default['backup_restore']['sources']['mysql']['schedule']['incremental'] = '0 2 * * 1-6'
+
+default['backup_restore']['sources']['ruby']['schedule']['full'] = '0 2 * * 0'
+
 # backup destinations
 default['backup_restore']['destinations']['enabled'] = []
 default['backup_restore']['destinations']['s3']['bucket'] = ''

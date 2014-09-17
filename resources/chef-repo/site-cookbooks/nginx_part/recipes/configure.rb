@@ -17,3 +17,15 @@ file "/usr/share/nginx/html/index.html" do
   content node['maintenance']
   action :create
 end
+
+file "/etc/nginx/conf.d/default.conf" do
+  action :delete
+end
+
+template "/etc/nginx/conf.d/default.conf" do
+  action :create
+  source 'default.conf.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+end

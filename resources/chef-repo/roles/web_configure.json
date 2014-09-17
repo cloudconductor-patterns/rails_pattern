@@ -1,0 +1,11 @@
+{
+  "name": "web_configure",
+  "description": "Configure maintenance page",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "run_list": [
+    "recipe[nginx_part::configure]"
+  ]
+}

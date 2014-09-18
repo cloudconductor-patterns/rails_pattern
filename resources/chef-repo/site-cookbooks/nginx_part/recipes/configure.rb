@@ -9,10 +9,6 @@
 
 if node['nginx_part']['maintenance']
   file "/usr/share/nginx/html/index.html" do
-    action :delete
-  end
-
-  file "/usr/share/nginx/html/index.html" do
     owner "root"
     group "root"
     content node['nginx_part']['maintenance']

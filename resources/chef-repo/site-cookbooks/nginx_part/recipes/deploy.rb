@@ -72,7 +72,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
   if app['type'] == 'dynamic'
     upstream_hash = {
       "#{app_name}" => {
-        server: "#{node['cloudconductor']['ap_host']}:8080"
+        server: "#{node['cloudconductor']['ap_host']}:#{app['parameters']['port'] || 8080}"
       }
     }
     locations_hash = {

@@ -97,9 +97,12 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
   end
 
   puma_config app_name do
+    protocol, host, port = node['rails_part']['puma']['bind'].split(':')
+    port = app['parameters']['port'] if app['parameters']['port']
+
     directory     "#{node['rails_part']['app']['base_path']}/#{app_name}"
     environment   node['rails_part']['app']['rails_env']
-    bind          node['rails_part']['puma']['bind']
+    bind          "#{protocol}:#{host}:#{port}"
     output_append node['rails_part']['puma']['output_append']
     logrotate     node['rails_part']['puma']['logrotate']
     thread_min    node['rails_part']['puma']['thread_min']

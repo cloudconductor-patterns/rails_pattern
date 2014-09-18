@@ -7,7 +7,7 @@ module BackupDirectoryHelper
     s3_dst = node['backup_restore']['destinations']['s3']
     paths = node['backup_restore']['sources']['directory']['paths']
 
-    commands paths.map do |path|
+    commands = paths.map do |path|
       "`s3cmd sync #{path} s3://#{s3_dst['bucket']}/#{s3_dst['prefix']}/directories/`"
     end
 

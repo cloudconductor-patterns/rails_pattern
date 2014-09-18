@@ -9,7 +9,7 @@
         "enabled": ["s3"]
       },
       "restore": {
-        "target_sources": ["ruby"]
+        "target_sources": ["ruby", "directory"]
       }
     }
   },

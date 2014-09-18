@@ -7,7 +7,7 @@
 # All rights reserved - Do Not Redistribute
 #
 
-if node['maintenance']
+if node['nginx_part']['maintenance']
   file "/usr/share/nginx/html/index.html" do
     action :delete
   end
@@ -15,7 +15,7 @@ if node['maintenance']
   file "/usr/share/nginx/html/index.html" do
     owner "root"
     group "root"
-    content node['maintenance']
+    content node['nginx_part']['maintenance']
     action :create
   end
 

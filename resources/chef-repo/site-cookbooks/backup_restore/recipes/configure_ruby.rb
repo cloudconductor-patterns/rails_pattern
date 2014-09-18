@@ -12,7 +12,7 @@ backup_model :ruby_full do
 
     archive :ruby do |archive|
       #{application_paths}
-      archive.tar_options '-h --xattrs'
+      archive.tar_options '--xattrs'
     end
 
     compress_with Gzip

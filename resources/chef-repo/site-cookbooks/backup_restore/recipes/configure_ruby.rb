@@ -3,7 +3,7 @@
 
 source = node['backup_restore']['sources']['ruby']
 
-backup_model :ruby do
+backup_model :ruby_full do
   s3_dst = node['backup_restore']['destinations']['s3']
 
   description 'Full Backup ruby application with gems'
@@ -39,17 +39,12 @@ if node['backup_restore']['config']['use_proxy']
   ruby_block 'set_proxy_env' do
     block do
       proxy_url = "http://#{node['backup_restore']['config']['proxy_host']}:#{node['backup_restore']['config']['proxy_port']}/"
-      schedules = []
-      schedules << 'full' if source['schedule']['full'] && !source['schedule']['full'].empty?
-      schedules << 'incremental' if source['schedule']['incremental'] && !source['schedule']['incremental'].empty?
-      schedules.each do |type|
-        cron_file = "/etc/cron.d/ruby_#{type}_backup"
-        file = Chef::Util::FileEdit.new(cron_file)
-        file.insert_line_after_match(/# Crontab for/, "https_proxy=#{proxy_url}")
-        file.insert_line_after_match(/# Crontab for/, "http_proxy=#{proxy_url}")
-        file.write_file
-        File.delete("#{cron_file}.old") if File.exist?("#{cron_file}.old")
-      end
+      cron_file = "/etc/cron.d/ruby_full_backup"
+      file = Chef::Util::FileEdit.new(cron_file)
+      file.insert_line_after_match(/# Crontab for/, "https_proxy=#{proxy_url}")
+      file.insert_line_after_match(/# Crontab for/, "http_proxy=#{proxy_url}")
+      file.write_file
+      File.delete("#{cron_file}.old") if File.exist?("#{cron_file}.old")
     end
   end
 end

@@ -1,5 +1,5 @@
 tmp_dir = "#{node['backup_restore']['tmp_dir']}/restore"
-backup_name = 'ruby'
+backup_name = 'ruby_full'
 backup_file = "#{tmp_dir}/#{backup_name}.tar"
 
 # TODO: Create LWRP

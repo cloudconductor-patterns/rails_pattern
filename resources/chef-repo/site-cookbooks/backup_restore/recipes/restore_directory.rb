@@ -4,7 +4,7 @@ backup_file = "#{tmp_dir}/#{backup_name}.tar"
 
 # TODO: Create LWRP
 
-paths = node['backup_restore']['sources']['directory']['paths']
+paths = node['backup_restore']['restore']['directory']['paths']
 paths.each do |path|
   directory path do
     recursive true

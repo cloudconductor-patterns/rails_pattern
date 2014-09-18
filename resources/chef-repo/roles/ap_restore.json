@@ -9,7 +9,12 @@
         "enabled": ["s3"]
       },
       "restore": {
-        "target_sources": ["ruby", "directory"]
+        "target_sources": ["ruby", "directory"],
+        "directory": {
+          "paths": [
+            "/var/www/shared/uploads"
+          ]
+        }
       }
     }
   },

@@ -3,7 +3,7 @@
 
 source = node['backup_restore']['sources']['ruby']
 
-backup_model :ruby_full do
+backup_model :ruby do
   s3_dst = node['backup_restore']['destinations']['s3']
 
   description 'Full Backup ruby application with gems'

@@ -8,10 +8,14 @@ def dynamic?
 end
 applications = node['cloudconductor']['applications'].select(&dynamic?)
 
+directory node['rails_part']['app']['base_path'] do
+  recursive true
+end
+
 bash 'extract_full_backup' do
   code <<-EOF
     tar -xvf #{backup_file} -C #{tmp_dir}
-    tar -zxvf #{tmp_dir}/#{backup_name}/archives/ruby.tar.gz -C /
+    tar -zxvf #{tmp_dir}/#{backup_name}/archives/ruby.tar.gz -C #{node['rails_part']['app']['base_path']}
   EOF
   only_if { ::File.exist?(backup_file) && !::Dir.exist?("#{tmp_dir}/#{backup_name}") }
 end

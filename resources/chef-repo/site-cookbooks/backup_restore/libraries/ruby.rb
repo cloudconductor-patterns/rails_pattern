@@ -7,7 +7,8 @@ module BackupRubyHelper
     applications = node['cloudconductor']['applications']
     paths = applications.select(&dynamic?).keys.map do |name|
       begin
-        Pathname.new("#{node['rails_part']['app']['base_path']}/#{name}/current").realpath
+        realpath = Pathname.new("#{node['rails_part']['app']['base_path']}/#{name}/current").realpath
+        realpath.relative_path_from Pathname.new(node['rails_part']['app']['base_path'])
       rescue Errno::ENOENT
         nil
       end

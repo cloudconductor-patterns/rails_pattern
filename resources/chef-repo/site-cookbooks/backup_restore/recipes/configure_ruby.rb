@@ -11,6 +11,7 @@ backup_model :ruby_full do
     split_into_chunks_of 4000
 
     archive :ruby do |archive|
+      archive.root '#{node['rails_part']['app']['base_path']}'
       #{application_paths}
       archive.tar_options '--xattrs'
     end

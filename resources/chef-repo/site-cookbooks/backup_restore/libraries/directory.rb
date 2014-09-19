@@ -4,10 +4,14 @@ module BackupDirectoryHelper
   end
 
   def syncer_definition
-    s3_dst = node['backup_restore']['destinations']['s3']
-    paths = node['backup_restore']['sources']['directory']['paths']
+    applications = node['cloudconductor']['applications']
+    paths = applications.select(&dynamic?).map do |_, application|
+      application[:parameters][:backup_directories] || []
+    end
 
-    commands = paths.map do |path|
+    s3_dst = node['backup_restore']['destinations']['s3']
+
+    commands = paths.flatten.map do |path|
       "`s3cmd sync #{path} s3://#{s3_dst['bucket']}/#{s3_dst['prefix']}/directories/`"
     end
 

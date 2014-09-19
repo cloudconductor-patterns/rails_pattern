@@ -3,12 +3,7 @@
   "default_attributes": {
     "backup_restore": {
       "sources": {
-        "enabled": ["ruby", "directory"],
-        "directory": {
-          "paths": [
-            "/var/www/shared/uploads"
-          ]
-        }
+        "enabled": ["ruby", "directory"]
       },
       "destinations": {
         "enabled": ["s3"]

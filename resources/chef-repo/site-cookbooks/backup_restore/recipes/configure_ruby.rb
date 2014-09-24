@@ -1,8 +1,6 @@
 ::Chef::Recipe.send(:include, BackupRubyHelper)
 ::Chef::Resource.send(:include, BackupRubyHelper)
 
-source = node['backup_restore']['sources']['ruby']
-
 backup_model :ruby_full do
   s3_dst = node['backup_restore']['destinations']['s3']
 
@@ -40,7 +38,7 @@ if node['backup_restore']['config']['use_proxy']
   ruby_block 'set_proxy_env' do
     block do
       proxy_url = "http://#{node['backup_restore']['config']['proxy_host']}:#{node['backup_restore']['config']['proxy_port']}/"
-      cron_file = "/etc/cron.d/ruby_full_backup"
+      cron_file = '/etc/cron.d/ruby_full_backup'
       file = Chef::Util::FileEdit.new(cron_file)
       file.insert_line_after_match(/# Crontab for/, "https_proxy=#{proxy_url}")
       file.insert_line_after_match(/# Crontab for/, "http_proxy=#{proxy_url}")

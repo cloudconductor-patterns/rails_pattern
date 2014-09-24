@@ -1,8 +1,6 @@
 ::Chef::Recipe.send(:include, BackupDirectoryHelper)
 ::Chef::Resource.send(:include, BackupDirectoryHelper)
 
-source = node['backup_restore']['sources']['directory']
-
 backup_model :directory do
   description 'Backup directories'
   definition syncer_definition
@@ -19,7 +17,7 @@ if node['backup_restore']['config']['use_proxy']
     block do
       proxy_url = "http://#{node['backup_restore']['config']['proxy_host']}:#{node['backup_restore']['config']['proxy_port']}/"
 
-      cron_file = "/etc/cron.d/directory_backup"
+      cron_file = '/etc/cron.d/directory_backup'
       file = Chef::Util::FileEdit.new(cron_file)
       file.insert_line_after_match(/# Crontab for/, "https_proxy=#{proxy_url}")
       file.insert_line_after_match(/# Crontab for/, "http_proxy=#{proxy_url}")

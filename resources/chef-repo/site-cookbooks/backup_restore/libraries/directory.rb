@@ -10,15 +10,14 @@ module BackupDirectoryHelper
     paths.flatten
   end
 
-  def s3_uri(name)
+  def s3_uri(name = '')
     s3 = node['backup_restore']['destinations']['s3']
     URI.join("s3://#{s3['bucket']}", File.join(s3['prefix'], 'directories', name, '/')).to_s
   end
 
   def syncer_definition
     commands = backup_directories.map do |path|
-      name = Pathname.new(path).basename
-      "`s3cmd sync #{path} #{s3_uri(name)}`"
+      "`s3cmd sync #{path} #{s3_uri}`"
     end
 
     commands.join("\n")

@@ -1,4 +1,5 @@
-::Chef::Recipe.send(:include, BackupCommonHelper)
+::Chef::Recipe.send(:include, BackupRubyHelper)
+::Chef::Resource.send(:include, BackupRubyHelper)
 
 tmp_dir = "#{node['backup_restore']['tmp_dir']}/restore"
 backup_name = 'ruby_full'

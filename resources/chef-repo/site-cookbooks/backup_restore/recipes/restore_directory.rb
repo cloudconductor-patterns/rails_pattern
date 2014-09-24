@@ -1,4 +1,5 @@
-::Chef::Recipe.send(:include, BackupCommonHelper)
+::Chef::Recipe.send(:include, BackupDirectoryHelper)
+::Chef::Resource.send(:include, BackupDirectoryHelper)
 
 # TODO: Create LWRP
 

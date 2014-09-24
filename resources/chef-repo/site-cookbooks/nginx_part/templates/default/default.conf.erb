@@ -3,7 +3,7 @@ server {
     server_name  localhost;
 
     location / {
-        root   /usr/share/nginx/html;
+        root   <%= @maintenance_dir %>;
         index  index.html index.htm;
     }
 

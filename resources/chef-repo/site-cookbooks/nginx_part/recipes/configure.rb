@@ -8,23 +8,33 @@
 #
 
 if node['nginx_part']['maintenance']
-  file "/usr/share/nginx/html/index.html" do
+  directory "#{node['nginx']['default_root']}/maintenance" do
+    action :create
+    owner 'root'
+    group 'root'
+    recursive true
+  end
+
+  file "#{node['nginx']['default_root']}/maintenance/index.html" do
+    action :create
     owner "root"
     group "root"
     content node['nginx_part']['maintenance']
-    action :create
   end
 
-  file "/etc/nginx/conf.d/default.conf" do
+  file "#{node['nginx']['dir']}/conf.d/default.conf" do
     action :delete
   end
 
-  template "/etc/nginx/conf.d/default.conf" do
+  template "#{node['nginx']['dir']}/conf.d/default.conf" do
     action :create
     source 'default.conf.erb'
     owner 'root'
     group 'root'
     mode '0644'
+    variables(
+      maintenance_dir: "#{node['nginx']['default_root']}/maintenance"
+    )
   end
 
   service "nginx" do

@@ -1,5 +1,5 @@
 module BackupDirectoryHelper
-  extend BackupCommonHelper
+  include BackupCommonHelper
 
   def backup_directories
     applications = node['cloudconductor']['applications']

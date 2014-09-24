@@ -1,5 +1,5 @@
 module BackupRubyHelper
-  extend BackupCommonHelper
+  include BackupCommonHelper
 
   def application_paths
     applications = node['cloudconductor']['applications']

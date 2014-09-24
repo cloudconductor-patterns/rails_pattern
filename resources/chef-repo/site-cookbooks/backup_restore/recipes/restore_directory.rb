@@ -17,15 +17,6 @@ paths.flatten.each do |path|
   end
 end
 
-
 bash 'sync_from_s3' do
-  s3 = node['backup_restore']['destinations']['s3']
-
-  commands = paths.flatten.map do |path|
-    name = Pathname.new(path).basename
-    s3_path = URI.join("s3://#{s3['bucket']}", File.join(s3['prefix'], name, '/')).to_s + '/'
-    "s3cmd sync #{s3_path} #{path}"
-  end
-
-  code commands.join("\n")
+  code restore_code
 end

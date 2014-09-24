@@ -1,16 +1,33 @@
 module BackupDirectoryHelper
   extend BackupCommonHelper
 
-  def syncer_definition
+  def backup_directories
     applications = node['cloudconductor']['applications']
     paths = applications.select(&dynamic?).map do |_, application|
       application[:parameters][:backup_directories] || []
     end
 
-    s3_dst = node['backup_restore']['destinations']['s3']
+    paths.flatten
+  end
 
-    commands = paths.flatten.map do |path|
-      "`s3cmd sync #{path} s3://#{s3_dst['bucket']}/#{s3_dst['prefix']}/directories/`"
+  def s3_uri(name)
+    s3 = node['backup_restore']['destinations']['s3']
+    URI.join("s3://#{s3['bucket']}", File.join(s3['prefix'], 'directories', name, '/')).to_s
+  end
+
+  def syncer_definition
+    commands = backup_directories.map do |path|
+      name = Pathname.new(path).basename
+      "`s3cmd sync #{path} #{s3_uri(name)}`"
+    end
+
+    commands.join("\n")
+  end
+
+  def restore_code
+    commands = backup_directories.map do |path|
+      name = Pathname.new(path).basename
+      "s3cmd sync #{s3_uri(name)} #{path}"
     end
 
     commands.join("\n")

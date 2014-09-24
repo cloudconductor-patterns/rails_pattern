@@ -1,4 +1,4 @@
-default['cloudconductor']['applications'] = []
+default['cloudconductor']['applications'] = {}
 default['cloudconductor']['ap_host'] = '127.0.0.1'
 default['cloudconductor']['db_host'] = '127.0.0.1'
 

@@ -11,6 +11,6 @@
     }
   },
   "run_list": [
-    "recipe[backup_restore::run_backup]"
+    "recipe[backup_restore::backup]"
   ]
 }

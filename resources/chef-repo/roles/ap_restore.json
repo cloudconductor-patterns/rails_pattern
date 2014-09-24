@@ -1,0 +1,19 @@
+{
+  "name": "ap_restore",
+  "description": "Restore ruby applications from latest backup",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "backup_restore": {
+      "destinations": {
+        "enabled": ["s3"]
+      },
+      "restore": {
+        "target_sources": ["ruby", "directory"]
+      }
+    }
+  },
+  "run_list": [
+    "recipe[backup_restore::restore]"
+  ]
+}

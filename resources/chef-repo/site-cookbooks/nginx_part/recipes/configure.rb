@@ -38,6 +38,7 @@ if node['nginx_part']['maintenance']
   end
 
   service "nginx" do
-    action :restart
+    action :reload
+    supports reload: true
   end
 end

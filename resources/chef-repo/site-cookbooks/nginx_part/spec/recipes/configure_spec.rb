@@ -43,7 +43,7 @@ describe 'nginx_part::configure' do
 
     it 'restarts a service with a nginx' do
       chef_run.converge(described_recipe)
-      expect(chef_run).to restart_service('nginx')
+      expect(chef_run).to reload_service('nginx')
     end
   end
 
@@ -72,7 +72,7 @@ describe 'nginx_part::configure' do
     end
 
     it 'not restarts a service with a nginx' do
-      expect(chef_run).to_not restart_service('nginx')
+      expect(chef_run).to_not reload_service('nginx')
     end
   end
 end

@@ -1,11 +1,10 @@
+::Chef::Recipe.send(:include, BackupCommonHelper)
+
 tmp_dir = "#{node['backup_restore']['tmp_dir']}/restore"
 backup_name = 'ruby_full'
 backup_file = "#{tmp_dir}/#{backup_name}.tar"
 
 # TODO: Create LWRP
-def dynamic?
-  -> (_, application) { application[:type] == 'dynamic' }
-end
 applications = node['cloudconductor']['applications'].select(&dynamic?)
 
 directory node['rails_part']['app']['base_path'] do

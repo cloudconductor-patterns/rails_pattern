@@ -1,7 +1,5 @@
 module BackupDirectoryHelper
-  def dynamic?
-    -> (_, application) { application[:type] == 'dynamic' }
-  end
+  extend BackupCommonHelper
 
   def syncer_definition
     applications = node['cloudconductor']['applications']

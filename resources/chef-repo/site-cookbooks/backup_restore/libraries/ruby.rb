@@ -1,7 +1,5 @@
 module BackupRubyHelper
-  def dynamic?
-    -> (_, application) { application[:type] == 'dynamic' }
-  end
+  extend BackupCommonHelper
 
   def application_paths
     applications = node['cloudconductor']['applications']

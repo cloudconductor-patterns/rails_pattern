@@ -1,0 +1,16 @@
+{
+  "name": "ap_configure",
+  "description": "Configure .s3cfg to use s3",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "backup_restore": {
+      "destinations": {
+        "enabled": ["s3"]
+      }
+    }
+  },
+  "run_list": [
+    "recipe[backup_restore::configure]"
+  ]
+}

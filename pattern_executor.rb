@@ -45,7 +45,7 @@ class PatternExecutor
     roles << 'all'
     roles.each do |role|
       role_file = "#{ROLES_DIR}/#{role}_#{@event}.json"
-      if File.exists(role_file)
+      if File.exist?(role_file)
         @logger.info("execute chef with [#{role_file}].")
         begin
           create_chefsolo_config_file(role)
@@ -70,7 +70,7 @@ class PatternExecutor
     roles.each do |role|
       events.each do |event|
         spec_file = "#{SPEC_DIR}/#{role}/#{role}_#{event}.json"
-        if File.exists(spec_file)
+        if File.exist?(spec_file)
           @logger.info("execute serverspec with [#{spec_file}].")
           spec_result = system("cd #{SPEC_ROOT_DIR}; rake spec[#{role},#{event}]")
           if spec_result

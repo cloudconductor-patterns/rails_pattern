@@ -98,7 +98,8 @@ class PatternExecutor
   def create_chefsolo_node_file(role)
     chefsolo_node_file = File.join(PATTERN_DIR, 'node.js')
     parameters = Consul::ConsulUtil.read_parameters
-    attributes = parameters[:cloudconductor][:patterns][PATTERN_NAME.to_sym][:user_attributes]
+    attributes = {}
+    attributes = parameters[:cloudconductor][:patterns][PATTERN_NAME.to_sym][:user_attributes] if @event != 'setup'
     attributes[:run_list] = ["role[#{role}_#{@event}]"]
     File.write(chefsolo_node_file, attributes.to_json)
     @logger.info('created chefsolo_node_file successfully.')

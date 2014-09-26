@@ -26,7 +26,7 @@ class PatternExecutor
   SPEC_DIR = File.join(SPEC_ROOT_DIR, 'spec')
 
   def initialize(event)
-    @logger = Pattern::PatternUtil.get_pattern_logger(PATTERN_NAME, 'executor.log')
+    @logger = Pattern::PatternUtil.pattern_logger(PATTERN_NAME, 'executor.log')
     @event = event
   end
 

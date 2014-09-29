@@ -18,6 +18,7 @@ require 'active_support'
 require '/opt/cloudconductor/lib/pattern/pattern_util'
 require '/opt/cloudconductor/lib/consul/consul_util'
 
+# rubocop: disable ClassLength
 class PatternExecutor
   PATTERN_NAME = 'rails_pattern'
   PATTERN_DIR = File.join(Pattern::PatternUtil::PATTERNS_ROOT_DIR, PATTERN_NAME)
@@ -102,7 +103,6 @@ class PatternExecutor
   def create_chefsolo_node_file(role)
     chefsolo_node_file = File.join(PATTERN_DIR, 'node.json')
     parameters = Consul::ConsulUtil.read_parameters
-    attributes = {}
     if @event != 'setup'
       parameters.deep_merge!(parameters[:cloudconductor][:patterns][PATTERN_NAME.to_sym][:user_attributes])
       parameters[:cloudconductor][:servers] = Consul::ConsulUtil.read_servers
@@ -130,6 +130,7 @@ class PatternExecutor
     end
   end
 end
+# rubocop: enable ClassLength
 
 role = ARGV[0]
 event = ARGV[1]

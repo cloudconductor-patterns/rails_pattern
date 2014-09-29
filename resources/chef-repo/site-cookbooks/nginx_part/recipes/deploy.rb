@@ -69,6 +69,9 @@ node['cloudconductor']['applications'].each do |app_name, app|
     )
   end
 
+  listen = node['nginx_conf']['listen']
+  listen << ' default_server' if app['parameters']['default_server']
+
   if app['type'] == 'dynamic'
     upstream_hash = {
       "#{app_name}" => {
@@ -93,12 +96,14 @@ node['cloudconductor']['applications'].each do |app_name, app|
       upstream upstream_hash
       locations locations_hash
       options options
+      listen listen
     end
   else
     nginx_conf_file app['domain'] do
       root "#{app_root}"
       options options
       site_type :static
+      listen listen
     end
   end
 

@@ -100,19 +100,22 @@ class PatternExecutor
   end
 
   def create_chefsolo_node_file(role)
-    chefsolo_node_file = File.join(PATTERN_DIR, 'node.js')
+    chefsolo_node_file = File.join(PATTERN_DIR, 'node.json')
     parameters = Consul::ConsulUtil.read_parameters
     attributes = {}
-    attributes = parameters[:cloudconductor][:patterns][PATTERN_NAME.to_sym][:user_attributes] if @event != 'setup'
-    attributes[:run_list] = ["role[#{role}_#{@event}]"]
-    File.write(chefsolo_node_file, attributes.to_json)
+    if @event != 'setup'
+      parameters.deep_merge!(parameters[:cloudconductor][:patterns][PATTERN_NAME.to_sym][:user_attributes])
+      parameters[:cloudconductor][:servers] = Consul::ConsulUtil.read_servers
+    end
+    parameters[:run_list] = ["role[#{role}_#{@event}]"]
+    File.write(chefsolo_node_file, parameters.to_json)
     @logger.info('created chefsolo_node_file successfully.')
     chefsolo_node_file
   end
 
   def run_chefsolo
     chefsolo_config_file = File.join(PATTERN_DIR, 'solo.rb')
-    chefsolo_node_file = File.join(PATTERN_DIR, 'node.js')
+    chefsolo_node_file = File.join(PATTERN_DIR, 'node.json')
     berks_result = system("cd #{PATTERN_DIR}; berks vendor ./cookbooks")
     if berks_result
       @logger.info('run berks successfully.')

@@ -1,6 +1,6 @@
 <%= @environment %>:
   adapter: '<%= @db['adapter'] %>'
-  host: '<%= @db['host'] %>'
+  host: '<%= @db_server[:private_ip] %>'
   <%- if @db['port'] -%>
   port: <%= @db['port'] %>
   <%- end -%>

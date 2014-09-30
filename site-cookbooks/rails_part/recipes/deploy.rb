@@ -79,7 +79,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
 
     template "#{app_dir}/config/database.yml" do
       source 'database.yml.erb'
-      variables db: node['rails_part']['db'], environment: node['rails_part']['app']['rails_env']
+      variables db: node['rails_part']['db'], db_server: db_server_info, environment: node['rails_part']['app']['rails_env']
     end
 
     bash "bundle_install_#{app_name}" do

@@ -320,8 +320,8 @@
       "Value" : { "Ref" : "FrontendEIP" },
       "Description" : "Frontend DNS name or IP address to access serf rpc port from CloudConductor server. This output is required."
     },
-    "VpcId" : {
-      "Value" : { "Ref" : "VPC" },
+    "SubnetId" : {
+      "Value" : { "Ref" : "Subnet" },
       "Description" : "Reference of VPC to join same VPC when create instance in optinal pattern. This output is required."
     },
     "ClusterAddress" : {

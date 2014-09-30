@@ -11,7 +11,9 @@ def dynamic?
 end
 
 db = node['rails_part']['db']
-cloudconductor = node['cloudconductor']
+
+::Chef::Recipe.send(:include, CloudConductor::CommonHelper)
+db_server_info = server_info('db')
 
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
   bash "pre_deploy_script_#{app_name}" do
@@ -36,7 +38,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
       rails do
         database do
           adapter db['adapter']
-          host cloudconductor['db_host']
+          host db_server_info[:private_ip]
           database db['database']
           username db['user']
           password db['password']

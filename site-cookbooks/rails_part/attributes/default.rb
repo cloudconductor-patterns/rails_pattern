@@ -1,6 +1,4 @@
 default['cloudconductor']['applications'] = {}
-default['cloudconductor']['ap_host'] = '127.0.0.1'
-default['cloudconductor']['db_host'] = '127.0.0.1'
 
 default['rails_part']['ruby']['version'] = '2.1.2'
 default['rails_part']['ruby']['global'] = true
@@ -19,7 +17,6 @@ default['rails_part']['app']['bundle_command'] = '/opt/rbenv/shims/bundle'
 
 default['rails_part']['db']['adapter'] = 'mysql2'
 default['rails_part']['db']['database'] = 'rails'
-default['rails_part']['db']['host'] = node['cloudconductor']['db_host']
 default['rails_part']['db']['user'] = 'rails'
 default['rails_part']['db']['password'] = 'todo_replace_randompassword'
 

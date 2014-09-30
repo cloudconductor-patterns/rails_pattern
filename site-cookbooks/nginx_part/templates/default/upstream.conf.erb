@@ -4,5 +4,5 @@
 #}
 #Tcp
 upstream <%= node["nginx_part"]["app_name"] %> {
-  server <%= node["cloudconductor"]["ap_host"] %>:<%= node["nginx_part"]["ap_svr_port"] %>;
+  server <%= ap_server_info[:private_ip] %>:<%= node["nginx_part"]["ap_svr_port"] %>;
 }

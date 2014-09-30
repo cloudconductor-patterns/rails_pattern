@@ -8,7 +8,7 @@
 #
 
 ::Chef::Recipe.send(:include, CloudConductor::CommonHelper)
-ap_server_info = server_info('ap')
+ap_server_info = server_info('ap').first
 
 file "#{node['nginx']['dir']}/conf.d/default.conf" do
   action :delete

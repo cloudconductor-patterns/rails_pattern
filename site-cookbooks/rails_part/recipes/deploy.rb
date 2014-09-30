@@ -13,7 +13,7 @@ end
 db = node['rails_part']['db']
 
 ::Chef::Recipe.send(:include, CloudConductor::CommonHelper)
-db_server_info = server_info('db')
+db_server_info = server_info('db').first
 
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
   bash "pre_deploy_script_#{app_name}" do

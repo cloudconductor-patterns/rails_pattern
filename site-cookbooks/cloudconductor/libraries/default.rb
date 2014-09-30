@@ -18,12 +18,14 @@ require '/opt/cloudconductor/lib/consul/consul_util'
 module CloudConductor
   module CommonHelper
     def server_info(role)
-      result = nil
-      servers = Consul::ConsulUtil.read_servers
-      servers.each do |hostname, server|
-        next unless server[:roles].include?(role)
-        result = [hostname, server]
-        break
+      result = []
+      all_servers = Consul::ConsulUtil.read_servers
+      servers = all_servers.select do |hostname, server|
+        server[:roles].include?(role)
+      end
+      result = servers.each_pair.map do |hostname, server|
+        server[:hostname] = hostname
+        server
       end
       result
     end

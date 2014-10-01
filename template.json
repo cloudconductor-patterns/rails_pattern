@@ -320,9 +320,13 @@
       "Value" : { "Ref" : "FrontendEIP" },
       "Description" : "Frontend DNS name or IP address to access serf rpc port from CloudConductor server. This output is required."
     },
+    "VpcId" : {
+      "Value" : { "Ref" : "VPC" },
+      "Description" : "Reference of VPC to create subnet, security group on same VPC in optional pattern. This output is required."
+    },
     "SubnetId" : {
       "Value" : { "Ref" : "Subnet" },
-      "Description" : "Reference of VPC to join same VPC when create instance in optinal pattern. This output is required."
+      "Description" : "Reference of subnet to connect same subnet when create instance in optional pattern. This output is required."
     },
     "ClusterAddress" : {
       "Value" : { "Fn::GetAtt" : ["WebNetworkInterface", "PrimaryPrivateIpAddress"] },

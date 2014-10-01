@@ -15,19 +15,19 @@
 
 require 'json'
 require 'active_support'
-require '/opt/cloudconductor/lib/pattern/pattern_util'
-require '/opt/cloudconductor/lib/consul/consul_util'
+require '/opt/cloudconductor/lib/cloudconductor/pattern_util'
+require '/opt/cloudconductor/lib/cloudconductor/consul_util'
 
 # rubocop: disable ClassLength
 class PatternExecutor
   PATTERN_NAME = 'rails_pattern'
-  PATTERN_DIR = File.join(Pattern::PatternUtil::PATTERNS_ROOT_DIR, PATTERN_NAME)
+  PATTERN_DIR = File.join(CloudConductor::PatternUtil::PATTERNS_ROOT_DIR, PATTERN_NAME)
   ROLES_DIR = File.join(PATTERN_DIR, 'roles')
   SPEC_ROOT_DIR = File.join(PATTERN_DIR, 'serverspec')
   SPEC_DIR = File.join(SPEC_ROOT_DIR, 'spec')
 
   def initialize(event)
-    @logger = Pattern::PatternUtil.pattern_logger(PATTERN_NAME, 'executor.log')
+    @logger = CloudConductor::PatternUtil.pattern_logger(PATTERN_NAME, 'executor.log')
     @event = event
   end
 
@@ -88,24 +88,24 @@ class PatternExecutor
 
   def create_chefsolo_config_file(role)
     chefsolo_config_file = File.join(PATTERN_DIR, 'solo.rb')
-    chefsolo_log_file = File.join(Pattern::PatternUtil::LOG_DIR, "#{PATTERN_NAME}_#{role}_chef-solo.log")
+    chefsolo_log_file = File.join(CloudConductor::PatternUtil::LOG_DIR, "#{PATTERN_NAME}_#{role}_chef-solo.log")
     cookbooks_dir = File.join(PATTERN_DIR, 'cookbooks')
     site_cookbooks_dir = File.join(PATTERN_DIR, 'site-cookbooks')
     File.open(chefsolo_config_file, 'w') do |file|
       file.write("role_path '#{ROLES_DIR}'\n")
       file.write("log_level :info\n")
       file.write("log_location '#{chefsolo_log_file}'\n")
-      file.write("file_cache_path '#{Pattern::PatternUtil::FILECACHE_DIR}'\n")
+      file.write("file_cache_path '#{CloudConductor::PatternUtil::FILECACHE_DIR}'\n")
       file.write("cookbook_path ['#{cookbooks_dir}', '#{site_cookbooks_dir}']\n")
     end
   end
 
   def create_chefsolo_node_file(role)
     chefsolo_node_file = File.join(PATTERN_DIR, 'node.json')
-    parameters = Consul::ConsulUtil.read_parameters
+    parameters = CloudConductor::ConsulUtil.read_parameters
     if @event != 'setup'
       parameters.deep_merge!(parameters[:cloudconductor][:patterns][PATTERN_NAME.to_sym][:user_attributes])
-      parameters[:cloudconductor][:servers] = Consul::ConsulUtil.read_servers
+      parameters[:cloudconductor][:servers] = CloudConductor::ConsulUtil.read_servers
     end
     parameters[:run_list] = ["role[#{role}_#{@event}]"]
     File.write(chefsolo_node_file, parameters.to_json)

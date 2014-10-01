@@ -15,8 +15,8 @@
 
 require 'json'
 require 'active_support'
-require '/opt/cloudconductor/lib/cloudconductor/pattern_util'
-require '/opt/cloudconductor/lib/cloudconductor/consul_util'
+require '/opt/cloudconductor/lib/cloud_conductor/pattern_util'
+require '/opt/cloudconductor/lib/cloud_conductor/consul_util'
 
 # rubocop: disable ClassLength
 class PatternExecutor
@@ -70,7 +70,7 @@ class PatternExecutor
     events << 'deploy' if @action == 'deploy'
     roles.each do |role|
       events.each do |event|
-        spec_file = "#{SPEC_DIR}/#{role}/#{role}_#{event}.json"
+        spec_file = "#{SPEC_DIR}/#{role}/#{role}_#{event}_spec.rb"
         if File.exist?(spec_file)
           @logger.info("execute serverspec with [#{spec_file}].")
           spec_result = system("cd #{SPEC_ROOT_DIR}; rake spec[#{role},#{event}]")

@@ -3,7 +3,15 @@
   "description": "Setup mysql database and backup tools",
   "chef_type": "role",
   "json_class": "Chef::Role",
+  "default_attributes": {
+    "yum": {
+      "main": {
+        "obsoletes": true
+      }
+    }
+  },
   "run_list": [
+    "recipe[yum]",
     "recipe[mysql_part::setup]",
     "recipe[backup_restore::setup]"
   ]

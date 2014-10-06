@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'mysql2'
+require '/opt/cloudconductor/lib/cloud_conductor/consul_util'
 
 describe service('iptables') do
   it { should_not be_enabled }
@@ -7,9 +8,13 @@ end
 
 describe 'connect mysql' do
   param = property[:consul_parameters]
+  servers = property[:servers]
+  db_host = servers.each_value.select do |server|
+    server[:roles].include?('db')
+  end.first
 
-  if param[:cloudconductor] && param[:cloudconductor][:db_host]
-    hostname = param[:cloudconductor][:db_host]
+  if param[:cloudconductor] && db_host[:private_ip]
+    hostname = db_host[:private_ip]
 
     if param[:mysql_part] && param[:mysql_part][:app] && param[:mysql_part][:app][:username]
       username = param[:mysql_part][:app][:username]
@@ -40,7 +45,7 @@ describe 'connect mysql' do
     end
   else
 
-    it 'consul parameter is missing: cloudconductor or cloudconductor.db_host' do
+    it 'consul parameter is missing: cloudconductor or cloudconductor/servers' do
       fail
     end
   end

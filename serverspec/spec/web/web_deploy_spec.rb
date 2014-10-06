@@ -6,7 +6,10 @@ end
 
 describe 'connect ap_svr' do
   params = property[:consul_parameters]
-
+  servers = property[:servers]
+  ap_host = servers.each_value.select do |server|
+    server[:roles].include?('ap')
+  end.first
   apps = params[:cloudconductor][:applications]
 
   apps.each do |app_name, app|
@@ -21,8 +24,8 @@ describe 'connect ap_svr' do
         end
 
         describe command( \
-          "curl --noproxy #{params[:cloudconductor][:ap_host]} \
-          'http://#{params[:cloudconductor][:ap_host]}:#{port}'") do
+          "curl --noproxy #{ap_host[:private_ip]} \
+          'http://#{ap_host[:private_ip]}:#{port}'") do
           it { should return_exit_status 0 }
         end
 

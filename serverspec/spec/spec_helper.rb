@@ -6,7 +6,7 @@ include SpecInfra::Helper::DetectOS
 require 'consul_parameters'
 
 include ConsulParameters
-properties = { consul_parameters: read }
+properties = { consul_parameters: read, servers: read_servers }
 
 RSpec.configure do |c|
   if ENV['ASK_SUDO_PASSWORD']

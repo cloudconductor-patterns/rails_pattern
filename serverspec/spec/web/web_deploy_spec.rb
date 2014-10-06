@@ -13,22 +13,17 @@ describe 'connect ap_svr' do
   apps = params[:cloudconductor][:applications]
 
   apps.each do |app_name, app|
-
-    if app[:type] != "optional"
-      describe "#{app_name} check" do
-
-        if app[:parameters][:app_port]
-          port = app[:parameters][:app_port]
-        else
-          port = 8080
-        end
-
-        describe command( \
-          "curl --noproxy #{ap_host[:private_ip]} \
-          'http://#{ap_host[:private_ip]}:#{port}'") do
-          it { should return_exit_status 0 }
-        end
-
+    next if app[:type] == 'optional'
+    describe "#{app_name} check" do
+      if app[:parameters][:app_port]
+        port = app[:parameters][:app_port]
+      else
+        port = 8080
+      end
+      describe command( \
+        "curl --noproxy #{ap_host[:private_ip]} \
+        'http://#{ap_host[:private_ip]}:#{port}'") do
+        it { should return_exit_status 0 }
       end
     end
   end

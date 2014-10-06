@@ -36,4 +36,3 @@ module ConsulParameters
     servers
   end
 end
-

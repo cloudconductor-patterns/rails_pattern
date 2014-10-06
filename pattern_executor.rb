@@ -20,14 +20,14 @@ require '/opt/cloudconductor/lib/cloud_conductor/consul_util'
 
 # rubocop: disable ClassLength
 class PatternExecutor
-  PATTERN_NAME = 'rails_pattern'
-  PATTERN_DIR = File.join(CloudConductor::PatternUtil::PATTERNS_ROOT_DIR, PATTERN_NAME)
-  ROLES_DIR = File.join(PATTERN_DIR, 'roles')
-  SPEC_ROOT_DIR = File.join(PATTERN_DIR, 'serverspec')
-  SPEC_DIR = File.join(SPEC_ROOT_DIR, 'spec')
-
   def initialize(event)
-    @logger = CloudConductor::PatternUtil.pattern_logger(PATTERN_NAME, 'executor.log')
+    metadata_file = File.join(File.expand_path(File.dirname(__FILE__)), 'metadata.yml')
+    @pattern_name = YAML.load_file(metadata_file)['name']
+    @pattern_dir = File.join(CloudConductor::PatternUtil::PATTERNS_ROOT_DIR, @pattern_name)
+    @roles_dir = File.join(@pattern_dir, 'roles')
+    @spec_root_dir = File.join(@pattern_dir, 'serverspec')
+    @spec_dir = File.join(@spec_root_dir, 'spec')
+    @logger = CloudConductor::PatternUtil.pattern_logger(@pattern_name, 'executor.log')
     @event = event
   end
 
@@ -45,7 +45,7 @@ class PatternExecutor
     roles = node_role.split(',')
     roles << 'all'
     roles.each do |role|
-      role_file = "#{ROLES_DIR}/#{role}_#{@event}.json"
+      role_file = "#{@roles_dir}/#{role}_#{@event}.json"
       if File.exist?(role_file)
         @logger.info("execute chef with [#{role_file}].")
         begin
@@ -70,10 +70,10 @@ class PatternExecutor
     events << 'deploy' if @action == 'deploy'
     roles.each do |role|
       events.each do |event|
-        spec_file = "#{SPEC_DIR}/#{role}/#{role}_#{event}_spec.rb"
+        spec_file = "#{@spec_dir}/#{role}/#{role}_#{event}_spec.rb"
         if File.exist?(spec_file)
           @logger.info("execute serverspec with [#{spec_file}].")
-          spec_result = system("cd #{SPEC_ROOT_DIR}; rake spec[#{role},#{event}]")
+          spec_result = system("cd #{@spec_root_dir}; rake spec[#{role},#{event}]")
           if spec_result
             @logger.info('finished successfully.')
           else
@@ -87,12 +87,12 @@ class PatternExecutor
   end
 
   def create_chefsolo_config_file(role)
-    chefsolo_config_file = File.join(PATTERN_DIR, 'solo.rb')
-    chefsolo_log_file = File.join(CloudConductor::PatternUtil::LOG_DIR, "#{PATTERN_NAME}_#{role}_chef-solo.log")
-    cookbooks_dir = File.join(PATTERN_DIR, 'cookbooks')
-    site_cookbooks_dir = File.join(PATTERN_DIR, 'site-cookbooks')
+    chefsolo_config_file = File.join(@pattern_dir, 'solo.rb')
+    chefsolo_log_file = File.join(CloudConductor::PatternUtil::LOG_DIR, "#{@pattern_name}_#{role}_chef-solo.log")
+    cookbooks_dir = File.join(@pattern_dir, 'cookbooks')
+    site_cookbooks_dir = File.join(@pattern_dir, 'site-cookbooks')
     File.open(chefsolo_config_file, 'w') do |file|
-      file.write("role_path '#{ROLES_DIR}'\n")
+      file.write("role_path '#{@roles_dir}'\n")
       file.write("log_level :info\n")
       file.write("log_location '#{chefsolo_log_file}'\n")
       file.write("file_cache_path '#{CloudConductor::PatternUtil::FILECACHE_DIR}'\n")
@@ -101,10 +101,10 @@ class PatternExecutor
   end
 
   def create_chefsolo_node_file(role)
-    chefsolo_node_file = File.join(PATTERN_DIR, 'node.json')
+    chefsolo_node_file = File.join(@pattern_dir, 'node.json')
     parameters = CloudConductor::ConsulUtil.read_parameters
     if @event != 'setup'
-      parameters.deep_merge!(parameters[:cloudconductor][:patterns][PATTERN_NAME.to_sym][:user_attributes])
+      parameters.deep_merge!(parameters[:cloudconductor][:patterns][@pattern_name.to_sym][:user_attributes])
       parameters[:cloudconductor][:servers] = CloudConductor::ConsulUtil.read_servers
     end
     parameters[:run_list] = ["role[#{role}_#{@event}]"]
@@ -114,9 +114,9 @@ class PatternExecutor
   end
 
   def run_chefsolo
-    chefsolo_config_file = File.join(PATTERN_DIR, 'solo.rb')
-    chefsolo_node_file = File.join(PATTERN_DIR, 'node.json')
-    berks_result = system("cd #{PATTERN_DIR}; berks vendor ./cookbooks")
+    chefsolo_config_file = File.join(@pattern_dir, 'solo.rb')
+    chefsolo_node_file = File.join(@pattern_dir, 'node.json')
+    berks_result = system("cd #{@pattern_dir}; berks vendor ./cookbooks")
     if berks_result
       @logger.info('run berks successfully.')
     else

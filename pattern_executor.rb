@@ -16,7 +16,7 @@
 require 'json'
 require 'active_support'
 require 'cloud_conductor_utils/consul'
-require '/opt/cloudconductor/lib/cloud_conductor/pattern_util'
+require '/opt/cloudconductor/lib/cloud_conductor_utils/pattern'
 
 # rubocop: disable ClassLength
 class PatternExecutor

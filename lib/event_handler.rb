@@ -21,7 +21,7 @@ require './logger'
 
 module RailsPattern
   # rubocop: disable ClassLength
-  class EventHandler 
+  class EventHandler
     def initialize(node_role)
       metadata_file = File.join(File.expand_path('../', File.dirname(__FILE__)), 'metadata.yml')
       @pattern_name = YAML.load_file(metadata_file)['name']
@@ -67,8 +67,7 @@ module RailsPattern
 
     def execute_serverspec
       @roles.unshift('all')
-      events = ['configure']
-      events << 'deploy' if deploy?
+      events = deploy? ? %w( configure deploy ) : %w( configure )
       spec_root_dir = File.join(@pattern_dir, 'serverspec')
       spec_dir = File.join(spec_root_dir, 'spec')
       @roles.each do |role|
@@ -144,7 +143,7 @@ module RailsPattern
   # rubocop: enable ClassLength
 end
 
-if __FILE__ == $0
+if __FILE__ == $PROGRAM_NAME
   role = ARGV[0]
   event = ARGV[1]
   RailsPattern::EventHandler.new(role).execute(event)

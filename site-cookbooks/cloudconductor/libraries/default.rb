@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-require '/opt/cloudconductor/lib/cloud_conductor/consul_util'
+require 'cloud_conductor_utils/consul'
 
 module CloudConductor
   module CommonHelper
     def server_info(role)
-      all_servers = CloudConductor::ConsulUtil.read_servers
+      all_servers = CloudConductorUtils::Consul.read_servers
       servers = all_servers.select do |_hostname, server|
         server[:roles].include?(role)
       end

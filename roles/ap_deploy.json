@@ -12,6 +12,7 @@
   },
   "run_list": [
     "recipe[rails_part::deploy]",
-    "recipe[backup_restore::configure]"
+    "recipe[backup_restore::configure]",
+    "recipe[backup_restore::backup]"
   ]
 }

@@ -22,7 +22,7 @@ module CloudConductor
       servers = all_servers.select do |_hostname, server|
         server[:roles].include?(role)
       end
-      result = servers.each_pair.map do |hostname, server|
+      result = servers.map do |hostname, server|
         server[:hostname] = hostname
         server
       end

@@ -5,7 +5,7 @@ backup_model :ruby_full do
   s3_dst = node['backup_restore']['destinations']['s3']
 
   description 'Full Backup ruby application with gems'
-  definition <<-DEF
+  definition lazy { <<-DEF
     split_into_chunks_of 4000
 
     archive :ruby do |archive|
@@ -26,6 +26,8 @@ backup_model :ruby_full do
       s3.retry_waitsec = 10
     end
   DEF
+  }
+
   schedule(parse_schedule('full'))
   cron_options(
     path: ENV['PATH'],

@@ -11,7 +11,7 @@ backup_model :ruby_full do
     archive :ruby do |archive|
       archive.root '#{node['rails_part']['app']['base_path']}'
       #{application_paths}
-      archive.tar_options '--xattrs'
+      archive.tar_options '--xattrs --warning=no-file-removed --warning=no-file-changed'
     end
 
     compress_with Gzip

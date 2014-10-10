@@ -3,7 +3,7 @@
 
 backup_model :directory do
   description 'Backup directories'
-  definition syncer_definition
+  definition lazy { syncer_definition }
   schedule parse_schedule
   cron_options(
     path: ENV['PATH'],

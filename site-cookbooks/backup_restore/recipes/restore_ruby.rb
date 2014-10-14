@@ -24,8 +24,11 @@ ruby_block 'link_to_latest_version' do
   block do
     applications.keys.each do |name|
       path = Pathname.new("#{node['rails_part']['app']['base_path']}/#{name}")
+      next if (path + 'current').exist?
+      next unless (path + 'releases').exist?
+
       latest = (path + 'releases').children.last
-      (path + 'current').make_symlink(latest) unless (path + 'current').exist?
+      (path + 'current').make_symlink(latest) if latest.exist?
     end
   end
 end

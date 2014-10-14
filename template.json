@@ -140,7 +140,7 @@
     "WebNetworkInterface" : {
       "Type" : "AWS::EC2::NetworkInterface",
       "Properties" : {
-        "GroupSet" : [{"Ref": "WebSecurityGroup"}],
+        "GroupSet" : [{"Ref": "SharedSecurityGroup"}, {"Ref": "WebSecurityGroup"}],
         "SubnetId" : { "Ref" : "Subnet" }
       }
     },
@@ -156,6 +156,16 @@
       "Properties" : {
         "AllocationId" : { "Fn::GetAtt" : [ "FrontendEIP", "AllocationId" ]},
         "NetworkInterfaceId" : { "Ref" : "WebNetworkInterface" }
+      }
+    },
+    "SharedSecurityGroup" : {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "Shared security group over all instances in platform/optional pattern",
+        "VpcId" : { "Ref" : "VPC" },
+        "SecurityGroupIngress" : [
+          {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "10.0.0.0/16"}
+        ]
       }
     },
     "WebSecurityGroup" : {
@@ -187,7 +197,7 @@
            "DeviceIndex" : "0",
            "AssociatePublicIpAddress" : true,
            "SubnetId" : { "Ref" : "Subnet" },
-           "GroupSet" : [{"Ref": "APSecurityGroup"}]
+           "GroupSet" : [{"Ref": "SharedSecurityGroup"}, {"Ref": "APSecurityGroup"}]
         }],
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/sh -v\n",
@@ -236,7 +246,7 @@
            "DeviceIndex" : "0",
            "AssociatePublicIpAddress" : true,
            "SubnetId" : { "Ref" : "Subnet" },
-           "GroupSet" : [{"Ref": "DBSecurityGroup"}]
+           "GroupSet" : [{"Ref": "SharedSecurityGroup"}, {"Ref": "DBSecurityGroup"}]
         }],
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
           "#!/bin/sh -v\n",
@@ -309,6 +319,22 @@
     "FrontendAddress" : {
       "Value" : { "Ref" : "FrontendEIP" },
       "Description" : "Frontend DNS name or IP address to access serf rpc port from CloudConductor server. This output is required."
+    },
+    "VpcId" : {
+      "Value" : { "Ref" : "VPC" },
+      "Description" : "Reference of VPC to create subnet, security group on same VPC in optional pattern. This output is required."
+    },
+    "SubnetId" : {
+      "Value" : { "Ref" : "Subnet" },
+      "Description" : "Reference of subnet to connect same subnet when create instance in optional pattern. This output is required."
+    },
+    "ClusterAddress" : {
+      "Value" : { "Fn::GetAtt" : ["WebNetworkInterface", "PrimaryPrivateIpAddress"] },
+      "Description" : "Private IP Address to join cluster. This output is required."
+    },
+    "SharedSecurityGroup" : {
+      "Value" : { "Ref" : "SharedSecurityGroup" },
+      "Description" : "Reference of shared security group to add rules from optional pattern. This output is required."
     }
   }
 }

@@ -1,6 +1,6 @@
 AllCops:
   Exclude:
-    - resources/chef-repo/cookbooks/**/*
+    - cookbooks/**/*
 
 LineLength:
   Max: 130
@@ -19,7 +19,3 @@ Style/RegexpLiteral:
 
 Style/SingleSpaceBeforeFirstArg:
   Enabled: false
-
-Style/FileName:
-  Exclude:
-    - events/**/*

@@ -70,7 +70,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
   end
 
   listen = node['nginx_conf']['listen']
-  listen << ' default_server' if app['parameters']['default_server']
+  listen += ' default_server' if app['parameters']['default_server']
 
   if app['type'] == 'dynamic'
     upstream_hash = {

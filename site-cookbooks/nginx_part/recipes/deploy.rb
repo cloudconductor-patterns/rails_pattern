@@ -16,6 +16,7 @@ end
 
 node['cloudconductor']['applications'].each do |app_name, app|
   app_root = "#{node['nginx']['default_root']}/#{app_name}/#{app['version']}"
+  maintenance_path = "#{node['nginx']['default_root']}/maintenance/index.html"
   current_root = "#{node['nginx']['default_root']}/#{app_name}/current"
   next if !app['force_update'] && Dir.exist?(app_root) && File.exist?(current_root) && File.realpath(current_root) == app_root
 
@@ -61,7 +62,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
     end
   end
 
-  options = { server_tokens: 'off' }
+  options = { server_tokens: 'off', error_page: '502 = /_errors/502.html' }
   if app['parameters']['basic_auth']
     package 'httpd-tools'
     bash 'create_htpasswd' do
@@ -93,6 +94,10 @@ node['cloudconductor']['applications'].each do |app_name, app|
       '/static' => {
         'alias' => "#{app_root}",
         index: 'index.html'
+      },
+      '/_errors/502.html' => {
+        'alias' => "#{maintenance_path}",
+        block: 'internal'
       }
     }
     options.merge(upstream_hash)

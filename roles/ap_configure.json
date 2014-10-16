@@ -18,7 +18,8 @@
         "smtp_tls_security_level" : "encrypt",
         "smtp_tls_note_starttls_offer" : "yes",
         "smtp_tls_CAfile" : "/etc/ssl/certs/ca-bundle.crt",
-        "default_destination_rate_delay": "1s"
+        "default_destination_rate_delay": "1s",
+        "smtpd_use_tls" : "no"
       }
     }
   },

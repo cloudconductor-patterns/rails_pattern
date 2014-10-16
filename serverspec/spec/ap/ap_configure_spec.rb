@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'mysql2'
-require '/opt/cloudconductor/lib/cloud_conductor/consul_util'
+require 'cloud_conductor_utils/consul'
 
 describe service('iptables') do
   it { should_not be_enabled }

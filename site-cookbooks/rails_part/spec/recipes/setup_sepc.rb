@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 describe 'rails_part::setup' do
   let(:chef_run) do
     ChefSpec::Runner.new(
-      cookbook_path: ['site-cookbooks', 'cookbooks'],
+      cookbook_path: %w[site-cookbooks cookbooks],
       platform:      'centos',
       version:       '6.5'
     ).converge('rails_part::setup')
@@ -32,8 +32,8 @@ describe 'rails_part::setup' do
   it 'rbenv setup' do
     expect(chef_run).to include_recipe 'rails_part::rbenv_setup'
   end
-  
   it 'ruby-shadow' do
+
     expect(chef_run).to install_gem_package 'ruby-shadow'
   end
 

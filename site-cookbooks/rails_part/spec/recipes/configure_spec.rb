@@ -3,11 +3,11 @@ require_relative '../spec_helper'
 describe 'rails_part::configure' do
   let(:chef_run) do
     runner = ChefSpec::Runner.new(
-      cookbook_path: ['site-cookbooks', 'cookbooks'],
+      cookbook_path: %w[site-cookbooks cookbooks],
       platform:      'centos',
       version:       '6.5'
     )do |node|
-      node.set['postfix']['sasl'] = 'foo',
+      node.set['postfix']['sasl'] = 'foo'
       node.set['postfix']['sasl_password_file'] = '/etc/postfix/sasl_passwd'
     end
     runner.converge('rails_part::configure')

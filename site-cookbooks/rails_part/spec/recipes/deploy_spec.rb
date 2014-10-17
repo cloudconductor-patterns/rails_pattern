@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 describe 'rails_part::deploy' do
   let(:chef_run) do
     runner = ChefSpec::Runner.new(
-      cookbook_path: ['site-cookbooks', 'cookbooks'],
+      cookbook_path: %w[site-cookbooks cookbooks],
       platform:      'centos',
       version:       '6.5'
     ) do |node|
@@ -16,7 +16,7 @@ describe 'rails_part::deploy' do
           pre_deploy: 'date',
           post_deploy: 'ifconfig',
           parameters: {
-            port:'8080'
+            port: '8080'
           }
         },
         dynamic_http_app: {
@@ -27,7 +27,7 @@ describe 'rails_part::deploy' do
           pre_deploy: 'date',
           post_deploy: 'ifconfig',
           parameters: {
-            port:'8080'
+            port: '8080'
           }
         }
       }
@@ -37,7 +37,7 @@ describe 'rails_part::deploy' do
 
   before do
     Chef::Recipe.any_instance.stub(:server_info).with('db').and_return(
-      [ { hostname: 'db', roles: 'db', private_ip: '127.0.0.1'} ] 
+      [{ hostname: 'db', roles: 'db', private_ip: '127.0.0.1' }]
     )
   end
 
@@ -65,7 +65,7 @@ describe 'rails_part::deploy' do
         revision:   'HEAD',
         migrate:    true,
         migration_command: '/opt/rbenv/shims/bundle exec rake db:migrate 2>&1 > /tmp/test.log',
-        environment_name: 'production',
+        environment_name: 'production'
       )
     end
   end
@@ -76,7 +76,7 @@ describe 'rails_part::deploy' do
         recursive: true
       )
     end
-    
+
     it 'create app directory' do
       expect(chef_run).to create_directory('/var/www/dynamic_http_app/releases').with(
         recursive: true
@@ -88,62 +88,62 @@ describe 'rails_part::deploy' do
         source: 'http://localhost/foo.tar.gz',
         path: '/tmp/dynamic_http_app/dynamic_http_app.tar.gz'
        )
-     end
-    
-     it 'extract_static_files_dynamic_http_app' do
-       app_name = 'dynamic_http_app'
-       tmp_dir = "/tmp/#{app_name}"
-       app_dir = "/var/www/#{app_name}/releases/1.0"
+    end
 
-       expect(chef_run).to run_bash('extract_static_files_dynamic_http_app').with(
-         code: <<-EOS
+    it 'extract_static_files_dynamic_http_app' do
+      app_name = 'dynamic_http_app'
+      tmp_dir = "/tmp/#{app_name}"
+      app_dir = "/var/www/#{app_name}/releases/1.0"
+
+      expect(chef_run).to run_bash('extract_static_files_dynamic_http_app').with(
+        code: <<-EOS
           tar -zxvf #{tmp_dir}/#{app_name}.tar.gz -C #{tmp_dir}
           rm #{tmp_dir}/#{app_name}.tar.gz
           mv #{tmp_dir}/* #{app_dir}
         EOS
        )
-     end
+    end
 
-     it 'create database config' do
-       expect(chef_run).to \
-         create_template('/var/www/dynamic_http_app/releases/1.0/config/database.yml').with(
-           source: 'database.yml.erb',
-           variables: {
-             db: {
-               "adapter" =>  'mysql2',
-               "database" => 'rails',
-               "user" =>  'rails',
-               "password" =>  'todo_replace_randompassword',
-             },
-             db_server: {
-               hostname: 'db',
-               roles: 'db',
-               private_ip: '127.0.0.1'
-             },
-             environment: 'production'
-           }
-         )      
-     end
+    it 'create database config' do
+      expect(chef_run).to \
+        create_template('/var/www/dynamic_http_app/releases/1.0/config/database.yml').with(
+          source: 'database.yml.erb',
+          variables: {
+            db: {
+              "adapter" =>  'mysql2',
+              "database" => 'rails',
+              "user" =>  'rails',
+              "password" =>  'todo_replace_randompassword'
+            },
+            db_server: {
+              hostname: 'db',
+              roles: 'db',
+              private_ip: '127.0.0.1'
+            },
+            environment: 'production'
+          }
+        )
+    end
 
-     it 'bundle install' do
-       expect(chef_run).to run_bash('bundle_install_dynamic_http_app').with(
-         cwd: '/var/www/dynamic_http_app/releases/1.0',
-         code: '/opt/rbenv/shims/bundle install --without test development --path=vendor/bundle'
-       )
-     end
+    it 'bundle install' do
+      expect(chef_run).to run_bash('bundle_install_dynamic_http_app').with(
+        cwd: '/var/www/dynamic_http_app/releases/1.0',
+        code: '/opt/rbenv/shims/bundle install --without test development --path=vendor/bundle'
+      )
+    end
 
-     it 'db migration' do
-       expect(chef_run).to run_bash('db_migrate_dynamic_http_app').with(
-         cwd: '/var/www/dynamic_http_app/releases/1.0',
-         environment: {'RAILS_ENV' => 'production'},
-         code: '/opt/rbenv/shims/bundle exec rake db:migrate'
-       )
-     end
+    it 'db migration' do
+      expect(chef_run).to run_bash('db_migrate_dynamic_http_app').with(
+        cwd: '/var/www/dynamic_http_app/releases/1.0',
+        environment: { 'RAILS_ENV' => 'production' },
+        code: '/opt/rbenv/shims/bundle exec rake db:migrate'
+      )
+    end
 
-     it 'create a link to the application current' do
-       link = chef_run.link('/var/www/dynamic_http_app/current')
-       expect(link).to link_to('/var/www/dynamic_http_app/releases/1.0')
-     end
+    it 'create a link to the application current' do
+      link = chef_run.link('/var/www/dynamic_http_app/current')
+      expect(link).to link_to('/var/www/dynamic_http_app/releases/1.0')
+    end
   end
 
   it 'create init.d file of puma' do

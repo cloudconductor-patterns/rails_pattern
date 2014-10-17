@@ -12,7 +12,7 @@
     "postfix" : {
       "main" : {
         "smtp_sasl_password_maps" : "hash:/etc/postfix/sasl_passwd",
-        "relayhost" : "email-smtp.us-east-1.amazonaws.com:25",
+        "relayhost" : "email-smtp.us-east-1.amazonaws.com:587",
         "smtp_sasl_auth_enable" : "yes",
         "smtp_use_tls" : "yes",
         "smtp_tls_security_level" : "encrypt",

@@ -1,6 +1,6 @@
 require_relative '../spec_helper'
 
-describe 'backup_restore::setup' do
+describe 'backup_restore::default' do
   let(:chef_run) do
     ChefSpec::Runner.new(
       cookbook_path: %w(site-cookbooks cookbooks),

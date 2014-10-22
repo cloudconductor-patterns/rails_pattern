@@ -14,7 +14,7 @@
 # limitations under the License.
 require_relative '../../lib/event_handler.rb'
 
-describe EventHandler do
+describe CloudConductorPattern::EventHandler do
   before do
     allow(Dir).to receive(:exist?).and_return(true)
     allow(FileUtils).to receive(:mkdir_p)
@@ -34,14 +34,14 @@ describe EventHandler do
     def dummy_logger.error(message)
       @message = message
     end
-    allow(PatternLogger).to receive(:logger).with(
+    allow(CloudConductorPattern::PatternLogger).to receive(:logger).with(
       '/opt/cloudconductor/patterns/rails_pattern/logs/event-handler.log'
     ).and_return(dummy_logger)
   end
 
   describe '#initialize' do
     it 'creates and returns new instance' do
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       def event_handler.logger
         @logger
       end
@@ -63,13 +63,13 @@ describe EventHandler do
 
   describe '#execute' do
     it 'executes rspec' do
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       allow(event_handler).to receive(:execute_serverspec)
       event_handler.execute('spec')
     end
 
     it 'executes chef' do
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       allow(event_handler).to receive(:execute_chef).with('setup')
       event_handler.execute('setup')
     end
@@ -89,7 +89,7 @@ describe EventHandler do
       allow(File).to receive(:exist?).with(
         '/opt/cloudconductor/patterns/rails_pattern/roles/all_setup.json'
       ).and_return(false)
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       allow(event_handler).to receive(:create_chefsolo_config_file).with('web')
       allow(event_handler).to receive(:create_chefsolo_node_file).with('web', 'setup')
       allow(event_handler).to receive(:create_chefsolo_config_file).with('db')
@@ -105,7 +105,7 @@ describe EventHandler do
 
   describe '#execute_serverspec' do
     it 'executes serverspec in configure phase' do
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       allow(event_handler).to receive(:deploy?).and_return(false)
       def event_handler.system(command)
         @command = [] if @command == nil
@@ -136,7 +136,7 @@ describe EventHandler do
     end
 
     it 'executes serverspec in deploy phase' do
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       allow(event_handler).to receive(:deploy?).and_return(true)
       def event_handler.system(command)
         @command = [] if @command == nil
@@ -190,14 +190,14 @@ describe EventHandler do
         }
       }
       allow(CloudConductorUtils::Consul).to receive(:read_parameters).and_return(dummy_parameter)
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       result = event_handler.send(:deploy?)
       expect(result).to eq(true)
     end
 
     it 'returns false' do
       allow(CloudConductorUtils::Consul).to receive(:read_parameters).and_return({})
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       result = event_handler.send(:deploy?)
       expect(result).to eq(false)
     end
@@ -212,7 +212,7 @@ describe EventHandler do
       allow(dummy_file).to receive(:write).with("log_location '/opt/cloudconductor/patterns/rails_pattern/logs/rails_pattern_web_chef-solo.log'\n")
       allow(dummy_file).to receive(:write).with("file_cache_path '/opt/cloudconductor/patterns/rails_pattern/tmp/cache'\n")
       allow(dummy_file).to receive(:write).with("cookbook_path ['/opt/cloudconductor/patterns/rails_pattern/cookbooks', '/opt/cloudconductor/patterns/rails_pattern/site-cookbooks']\n")
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       allow(File).to receive(:open).with(
         '/opt/cloudconductor/patterns/rails_pattern/solo.rb',
         'w'
@@ -259,7 +259,7 @@ describe EventHandler do
         '/opt/cloudconductor/patterns/rails_pattern/node.json',
         expected_data.to_json
       )
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       event_handler.send(:create_chefsolo_node_file, 'web', 'setup')
     end
 
@@ -315,7 +315,7 @@ describe EventHandler do
         '/opt/cloudconductor/patterns/rails_pattern/node.json',
         expected_data.to_json
       )
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       result = event_handler.send(:create_chefsolo_node_file, 'web', 'configure')
       expect(result).to eq('/opt/cloudconductor/patterns/rails_pattern/node.json')
     end
@@ -323,7 +323,7 @@ describe EventHandler do
 
   describe '#run_chefsolo' do
     it 'runs chef-solo' do
-      event_handler = EventHandler.new('web,ap,db')
+      event_handler = CloudConductorPattern::EventHandler.new('web,ap,db')
       def event_handler.system(command)
         @command = [] if @command == nil
         @command << command

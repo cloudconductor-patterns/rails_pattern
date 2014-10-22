@@ -14,7 +14,7 @@
 # limitations under the License.
 require_relative '../../lib/pattern_logger.rb'
 
-describe PatternLogger do
+describe CloudConductorPattern::PatternLogger do
   describe '#logger' do
     it 'creates and returns the logger instance' do
       dummy_logger = Object.new
@@ -27,7 +27,7 @@ describe PatternLogger do
       allow(Logger).to receive(:new).with(
         'testlog.log'
       ).and_return(dummy_logger)
-      logger = PatternLogger.logger('testlog.log')
+      logger = CloudConductorPattern::PatternLogger.logger('testlog.log')
       expect(dummy_logger.formatter).not_to be_nil
       expect(logger).not_to be_nil
     end

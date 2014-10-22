@@ -14,12 +14,14 @@
 # limitations under the License.
 require 'logger'
 
-class PatternLogger
-  def self.logger(log_filename)
-    logger = ::Logger.new(log_filename)
-    logger.formatter = proc do |severity, datetime, _progname, message|
-      "[#{datetime.strftime('%Y-%m-%dT%H:%M:%S')}] #{severity}: #{message}\n"
+module CloudConductorPattern
+  class PatternLogger
+    def self.logger(log_filename)
+      logger = ::Logger.new(log_filename)
+      logger.formatter = proc do |severity, datetime, _progname, message|
+        "[#{datetime.strftime('%Y-%m-%dT%H:%M:%S')}] #{severity}: #{message}\n"
+      end
+      logger
     end
-    logger
   end
 end

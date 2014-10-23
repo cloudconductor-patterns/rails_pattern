@@ -92,7 +92,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
 
   bash "db_migrate_#{app_name}" do
     cwd app_dir
-    environment 'RAILS_ENV' => node['rails_part']['app']['rails_env']
+    environment 'RAILS_ENV' => node['rails_part']['app']['rails_env'], 'RACK_ENV' => node['rails_part']['app']['rails_env']
     code '/opt/rbenv/shims/bundle exec rake db:migrate'
   end
 

@@ -75,6 +75,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
   end
 
   bash "pre_deploy_script_#{app_name}" do
+    cwd app_dir
     code app['pre_deploy']
     only_if { app['pre_deploy'] && !app['pre_deploy'].empty? }
   end
@@ -132,6 +133,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
   end
 
   bash "post_deploy_script_#{app_name}" do
+    cwd app_dir
     code app['post_deploy']
     only_if { app['post_deploy'] && !app['post_deploy'].empty? }
   end

@@ -1,4 +1,6 @@
 module BackupMySQLHelper
+  include BackupCommonHelper
+
   def import_stores(incremental = false)
     blocks = node['backup_restore']['destinations']['enabled'].map do |destination_type|
       case destination_type
@@ -7,18 +9,6 @@ module BackupMySQLHelper
       end
     end
     blocks.join('\n\n')
-  end
-
-  def parse_schedule(type)
-    schedule = node['backup_restore']['sources']['mysql']['schedule'][type]
-    minute, hour, day, month, week = schedule.split
-    {
-      minute: minute,
-      hour: hour,
-      day: day,
-      month: month,
-      weekday: week
-    }
   end
 
   def lsn_dir

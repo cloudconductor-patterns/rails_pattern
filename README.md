@@ -74,7 +74,7 @@ Mandatory parameters
 |sources        |plain         |Hash           |Source database information|
 |destinations   |plain         |Hash           |Destination storage to backup to, or to recovery from|
 
-* userdata.sources
+* backup_restore.sources
 
 |Parameter      |Style         |Type           |Description  |
 |:--------------|:-------------|:--------------|:------------|

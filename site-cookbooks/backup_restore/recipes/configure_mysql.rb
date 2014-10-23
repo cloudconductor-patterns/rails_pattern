@@ -36,7 +36,7 @@ if source['schedule']['full'] && !source['schedule']['full'].empty?
         end
       end
     DEF
-    schedule(parse_schedule('full'))
+    schedule(parse_schedule(node['backup_restore']['sources']['mysql']['schedule']['full']))
     cron_options(
       path: ENV['PATH'],
       output_log: "#{node['backup_restore']['log_dir']}/backup.log"
@@ -68,7 +68,7 @@ if source['schedule']['incremental'] && !source['schedule']['incremental'].empty
 
       #{import_stores(incremental: true)}
     DEF
-    schedule(parse_schedule('incremental'))
+    schedule(parse_schedule(node['backup_restore']['sources']['mysql']['schedule']['incremental']))
     cron_options(
       path: ENV['PATH'],
       output_log: "#{node['backup_restore']['log_dir']}/backup.log"

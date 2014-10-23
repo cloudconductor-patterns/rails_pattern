@@ -14,16 +14,4 @@ module BackupRubyHelper
 
     paths.compact.map { |path| "archive.add '#{path}'" }.join("\n")
   end
-
-  def parse_schedule(type)
-    schedule = node['backup_restore']['sources']['ruby']['schedule'][type]
-    minute, hour, day, month, week = schedule.split
-    {
-      minute: minute,
-      hour: hour,
-      day: day,
-      month: month,
-      weekday: week
-    }
-  end
 end

@@ -17,9 +17,9 @@ require 'yaml'
 require 'json'
 require 'active_support'
 require 'cloud_conductor_utils/consul'
-require_relative './logger'
+require_relative './pattern_logger'
 
-module RailsPattern
+module CloudConductorPattern
   # rubocop: disable ClassLength
   class EventHandler
     def initialize(node_role)
@@ -29,7 +29,7 @@ module RailsPattern
       log_dir = File.join(@pattern_dir, 'logs')
       FileUtils.mkdir_p(log_dir) unless Dir.exist?(log_dir)
       log_filename = File.join(log_dir, 'event-handler.log')
-      @logger = RailsPattern::Logger.logger(log_filename)
+      @logger = CloudConductorPattern::PatternLogger.logger(log_filename)
       @roles = node_role.split(',')
     end
 
@@ -147,5 +147,5 @@ end
 if __FILE__ == $PROGRAM_NAME
   role = ARGV[0]
   event = ARGV[1]
-  RailsPattern::EventHandler.new(role).execute(event)
+  CloudConductorPattern::EventHandler.new(role).execute(event)
 end

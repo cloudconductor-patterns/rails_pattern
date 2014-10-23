@@ -4,7 +4,7 @@
 backup_model :directory do
   description 'Backup directories'
   definition lazy { syncer_definition }
-  schedule parse_schedule
+  schedule parse_schedule(node['backup_restore']['sources']['directory']['schedule'])
   cron_options(
     path: ENV['PATH'],
     output_log: "#{node['backup_restore']['log_dir']}/backup.log"

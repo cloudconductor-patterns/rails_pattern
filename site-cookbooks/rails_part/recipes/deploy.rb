@@ -16,10 +16,6 @@ db = node['rails_part']['db']
 db_server_info = server_info('db').first
 
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
-  bash "pre_deploy_script_#{app_name}" do
-    code app['pre_deploy']
-    only_if { app['pre_deploy'] && !app['pre_deploy'].empty? }
-  end
 
   case app['protocol']
   when 'git'
@@ -76,26 +72,31 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
         EOS
       end
     end
+  end
 
-    template "#{app_dir}/config/database.yml" do
-      source 'database.yml.erb'
-      variables db: node['rails_part']['db'], db_server: db_server_info, environment: node['rails_part']['app']['rails_env']
-    end
+  bash "pre_deploy_script_#{app_name}" do
+    code app['pre_deploy']
+    only_if { app['pre_deploy'] && !app['pre_deploy'].empty? }
+  end
 
-    bash "bundle_install_#{app_name}" do
-      cwd app_dir
-      code '/opt/rbenv/shims/bundle install --without test development --path=vendor/bundle'
-    end
+  template "#{app_dir}/config/database.yml" do
+    source 'database.yml.erb'
+    variables db: node['rails_part']['db'], db_server: db_server_info, environment: node['rails_part']['app']['rails_env']
+  end
 
-    bash "db_migrate_#{app_name}" do
-      cwd app_dir
-      environment 'RAILS_ENV' => node['rails_part']['app']['rails_env']
-      code '/opt/rbenv/shims/bundle exec rake db:migrate'
-    end
+  bash "bundle_install_#{app_name}" do
+    cwd app_dir
+    code '/opt/rbenv/shims/bundle install --without test development --path=vendor/bundle'
+  end
 
-    link "#{app_root}/current" do
-      to app_dir
-    end
+  bash "db_migrate_#{app_name}" do
+    cwd app_dir
+    environment 'RAILS_ENV' => node['rails_part']['app']['rails_env']
+    code '/opt/rbenv/shims/bundle exec rake db:migrate'
+  end
+
+  link "#{app_root}/current" do
+    to app_dir
   end
 
   puma_config app_name do

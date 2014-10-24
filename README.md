@@ -4,10 +4,9 @@ About
 This is the platform pattern designed to build the system hosts Ruby on Rails based application.
 It also supports backup and recovery for MySQL or files. Currently supported:
 
-* CentOS 6.5
-* Ruby 2.1.2 or later
-* Ruby on Rails 
-* MySQL 5.6 or later
+* CentOS (6.5)
+* Ruby (>= 2.1.2)
+* MySQL (>= 5.6)
 
 For more information, please visit [official web site](http://cloudconductor.org/).
 

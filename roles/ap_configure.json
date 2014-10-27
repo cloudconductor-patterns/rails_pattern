@@ -1,6 +1,6 @@
 {
   "name": "ap_configure",
-  "description": "Configure .s3cfg to use s3",
+  "description": "Configures .s3cfg to use s3",
   "chef_type": "role",
   "json_class": "Chef::Role",
   "default_attributes": {

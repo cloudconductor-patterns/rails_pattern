@@ -1,4 +1,7 @@
 {
+  "name": "ap_deploy",
+  "description": "Deploys Ruby on Rails applications",
+  "chef_type": "role",
   "json_class": "Chef::Role",
   "default_attributes": {
     "backup_restore": {

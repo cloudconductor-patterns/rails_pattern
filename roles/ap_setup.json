@@ -1,4 +1,7 @@
 {
+  "name": "ap_setup",
+  "description": "Installs ruby",
+  "chef_type": "role",
   "json_class":"Chef::Role",
   "run_list": [
     "recipe[rails_part::setup]",

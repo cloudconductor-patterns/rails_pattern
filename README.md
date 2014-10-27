@@ -131,9 +131,6 @@ Example of parameters
             "prefix": "app_backup"
           }
         }
-      },
-      "nginx_part": {
-        "maintenance": "Now under maintenance."
       }
     }
 

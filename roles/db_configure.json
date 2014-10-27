@@ -1,6 +1,6 @@
 {
   "name": "db_configure",
-  "description": "Configure cron job to backup mysql database using gem backup",
+  "description": "Configures cron job to backup mysql database using gem backup",
   "chef_type": "role",
   "json_class": "Chef::Role",
   "default_attributes": {

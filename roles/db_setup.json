@@ -1,6 +1,6 @@
 {
   "name": "db_setup",
-  "description": "Setup mysql database and backup tools",
+  "description": "Setups mysql database and backup tools",
   "chef_type": "role",
   "json_class": "Chef::Role",
   "default_attributes": {

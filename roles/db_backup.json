@@ -1,6 +1,6 @@
 {
   "name": "db_backup",
-  "description": "Run backup job immediately",
+  "description": "Runs backup job immediately",
   "chef_type": "role",
   "json_class": "Chef::Role",
   "default_attributes": {

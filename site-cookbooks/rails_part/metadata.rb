@@ -1,10 +1,11 @@
 name             'rails_part'
-maintainer       'YOUR_COMPANY_NAME'
-maintainer_email 'YOUR_EMAIL'
-license          'All rights reserved'
-description      'Installs/Configures rails_part'
-long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
-version          '0.1.0'
+version          '0.0.1'
+description      'Install/Configure Ruby, Ruby on Rails, and Deploys applications'
+license          'Apache v2.0'
+maintainer       'TIS Inc.'
+maintainer_email 'ccndctr@gmail.com'
+
+supports 'centos', '= 6.5'
 
 depends 'cloudconductor'
 depends 'git'

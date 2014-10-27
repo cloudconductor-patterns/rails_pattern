@@ -1,4 +1,4 @@
-require_relative 'spec_helper'
+require_relative '../spec_helper'
 require 'rspec'
 
 describe 'nginx_part::deploy' do

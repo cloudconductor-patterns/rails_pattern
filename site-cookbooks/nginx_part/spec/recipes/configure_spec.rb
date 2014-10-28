@@ -3,14 +3,14 @@ require_relative '../spec_helper'
 describe 'nginx_part::configure' do
   describe 'if node["nginx_part"]["maintenance"] is present' do
     let(:chef_run) do
-      ChefSpec::Runner.new(cookbook_path: ['site-cookbooks', 'cookbooks'], platform: 'centos', version: '6.5') do |node|
+      ChefSpec::Runner.new(cookbook_path: ['cookbooks', 'site-cookbooks'], platform: 'centos', version: '6.5') do |node|
         node.set['nginx_part']['maintenance'] = '<!DOCTYPE html><html><head></head><body>dummy</body></html>'
         node.set['nginx']['dir'] = '/etc/nginx'
         node.set['nginx']['default_root'] = '/var/www/nginx-default'
-      end
+      end.converge(described_recipe)
     end
 
-    it 'create anginx maintenance directory with attributes' do
+    it 'create nginx maintenance directory with attributes' do
       chef_run.converge(described_recipe)
       expect(chef_run).to create_directory('/var/www/nginx-default/maintenance').with(
         user:   'root',

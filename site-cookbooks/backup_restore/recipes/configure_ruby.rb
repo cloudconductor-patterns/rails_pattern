@@ -28,7 +28,7 @@ backup_model :ruby_full do
   DEF
   }
 
-  schedule(parse_schedule('full'))
+  schedule(parse_schedule(node['backup_restore']['sources']['ruby']['schedule']['full']))
   cron_options(
     path: ENV['PATH'],
     output_log: "#{node['backup_restore']['log_dir']}/backup_ruby.log"

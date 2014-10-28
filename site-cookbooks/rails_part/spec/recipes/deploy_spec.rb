@@ -13,6 +13,7 @@ describe 'rails_part::deploy' do
           type: 'dynamic',
           protocol: 'git',
           url: 'http://github.com/foo.git',
+          revision: 'test_revision',
           pre_deploy: 'date',
           post_deploy: 'ifconfig',
           parameters: {
@@ -41,31 +42,17 @@ describe 'rails_part::deploy' do
     )
   end
 
-  it 'bash pre deploy script' do
-    expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
-      :bash,
-      :run,
-      'pre_deploy_script_dynamic_git_app'
-    ).with(
-      code: 'date'
+  it 'create app directory' do
+    expect(chef_run).to create_directory('/var/www/dynamic_http_app/releases').with(
+      recursive: true
     )
   end
 
   describe 'application deploy from git' do
-    it 'deploy rails application' do
-      expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
-        :application,
-        :deploy,
-        'dynamic_git_app'
-      ).with(
-        path:       '/var/www/dynamic_git_app',
-        owner:      'rails',
-        group:      'rails',
+    it 'checkout application' do
+      expect(chef_run).to checkout_git('/var/www/dynamic_git_app/releases/').with(
         repository: 'http://github.com/foo.git',
-        revision:   'HEAD',
-        migrate:    true,
-        migration_command: '/opt/rbenv/shims/bundle exec rake db:migrate 2>&1 > /tmp/test.log',
-        environment_name: 'production'
+        revision: 'test_revision'
       )
     end
   end
@@ -73,12 +60,6 @@ describe 'rails_part::deploy' do
   describe 'application deploy from http' do
     it 'create tmp directory' do
       expect(chef_run).to create_directory('/tmp/dynamic_http_app').with(
-        recursive: true
-      )
-    end
-
-    it 'create app directory' do
-      expect(chef_run).to create_directory('/var/www/dynamic_http_app/releases').with(
         recursive: true
       )
     end
@@ -102,6 +83,16 @@ describe 'rails_part::deploy' do
           mv #{tmp_dir}/* #{app_dir}
         EOS
        )
+    end
+
+    it 'bash pre deploy script' do
+      expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
+        :bash,
+        :run,
+        'pre_deploy_script_dynamic_git_app'
+      ).with(
+        code: 'date'
+      )
     end
 
     it 'create database config' do
@@ -135,7 +126,7 @@ describe 'rails_part::deploy' do
     it 'db migration' do
       expect(chef_run).to run_bash('db_migrate_dynamic_http_app').with(
         cwd: '/var/www/dynamic_http_app/releases/1.0',
-        environment: { 'RAILS_ENV' => 'production' },
+        environment: { 'RAILS_ENV' => 'production', 'RACK_ENV' => 'production' },
         code: '/opt/rbenv/shims/bundle exec rake db:migrate'
       )
     end

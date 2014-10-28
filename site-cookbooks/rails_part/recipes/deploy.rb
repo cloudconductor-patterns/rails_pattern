@@ -17,31 +17,19 @@ db_server_info = server_info('db').first
 
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
 
+  app_root = "#{node['rails_part']['app']['base_path']}/#{app_name}"
+  app_dir = "#{app_root}/releases/#{app['version']}"
+  directory "#{app_root}/releases" do
+    recursive true
+    action :create
+  end
+
   case app['protocol']
   when 'git'
-    application app_name do
-      action :deploy
-      path "#{node['rails_part']['app']['base_path']}/#{app_name}"
-      owner node['rails_part']['user']['name']
-      group node['rails_part']['user']['group']
-      repository app['url']
-      revision app['revision'] || 'HEAD'
-      migrate node['rails_part']['app']['migrate']
-      # migration_command node['rails_part']['app']['migration_command']
-      migration_command '/opt/rbenv/shims/bundle exec rake db:migrate 2>&1 > /tmp/test.log'
-      environment_name node['rails_part']['app']['rails_env']
-
-      rails do
-        database do
-          adapter db['adapter']
-          host db_server_info[:private_ip]
-          database db['database']
-          username db['user']
-          password db['password']
-        end
-        bundler node['rails_part']['app']['bundler']
-        bundle_command node['rails_part']['app']['bundle_command']
-      end
+    git "#{app_dir}" do
+      repository "#{app['url']}"
+      revision "#{app['revision']}"
+      action :checkout
     end
   when 'http'
     tmp_dir = "/tmp/#{app_name}"
@@ -49,15 +37,6 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
       recursive true
       action :create
     end
-
-    app_root = "#{node['rails_part']['app']['base_path']}/#{app_name}"
-    app_dir = "#{app_root}/releases/#{app['version']}"
-
-    directory "#{app_root}/releases" do
-      recursive true
-      action :create
-    end
-
     unless Dir.exist?(app_dir)
       remote_file "application_tarball_#{app_name}" do
         source app['url']

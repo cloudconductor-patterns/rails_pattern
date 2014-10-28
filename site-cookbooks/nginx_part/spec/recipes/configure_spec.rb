@@ -4,7 +4,7 @@ describe 'nginx_part::configure' do
   describe 'if node["nginx_part"]["maintenance"] is present' do
     let(:chef_run) do
       ChefSpec::Runner.new(cookbook_path: ['site-cookbooks', 'cookbooks'], platform: 'centos', version: '6.5') do |node|
-        node.set['nginx_part']['maintenance'] = "<!DOCTYPE html><html><head></head><body>dummy</body></html>"
+        node.set['nginx_part']['maintenance'] = '<!DOCTYPE html><html><head></head><body>dummy</body></html>'
         node.set['nginx']['dir'] = '/etc/nginx'
         node.set['nginx']['default_root'] = '/var/www/nginx-default'
       end

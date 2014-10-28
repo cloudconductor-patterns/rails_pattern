@@ -17,8 +17,8 @@ if node['nginx_part']['maintenance']
 
   file "#{node['nginx']['default_root']}/maintenance/index.html" do
     action :create
-    owner "root"
-    group "root"
+    owner 'root'
+    group 'root'
     content node['nginx_part']['maintenance']
   end
 
@@ -37,7 +37,7 @@ if node['nginx_part']['maintenance']
     )
   end
 
-  service "nginx" do
+  service 'nginx' do
     action :reload
     supports reload: true
   end

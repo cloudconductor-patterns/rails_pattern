@@ -223,10 +223,15 @@ describe 'nginx_part::deploy' do
           '/static' => {
             'alias' => '/var/www/test_dynamic_app/1.0.0',
             index: 'index.html'
+          },
+          '/_errors/502.html' => {
+            'alias' => '/var/www/maintenance/index.html',
+            block: 'internal'
           }
         },
         options: {
           server_tokens: 'off',
+          error_page: '502 = /_errors/502.html',
           auth_basic: 'Restricted',
           auth_basic_user_file: 'htpasswd'
         },
@@ -240,6 +245,7 @@ describe 'nginx_part::deploy' do
         root: '/var/www/test_app/1.0.0',
         options: {
           server_tokens: 'off',
+          error_page: '502 = /_errors/502.html',
           auth_basic: 'Restricted',
           auth_basic_user_file: 'htpasswd'
         },

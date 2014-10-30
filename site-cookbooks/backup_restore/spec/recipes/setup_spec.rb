@@ -2,7 +2,7 @@ require_relative '../spec_helper'
 
 describe 'backup_restore::setup' do
   let(:chef_run) do
-    ChefSpec::Runner.new(
+    ChefSpec::SoloRunner.new(
       cookbook_path: %w(site-cookbooks cookbooks),
       platform:      'centos',
       version:       '6.5'
@@ -10,7 +10,7 @@ describe 'backup_restore::setup' do
   end
 
   let(:chef_run_backup_options) do
-    runner =  ChefSpec::Runner.new(
+    runner =  ChefSpec::SoloRunner.new(
       cookbook_path: %w(site-cookbooks cookbooks),
       platform:      'centos',
       version:       '6.5'

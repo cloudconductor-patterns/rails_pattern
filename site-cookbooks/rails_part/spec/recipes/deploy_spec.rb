@@ -2,7 +2,7 @@ require_relative '../spec_helper'
 
 describe 'rails_part::deploy' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
       cookbook_path: %w(site-cookbooks cookbooks),
       platform:      'centos',
       version:       '6.5'
@@ -37,7 +37,7 @@ describe 'rails_part::deploy' do
   end
 
   before do
-    Chef::Recipe.any_instance.stub(:server_info).with('db').and_return(
+    allow_any_instance_of(Chef::Recipe).to receive(:server_info).with('db').and_return(
       [{ hostname: 'db', roles: 'db', private_ip: '127.0.0.1' }]
     )
   end

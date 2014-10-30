@@ -2,7 +2,7 @@ require_relative '../spec_helper'
 
 describe 'backup_restore::restore_mysql' do
   let(:chef_run) do
-    runner = ChefSpec::Runner.new(
+    runner = ChefSpec::SoloRunner.new(
       cookbook_path: %w(site-cookbooks cookbooks),
       platform:      'centos',
       version:       '6.5'

@@ -77,6 +77,8 @@ node['cloudconductor']['applications'].each do |app_name, app|
   listen = node['nginx_conf']['listen']
   listen += ' default_server' if app['parameters']['default_server']
 
+  options[:client_max_body_size] = app['parameters']['client_max_body_size'] if app['parameters']['client_max_body_size']
+
   if app['type'] == 'dynamic'
     upstream_hash = {
       "#{app_name}" => {

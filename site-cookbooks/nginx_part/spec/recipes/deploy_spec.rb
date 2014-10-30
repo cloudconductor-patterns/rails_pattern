@@ -118,7 +118,6 @@ describe 'nginx_part::deploy' do
   end
 
   before do
-#    Chef::Recipe.any_instance.stub(:server_info).with('ap').and_return(
     allow_any_instance_of(Chef::Recipe).to receive(:server_info).with('ap').and_return(
       [{ hostname: 'ap_svr', roles: 'ap', private_ip: '10.0.0.3' }]
     )

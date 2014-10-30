@@ -5,7 +5,7 @@ require 'chefspec'
 # prepare 1 node setting
 describe 'Create database spec' do
   let(:chef_run) do
-    ChefSpec::Runner.new(
+    ChefSpec::SoloRunner.new(
       cookbook_path: ['cookbooks', 'site-cookbooks'],
       platform: 'centos',
       version: '6.5'

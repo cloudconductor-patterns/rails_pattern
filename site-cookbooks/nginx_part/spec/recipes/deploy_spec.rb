@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 describe 'nginx_part::deploy' do
   # attribute node.set
   let(:chef_run_dynamic) do
-    ChefSpec::Runner.new(cookbook_path: ['cookbooks', 'site-cookbooks']) do |node|
+    ChefSpec::SoloRunner.new(cookbook_path: ['cookbooks', 'site-cookbooks']) do |node|
       node.set['nginx']['dir'] = '/etc/nginx'
       node.set['nginx_part']['tmp_dir'] = '/tmp/work'
       node.set['nginx']['default_root'] = '/var/www'
@@ -69,7 +69,7 @@ describe 'nginx_part::deploy' do
     end.converge 'nginx_part::deploy'
   end
   let(:chef_run_static) do
-    ChefSpec::Runner.new(cookbook_path: ['cookbooks', 'site-cookbooks']) do |node|
+    ChefSpec::SoloRunner.new(cookbook_path: ['cookbooks', 'site-cookbooks']) do |node|
       node.set['nginx']['dir'] = '/etc/nginx'
       node.set['nginx_part']['tmp_dir'] = '/tmp/work'
       node.set['nginx']['default_root'] = '/var/www'
@@ -118,7 +118,8 @@ describe 'nginx_part::deploy' do
   end
 
   before do
-    Chef::Recipe.any_instance.stub(:server_info).with('ap').and_return(
+#    Chef::Recipe.any_instance.stub(:server_info).with('ap').and_return(
+    allow_any_instance_of(Chef::Recipe).to receive(:server_info).with('ap').and_return(
       [{ hostname: 'ap_svr', roles: 'ap', private_ip: '10.0.0.3' }]
     )
   end

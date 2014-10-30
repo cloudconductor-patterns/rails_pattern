@@ -2,7 +2,7 @@ require_relative '../spec_helper'
 
 describe 'nginx_part::setup' do
   let(:chef_run) do
-    ChefSpec::Runner.new(
+    ChefSpec::SoloRunner.new(
       cookbook_path: ['cookbooks', 'site-cookbooks'],
       platform:      'centos',
       version:       '6.5'

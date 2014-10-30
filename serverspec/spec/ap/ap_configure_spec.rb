@@ -14,7 +14,7 @@ describe 'connect mysql' do
   if db_host[:private_ip]
     hostname = db_host[:private_ip]
     describe command("hping3 -S #{hostname} -p 3306 -c 5") do
-      its(:stdout) { should match /sport=3306 flags=SA/ }
+      its(:stdout) { should match(/sport=3306 flags=SA/) }
     end
   else
 

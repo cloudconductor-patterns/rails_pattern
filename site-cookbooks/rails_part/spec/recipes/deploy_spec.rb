@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 describe 'rails_part::deploy' do
   let(:chef_run) do
     runner = ChefSpec::Runner.new(
-      cookbook_path: %w[site-cookbooks cookbooks],
+      cookbook_path: %w(site-cookbooks cookbooks),
       platform:      'centos',
       version:       '6.5'
     ) do |node|
@@ -101,10 +101,10 @@ describe 'rails_part::deploy' do
           source: 'database.yml.erb',
           variables: {
             db: {
-              "adapter" =>  'mysql2',
-              "database" => 'rails',
-              "user" =>  'rails',
-              "password" =>  'todo_replace_randompassword'
+              'adapter' =>  'mysql2',
+              'database' => 'rails',
+              'user' =>  'rails',
+              'password' =>  'todo_replace_randompassword'
             },
             db_server: {
               hostname: 'db',

@@ -3,7 +3,7 @@ require_relative '../spec_helper'
 describe 'rails_part::rbenv_setup' do
   let(:chef_run) do
     ChefSpec::Runner.new(
-      cookbook_path:  %w[site-cookbooks cookbooks],
+      cookbook_path:  %w(site-cookbooks cookbooks),
       platform:       'centos',
       version:        '6.5'
     ).converge('rails_part::rbenv_setup')

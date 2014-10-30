@@ -26,7 +26,7 @@ describe 'backup_restore::configure' do
 
   it 's3 config' do
     expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
-      :s3cfg, 
+      :s3cfg,
       :create,
       '/root/.s3cfg'
     ).with(
@@ -36,9 +36,9 @@ describe 'backup_restore::configure' do
       group: 'root',
       install_s3cmd: false,
       config: {
-        "proxy_host" => 'localhost',
-        "proxy_port" => '8080',
-        "use_https" => false
+        'proxy_host' => 'localhost',
+        'proxy_port' => '8080',
+        'use_https' => false
       }
     )
   end
@@ -59,6 +59,6 @@ describe 'backup_restore::configure' do
   end
 
   it 'include ruby configure' do
-    expect(chef_run).to include_recipe("backup_restore::configure_ruby")
+    expect(chef_run).to include_recipe('backup_restore::configure_ruby')
   end
 end

@@ -5,7 +5,8 @@ backup_model :ruby_full do
   s3_dst = node['backup_restore']['destinations']['s3']
 
   description 'Full Backup ruby application with gems'
-  definition lazy { <<-DEF
+  definition lazy {
+    <<-DEF
     split_into_chunks_of 4000
 
     archive :ruby do |archive|

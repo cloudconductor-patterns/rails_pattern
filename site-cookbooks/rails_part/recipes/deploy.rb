@@ -10,8 +10,6 @@ def dynamic?
   -> (_, application) { application[:type] == 'dynamic' }
 end
 
-db = node['rails_part']['db']
-
 ::Chef::Recipe.send(:include, CloudConductor::CommonHelper)
 db_server_info = server_info('db').first
 

@@ -10,22 +10,22 @@ describe 'backup_restore::restore_directory' do
       node.set['cloudconductor']['applications'] = {
         dynamic_git_app: {
           type: 'dynamic',
-          #protocol: 'git',
-          #url: 'http://github.com/foo.git',
-          #pre_deploy: 'date',
-          #post_deploy: 'ifconfig',
+          # protocol: 'git',
+          # url: 'http://github.com/foo.git',
+          # pre_deploy: 'date',
+          # post_deploy: 'ifconfig',
           parameters: {
-          #  port: '8080'
-            backup_directories: '/var/www/app' 
+            #  port: '8080'
+            backup_directories: '/var/www/app'
           }
-        } 
+        }
       }
       node.set['backup_restore']['destinations']['s3'] = {
         bucket: 'cloudconductor',
         access_key_id: '1234',
         secret_access_key: '4321',
         region: 'us-east-1',
-        prefix: '/backup',
+        prefix: '/backup'
       }
     end
     runner.converge(described_recipe)

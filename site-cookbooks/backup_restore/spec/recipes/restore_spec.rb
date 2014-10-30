@@ -7,7 +7,7 @@ describe 'backup_restore::restore' do
       platform:      'centos',
       version:       '6.5'
     )do |node|
-      node.set['backup_restore']['destinations']['enabled'] = %w(s3) 
+      node.set['backup_restore']['destinations']['enabled'] = %w(s3)
       node.set['backup_restore']['destinations']['s3'] = {
         bucket: 's3bucket',
         access_key_id: 'access_key_id',

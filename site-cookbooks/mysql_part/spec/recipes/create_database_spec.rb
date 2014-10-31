@@ -24,11 +24,23 @@ describe 'Create database spec' do
   end
 
   it 'create mysql_database' do
-    ChefSpec::Matchers::ResourceMatcher.new(
+    expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
       :mysql_database, :create, 'app'
     ).with(encoding: 'utf8')
   end
-  # run sql
+
+  it 'create database user' do
+    expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
+      :mysql_database_user, :create, 'create database user'
+    ).with(username: 'root', password: 'todo_replace_randompassword')
+  end
+
+  it 'Grant database' do
+    expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
+      :mysql_database_user, :grant, 'Grant database'
+    ).with(username: 'root', database_name: 'app', host: '%', privileges: [:all], require_ssl: false)
+  end
+
   it 'flush the privileges' do
     ChefSpec::Matchers::ResourceMatcher.new(
       :mysql_database, :query, 'flush the privileges'

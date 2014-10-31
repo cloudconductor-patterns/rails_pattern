@@ -1,0 +1,18 @@
+name             'rails_part'
+version          '0.0.1'
+description      'Install/Configure Ruby, Ruby on Rails, and Deploys applications'
+license          'Apache v2.0'
+maintainer       'TIS Inc.'
+maintainer_email 'ccndctr@gmail.com'
+
+supports 'centos', '= 6.5'
+
+depends 'cloudconductor'
+depends 'git'
+depends 'build-essential'
+depends 'rbenv'
+depends 'application'
+depends 'application_ruby'
+depends 'puma'
+depends 'yum-mysql-community'
+depends 'postfix'

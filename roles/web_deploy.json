@@ -1,0 +1,9 @@
+{
+  "name": "web_deploy",
+  "description": "Deploys static contents",
+  "chef_type": "role",
+  "json_class":"Chef::Role",
+  "run_list": [
+    "recipe[nginx_part::deploy]"
+  ]
+}

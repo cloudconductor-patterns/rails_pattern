@@ -1,0 +1,21 @@
+{
+  "name": "ap_deploy",
+  "description": "Deploys Ruby on Rails applications",
+  "chef_type": "role",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+    "backup_restore": {
+      "sources": {
+        "enabled": ["ruby", "directory"]
+      },
+      "destinations": {
+        "enabled": ["s3"]
+      }
+    }
+  },
+  "run_list": [
+    "recipe[rails_part::deploy]",
+    "recipe[backup_restore::configure]",
+    "recipe[backup_restore::backup]"
+  ]
+}

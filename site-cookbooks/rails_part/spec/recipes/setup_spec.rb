@@ -37,7 +37,7 @@ describe 'rails_part::setup' do
     chef_run.node.set[:rails_part][:user][:passwd] = 'chefspec_pwd'
     chef_run.node.set[:rails_part][:user][:manage_home] = true
     chef_run.converge(described_recipe)
-    
+
     expect(chef_run).to create_user('chefspec_user').with(
       password: 'chefspec_pwd',
       supports: {

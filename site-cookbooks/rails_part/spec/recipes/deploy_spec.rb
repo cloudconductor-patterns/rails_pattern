@@ -78,7 +78,7 @@ describe 'rails_part::deploy' do
         it 'extract the application from the archive file' do
           tmp_dir = "/tmp/#{application_name}"
           app_dir = "#{base_path}/#{application_name}/releases/#{app_version}"
-    
+
           expect(chef_run).to run_bash("extract_static_files_#{application_name}").with(
             code: <<-EOS
           tar -zxvf #{tmp_dir}/#{application_name}.tar.gz -C #{tmp_dir}
@@ -104,7 +104,7 @@ describe 'rails_part::deploy' do
         end
       end
     end
-    
+
     it 'run pre_deploy script' do
       command = 'pwd'
       chef_run.node.set['cloudconductor']['applications'][application_name]['pre_deploy'] = command
@@ -124,10 +124,10 @@ describe 'rails_part::deploy' do
       allow_any_instance_of(Chef::Recipe).to receive(:server_info).with('db').and_return([db_server_info])
 
       db_settings = {
-        "adapter" => 'mysql2',
-        "database" => 'rails',
-        "user" => 'rails',
-        "password" => 'app_passwd'
+        'adapter' => 'mysql2',
+        'database' => 'rails',
+        'user' => 'rails',
+        'password' => 'app_passwd'
       }
       rails_env = 'production'
 
@@ -158,7 +158,7 @@ describe 'rails_part::deploy' do
 
       expect(chef_run).to run_bash("db_migrate_#{application_name}").with(
         cwd: "#{base_path}/#{application_name}/releases/#{app_version}",
-        environment: { 
+        environment: {
           'RAILS_ENV' => rails_env,
           'RACK_ENV' => rails_env
         },
@@ -167,7 +167,8 @@ describe 'rails_part::deploy' do
     end
 
     it 'create a link to the application current' do
-      expect(chef_run.link("#{base_path}/#{application_name}/current")).to link_to("#{base_path}/#{application_name}/releases/#{app_version}")
+      expect(chef_run.link("#{base_path}/#{application_name}/current"))
+        .to link_to("#{base_path}/#{application_name}/releases/#{app_version}")
     end
 
     it 'create init.d file of puma' do

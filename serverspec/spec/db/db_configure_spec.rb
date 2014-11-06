@@ -29,6 +29,6 @@ describe 'using consul parameters' do
   end
 
   describe command("mysql #{database} -u #{username} -p#{password} -e 'SHOW DATABASES;'") do
-    it { should return_exit_status 0 }
+    its(:exit_status) { should eq 0 }
   end
 end

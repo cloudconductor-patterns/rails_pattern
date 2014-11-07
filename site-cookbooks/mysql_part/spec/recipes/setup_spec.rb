@@ -1,24 +1,18 @@
 require_relative '../spec_helper'
 require 'chefspec'
 
-describe 'mysql_part setup spec' do
-  let(:chef_run) do
-    ChefSpec::SoloRunner.new(
-      cookbook_path: ['cookbooks', 'site-cookbooks'],
-      platform: 'centos',
-      version: '6.5'
-    ).converge('mysql_part::setup')
-  end
+describe 'mysql_part::setup' do
+  let(:chef_run) { ChefSpec::SoloRunner.converge(described_recipe) }
 
-  it 'include mysql::server' do
+  it 'include server recipe of mysql cookbook' do
     expect(chef_run).to include_recipe 'mysql::server'
   end
 
-  it 'include mysql::client' do
+  it 'include client recipe of mysql cookbook' do
     expect(chef_run).to include_recipe 'mysql::client'
   end
 
-  it 'include mysql_part::create_database' do
+  it 'include create_database recipe' do
     expect(chef_run).to include_recipe 'mysql_part::create_database'
   end
 end

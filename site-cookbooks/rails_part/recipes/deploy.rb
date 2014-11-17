@@ -24,9 +24,9 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
 
   case app['protocol']
   when 'git'
-    git "#{app_dir}" do
-      repository "#{app['url']}"
-      revision "#{app['revision']}"
+    git app_dir do
+      repository app['url']
+      revision app['revision']
       action :checkout
     end
   when 'http'

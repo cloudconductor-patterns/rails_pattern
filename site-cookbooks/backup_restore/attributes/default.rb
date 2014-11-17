@@ -40,7 +40,6 @@ default['backup_restore']['restore']['target_sources'] = []
 
 # override dependent cookbooks attributes
 # 'backup'
-default['backup']['dependencies'] = %w(fog s3)
 default['backup']['version'] = nil
 # 'percona'
 default['percona']['skip_passwords'] = true

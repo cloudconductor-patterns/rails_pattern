@@ -25,6 +25,7 @@ end
 mysql_database_user 'create database user' do
   username node['mysql_part']['app']['username']
   connection mysql_connection_info
+  host '%'
   password node['mysql_part']['app']['password']
   action :create
 end

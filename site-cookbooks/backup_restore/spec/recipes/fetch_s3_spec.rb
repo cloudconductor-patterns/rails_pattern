@@ -22,8 +22,9 @@ describe 'backup_restore::fetch_s3' do
       chef_run.node.set['backup_restore']['restore']['target_sources'] = [source]
       allow(::File).to receive(:exist?).and_call_original
       allow(::File).to receive(:exist?).with("#{tmp_dir}/restore/#{source}_full.tar").and_return(false)
-      expect_any_instance_of(Chef::Recipe).to receive(:`)
-        .and_return("s3://#{s3_bucket}/#{s3_prefix}/#{source}_full/2014.10.01.00.00.00")
+      expect_any_instance_of(Mixlib::ShellOut).to receive(:run_command)
+      expect_any_instance_of(Mixlib::ShellOut).to \
+        receive(:stdout).and_return("s3://#{s3_bucket}/#{s3_prefix}/#{source}_full/2014.10.01.00.00.00")
 
       chef_run.converge(described_recipe)
 

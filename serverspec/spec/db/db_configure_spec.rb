@@ -5,9 +5,8 @@ describe port(3306) do
   it { should be_listening.with('tcp') }
 end
 
-# Check mysql databases
 # Check mysql databases for consul kvs
-describe 'using consul parameters' do
+describe 'there is a the assumed key to consul_parameters' do
   params = property[:consul_parameters]
 
   if params[:mysql_part] && params[:mysql_part][:app] && params[:mysql_part][:app][:database]

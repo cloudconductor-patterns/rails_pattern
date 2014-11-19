@@ -14,7 +14,7 @@ describe 'connect ap_svr' do
 
   apps.each do |app_name, app|
     next if app[:type] == 'optional'
-    describe "#{app_name} check" do
+    describe "There is not a 'optional' for app[:type]" do
       if app[:parameters][:app_port]
         port = app[:parameters][:app_port]
       else

@@ -39,7 +39,7 @@ describe 'backup_restore::configure' do
 
     describe 'use proxy' do
       it 'create s3 config include proxy settings' do
-        chef_run.node.set['backup_restore']['config']['user_proxy'] = true
+        chef_run.node.set['backup_restore']['config']['use_proxy'] = true
         chef_run.node.set['backup_restore']['config']['proxy_host'] = '127.0.0.250'
         chef_run.node.set['backup_restore']['config']['proxy_port'] = '8080'
         chef_run.converge(described_recipe)
@@ -53,6 +53,19 @@ describe 'backup_restore::configure' do
             'proxy_port' => '8080',
             'use_https' => false
           }
+        )
+      end
+    end
+    describe 'not use proxy' do
+      it 'create s3 config include proxy settings' do
+        chef_run.node.set['backup_restore']['config']['use_proxy'] = false
+        chef_run.converge(described_recipe)
+        expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
+          :s3cfg,
+          :create,
+          '/root/.s3cfg'
+        ).with(
+          config: {}
         )
       end
     end

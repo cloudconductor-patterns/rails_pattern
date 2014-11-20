@@ -5,7 +5,7 @@ describe service('iptables') do
   it { should_not be_enabled }
 end
 
-describe 'connect mysql' do
+describe 'connect to the server have a key that [:roles] to db' do
   servers = property[:servers]
   db_host = servers.each_value.select do |server|
     server[:roles].include?('db')

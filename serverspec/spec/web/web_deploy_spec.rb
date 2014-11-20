@@ -14,7 +14,7 @@ describe 'connect ap_svr' do
 
   apps.each do |app_name, app|
     next if app[:type] == 'optional'
-    describe "#{app_name} check" do
+    describe "There is not a 'optional' for app[:type]" do
       if app[:parameters][:app_port]
         port = app[:parameters][:app_port]
       else
@@ -23,7 +23,7 @@ describe 'connect ap_svr' do
       describe command( \
         "curl --noproxy #{ap_host[:private_ip]} \
         'http://#{ap_host[:private_ip]}:#{port}'") do
-        it { should return_exit_status 0 }
+        its(:exit_status) { should eq 0 }
       end
     end
   end

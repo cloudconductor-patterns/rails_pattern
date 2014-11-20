@@ -1,48 +1,34 @@
 require_relative '../spec_helper'
 
 describe 'backup_restore::restore_ruby' do
-  let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
-      cookbook_path: %w(site-cookbooks cookbooks),
-      platform:      'centos',
-      version:       '6.5'
-    ) do |node|
-      node.set['cloudconductor']['applications'] = {
-        dynamic_git_app: {
-          type: 'dynamic',
-          parameters: {
-            backup_directories: '/var/www/app'
-          }
-        }
-      }
-    end
-    runner.converge(described_recipe)
-  end
+  let(:chef_run) { ChefSpec::SoloRunner.new }
 
-  tmp_dir = '/tmp/backup/restore'
-  backup_name = 'ruby_full'
-  backup_file = "#{tmp_dir}/#{backup_name}.tar"
+  it 'create application directory' do
+    base_path = '/var/www'
+    chef_run.node.set['rails_part']['app']['base_path'] = base_path
+    chef_run.converge(described_recipe)
 
-  it 'create base_path' do
-    expect(chef_run).to create_directory('/var/www').with(
+    expect(chef_run).to create_directory(base_path).with(
       recursive: true
     )
   end
 
-  it 'extract_full_backup' do
-    allow(::File).to receive(:exist?).and_call_original
-    allow(::File).to receive(:exist?).with(backup_file).and_return(true)
-    allow(::Dir).to receive(:exist?).and_call_original
-    allow(::Dir).to receive(:exist?).with("#{tmp_dir}/#{backup_name}").and_return(false)
-    expect(chef_run).to run_bash('extract_full_backup').with(
-      code: <<-EOF
-    tar -xvf #{backup_file} -C #{tmp_dir}
-    tar -zxvf #{tmp_dir}/#{backup_name}/archives/ruby.tar.gz -C #{chef_run.node['rails_part']['app']['base_path']}
-  EOF
-    )
+  describe 'backup file is exist and is not yet uncompress' do
+    it 'extract_full_backup' do
+      tmp_dir = '/tmp'
+      chef_run.node.set['backup_restore']['tmp_dir'] = tmp_dir
+      allow(::File).to receive(:exist?).and_call_original
+      allow(::File).to receive(:exist?).with("#{tmp_dir}/restore/ruby_full.tar").and_return(true)
+      allow(::Dir).to receive(:exist?).and_call_original
+      allow(::Dir).to receive(:exist?).with("#{tmp_dir}/restore/ruby_full").and_return(false)
+      chef_run.converge(described_recipe)
+
+      expect(chef_run).to run_bash('extract_full_backup')
+    end
   end
 
-  it 'link_to_latest_version' do
+  it 'create link to latest version' do
+    chef_run.converge(described_recipe)
     expect(chef_run).to run_ruby_block('link_to_latest_version')
   end
 end

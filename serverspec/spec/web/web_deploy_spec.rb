@@ -12,7 +12,7 @@ describe 'connect ap_svr' do
   end.first
   apps = params[:cloudconductor][:applications]
 
-  apps.each do |app_name, app|
+  apps.each do |_app_name, app|
     next if app[:type] == 'optional'
     describe "There is not a 'optional' for app[:type]" do
       if app[:parameters][:app_port]

@@ -40,10 +40,11 @@ describe 'mysql_part::create_database' do
   end
 
   it 'create database user for application' do
+    allow_any_instance_of(Chef::Resource).to receive(:generate_random).and_return('GENERATED_PASSWORD')
+
     app_user_name = 'app_user'
-    app_user_pass = 'passwd'
+    app_user_pass = 'GENERATED_PASSWORD'
     chef_run.node.set['mysql_part']['app']['username'] = app_user_name
-    chef_run.node.set['mysql_part']['app']['password'] = app_user_pass
     chef_run.converge(described_recipe)
 
     expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(

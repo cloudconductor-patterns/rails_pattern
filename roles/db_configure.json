@@ -14,6 +14,7 @@
     }
   },
   "run_list": [
+    "recipe[mysql_part::create_database]",
     "recipe[backup_restore::configure]"
   ]
 }

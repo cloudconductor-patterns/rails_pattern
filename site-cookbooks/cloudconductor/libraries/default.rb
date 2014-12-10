@@ -17,6 +17,16 @@ require 'cloud_conductor_utils/consul'
 
 module CloudConductor
   module CommonHelper
+    def generate_random(key = nil, size = 16)
+      seed = node[:cloudconductor][:seed]
+      before_seed = srand(seed + key.hash)
+
+      result = size.times.map { rand(256).to_s(16) }.join
+
+      srand(before_seed)
+      result
+    end
+
     def server_info(role)
       all_servers = CloudConductorUtils::Consul.read_servers
       servers = all_servers.select do |_hostname, server|

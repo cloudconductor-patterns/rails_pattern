@@ -6,9 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-::Chef::Recipe.send(:include, CloudConductor::CommonHelper)
-::Chef::Resource.send(:include, CloudConductor::CommonHelper)
-
 include_recipe 'database::mysql'
 
 mysql_connection_info = {

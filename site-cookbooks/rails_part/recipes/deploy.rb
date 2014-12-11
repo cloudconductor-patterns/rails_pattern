@@ -10,7 +10,6 @@ def dynamic?
   -> (_, application) { application[:type] == 'dynamic' }
 end
 
-::Chef::Recipe.send(:include, CloudConductor::CommonHelper)
 db_server_info = server_info('db').first
 
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|

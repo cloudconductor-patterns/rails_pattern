@@ -13,6 +13,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+require 'chef/recipe'
+require 'chef/resource'
+require 'chef/provider'
+
 require 'cloud_conductor_utils/consul'
 
 module CloudConductor
@@ -40,3 +44,7 @@ module CloudConductor
     end
   end
 end
+
+Chef::Recipe.send(:include, CloudConductor::CommonHelper)
+Chef::Resource.send(:include, CloudConductor::CommonHelper)
+Chef::Provider.send(:include, CloudConductor::CommonHelper)

@@ -223,7 +223,6 @@ describe 'nginx_part::deploy' do
             }
           )
         end
-
       end
 
       describe 'application type is static' do
@@ -338,7 +337,6 @@ describe 'nginx_part::deploy' do
         allow(File).to receive(:exist?).with("#{nginx_default_root}/#{app_name}/current").and_return(true)
         allow(File).to receive(:realpath).with("#{nginx_default_root}/#{app_name}/current")
           .and_return("#{nginx_default_root}/#{app_name}/#{current_version}")
-
       end
 
       it 'start the building'do
@@ -367,6 +365,5 @@ describe 'nginx_part::deploy' do
         expect(chef_run).to_not create_directory("/tmp/#{app_name}")
       end
     end
-
   end
 end

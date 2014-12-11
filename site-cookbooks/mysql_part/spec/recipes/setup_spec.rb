@@ -11,8 +11,4 @@ describe 'mysql_part::setup' do
   it 'include client recipe of mysql cookbook' do
     expect(chef_run).to include_recipe 'mysql::client'
   end
-
-  it 'include create_database recipe' do
-    expect(chef_run).to include_recipe 'mysql_part::create_database'
-  end
 end

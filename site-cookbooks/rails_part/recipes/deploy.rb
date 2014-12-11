@@ -14,7 +14,6 @@ end
 db_server_info = server_info('db').first
 
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
-
   app_root = "#{node['rails_part']['app']['base_path']}/#{app_name}"
   app_dir = "#{app_root}/releases/#{app['version']}"
   directory "#{app_root}/releases" do

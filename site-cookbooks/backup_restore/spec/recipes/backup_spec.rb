@@ -1,7 +1,6 @@
 require_relative '../spec_helper'
 
 describe 'backup_restore::backup' do
-
   let(:chef_run) { ChefSpec::SoloRunner.new }
 
   describe 'contains directory to a enabled sources' do

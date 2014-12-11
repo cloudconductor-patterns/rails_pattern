@@ -63,7 +63,6 @@ describe 'rails_part::deploy' do
       end
 
       describe 'application directory is not exist' do
-
         before do
           allow(Dir).to receive(:exist?).with("#{base_path}/#{application_name}/releases/#{app_version}").and_return(false)
         end

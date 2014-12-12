@@ -22,7 +22,7 @@ require 'cloud_conductor_utils/consul'
 module CloudConductor
   module Helper
     def generate_random(key = '', size = 16)
-      seed = node[:cloudconductor][:seed]
+      seed = node[:cloudconductor][:seed].to_i
       key_hash = key.each_byte.inject(0) { |a, e| a * 256 + e }
       before_seed = srand(seed + key_hash)
 

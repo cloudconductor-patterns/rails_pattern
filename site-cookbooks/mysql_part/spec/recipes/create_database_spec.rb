@@ -15,10 +15,10 @@ describe 'mysql_part::create_database' do
 
   before do
     chef_run.node.set['mysql']['server_root_password'] = db_passwd
-    chef_run.converge(described_recipe)
   end
 
   it 'include mysql recipe of database cookbook' do
+    chef_run.converge(described_recipe)
     expect(chef_run).to include_recipe('database::mysql')
   end
 

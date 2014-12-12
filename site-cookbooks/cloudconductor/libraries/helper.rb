@@ -20,7 +20,7 @@ require 'chef/provider'
 require 'cloud_conductor_utils/consul'
 
 module CloudConductor
-  module CommonHelper
+  module Helper
     def generate_random(key = nil, size = 16)
       seed = node[:cloudconductor][:seed]
       before_seed = srand(seed + key.hash)
@@ -45,6 +45,6 @@ module CloudConductor
   end
 end
 
-Chef::Recipe.send(:include, CloudConductor::CommonHelper)
-Chef::Resource.send(:include, CloudConductor::CommonHelper)
-Chef::Provider.send(:include, CloudConductor::CommonHelper)
+Chef::Recipe.send(:include, CloudConductor::Helper)
+Chef::Resource.send(:include, CloudConductor::Helper)
+Chef::Provider.send(:include, CloudConductor::Helper)

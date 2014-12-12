@@ -125,8 +125,7 @@ describe 'rails_part::deploy' do
       db_settings = {
         'adapter' => 'mysql2',
         'database' => 'rails',
-        'user' => 'rails',
-        'password' => 'app_passwd'
+        'user' => 'rails'
       }
       rails_env = 'production'
 

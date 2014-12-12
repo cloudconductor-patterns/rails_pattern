@@ -134,11 +134,12 @@ describe 'rails_part::deploy' do
       chef_run.converge(described_recipe)
 
       expect(chef_run).to create_template("#{base_path}/#{application_name}/releases/#{app_version}/config/database.yml").with(
-        variables: {
+        variables: hash_including(
           db: db_settings,
+          password: /[a-f0-9]{32}/,
           db_server: db_server_info,
           environment: rails_env
-        }
+        )
       )
     end
 

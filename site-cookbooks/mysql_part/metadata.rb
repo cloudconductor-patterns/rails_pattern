@@ -8,4 +8,4 @@ maintainer_email 'ccndctr@gmail.com'
 supports 'centos', '= 6.5'
 
 depends 'mysql'
-depends 'database'
+depends 'database', '= 2.3.1'

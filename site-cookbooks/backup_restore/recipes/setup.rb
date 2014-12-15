@@ -1,6 +1,10 @@
 include_recipe 'cron'
 
-package ['zlib-devel', 'xz-devel'] do
+package 'zlib-devel' do
+  action :install
+end
+
+package 'xz-devel' do
   action :install
 end
 

@@ -40,7 +40,7 @@ describe 'mysql_part::create_database' do
   end
 
   it 'create database user for application' do
-    allow_any_instance_of(Chef::Resource).to receive(:generate_random).and_return('GENERATED_PASSWORD')
+    allow_any_instance_of(Chef::Resource).to receive(:generate_password).and_return('GENERATED_PASSWORD')
 
     app_user_name = 'app_user'
     app_user_pass = 'GENERATED_PASSWORD'

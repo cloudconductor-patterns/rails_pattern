@@ -59,7 +59,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
     source 'database.yml.erb'
     variables(
       db: node['rails_part']['db'],
-      password: generate_random('database'),
+      password: generate_password('database'),
       db_server: db_server_info,
       environment: node['rails_part']['app']['rails_env']
     )

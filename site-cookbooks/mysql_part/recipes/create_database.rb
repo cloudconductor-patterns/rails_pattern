@@ -25,7 +25,7 @@ mysql_database_user 'create database user' do
   username node['mysql_part']['app']['username']
   connection mysql_connection_info
   host '%'
-  password generate_random('database')
+  password generate_password('database')
   action :create
 end
 

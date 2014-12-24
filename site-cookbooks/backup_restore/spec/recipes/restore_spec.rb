@@ -1,51 +1,57 @@
 require_relative '../spec_helper'
 
 describe 'backup_restore::restore' do
-  let(:chef_run) do
-    runner = ChefSpec::SoloRunner.new(
-      cookbook_path: %w(site-cookbooks cookbooks),
-      platform:      'centos',
-      version:       '6.5'
-    )do |node|
-      node.set['backup_restore']['destinations']['enabled'] = %w(s3)
-      node.set['backup_restore']['destinations']['s3'] = {
-        bucket: 's3bucket',
-        access_key_id: 'access_key_id',
-        secret_access_key: 'secret_access_key',
-        region: 'us-east-1',
-        prefix: '/backup'
-      }
-      node.set['backup_restore']['restore']['target_sources'] = %w(directory mysql ruby)
-    end
+  let(:chef_run) { ChefSpec::SoloRunner.new }
 
-    runner.converge(described_recipe)
+  tmp_dir = '/tmp/backup'
+
+  before do
+    chef_run.node.set['backup_restore']['tmp_dir'] = tmp_dir
+    chef_run.node.set['backup_restore']['destinations']['enabled'] = %w(s3)
+    chef_run.node.set['backup_restore']['destinations']['s3'] = {
+      bucket: 's3bucket'
+    }
+
+    chef_run.converge(described_recipe)
   end
 
-  it 'create temporary directory' do
-    expect(chef_run).to create_directory('/tmp/backup/restore').with(
+  it 'create tmp directory' do
+    expect(chef_run).to create_directory("#{tmp_dir}/restore").with(
       recursive: true
     )
   end
 
-  it 'run directory backup' do
+  it 'delete tem directory' do
+    expect(chef_run).to delete_directory("#{tmp_dir}/restore").with(
+      recursive: true
+    )
+  end
+
+  it 'from first of the enabled backup destination will include the recipe of fetch' do
     expect(chef_run).to include_recipe('backup_restore::fetch_s3')
   end
 
-  it 'run directory backup' do
-    expect(chef_run).to include_recipe('backup_restore::restore_directory')
+  describe 'contains directory to a restore target sources' do
+    it 'include restore_directory recipe' do
+      chef_run.node.set['backup_restore']['restore']['target_sources'] = %w(directory)
+      chef_run.converge(described_recipe)
+      expect(chef_run).to include_recipe('backup_restore::restore_directory')
+    end
   end
 
-  it 'run directory backup' do
-    expect(chef_run).to include_recipe('backup_restore::restore_mysql')
+  describe 'contains directory to a restore target sources' do
+    it 'include restore_mysqly recipe' do
+      chef_run.node.set['backup_restore']['restore']['target_sources'] = %w(mysql)
+      chef_run.converge(described_recipe)
+      expect(chef_run).to include_recipe('backup_restore::restore_mysql')
+    end
   end
 
-  it 'run directory backup' do
-    expect(chef_run).to include_recipe('backup_restore::restore_ruby')
-  end
-
-  it 'delete temporary directory' do
-    expect(chef_run).to delete_directory('/tmp/backup/restore').with(
-      recursive: true
-    )
+  describe 'contains directory to a restore target sources' do
+    it 'include restore_ruby recipe' do
+      chef_run.node.set['backup_restore']['restore']['target_sources'] = %w(ruby)
+      chef_run.converge(described_recipe)
+      expect(chef_run).to include_recipe('backup_restore::restore_ruby')
+    end
   end
 end

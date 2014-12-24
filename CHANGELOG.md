@@ -1,6 +1,15 @@
 CHANGELOG
 =========
 
+## version 0.3.2 (2014/12/24)
+
+  - Support latest serverspec.
+  - Add default CIDR to CloudConductorLocation parameter.
+  - Add dependencies between SubnetRouteTableAssociation and EIP to specify remove order.
+  - Remove unnecessary role file.
+  - Add required packages to build nokogiri.
+  - Brush up chef recipes on mysql_part and nginx_part.
+
 ## version 0.3.1 (2014/11/17)
 
   - Remove unused dependencies from backup_restore

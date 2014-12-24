@@ -81,7 +81,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
 
   if app['type'] == 'dynamic'
     upstream_hash = {
-      "#{app_name}" => {
+      app_name => {
         server: "#{ap_server_info[:private_ip]}:#{app['parameters']['port'] || 8080}"
       }
     }
@@ -94,11 +94,11 @@ node['cloudconductor']['applications'].each do |app_name, app|
         'proxy_set_header X-Forwarded-Proto' => '$scheme'
       },
       '/static' => {
-        'alias' => "#{app_root}",
+        'alias' => app_root,
         index: 'index.html'
       },
       '/_errors/502.html' => {
-        'alias' => "#{maintenance_path}",
+        'alias' => maintenance_path,
         block: 'internal'
       }
     }
@@ -111,7 +111,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
     end
   else
     nginx_conf_file app['domain'] do
-      root "#{app_root}"
+      root app_root
       options options
       site_type :static
       listen listen

@@ -14,7 +14,6 @@ end
 db_server_info = server_info('db').first
 
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
-
   app_root = "#{node['rails_part']['app']['base_path']}/#{app_name}"
   app_dir = "#{app_root}/releases/#{app['version']}"
   directory "#{app_root}/releases" do
@@ -24,9 +23,9 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
 
   case app['protocol']
   when 'git'
-    git "#{app_dir}" do
-      repository "#{app['url']}"
-      revision "#{app['revision']}"
+    git app_dir do
+      repository app['url']
+      revision app['revision']
       action :checkout
     end
   when 'http'

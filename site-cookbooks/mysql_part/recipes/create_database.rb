@@ -22,7 +22,8 @@ mysql_database node['mysql_part']['app']['database'] do
 end
 
 # create database user
-mysql_database_user node['mysql_part']['app']['username'] do
+mysql_database_user 'create database user' do
+  username node['mysql_part']['app']['username']
   connection mysql_connection_info
   host '%'
   password node['mysql_part']['app']['password']
@@ -30,7 +31,8 @@ mysql_database_user node['mysql_part']['app']['username'] do
 end
 
 # Grant database
-mysql_database_user node['mysql_part']['app']['username'] do
+mysql_database_user 'Grant database' do
+  username node['mysql_part']['app']['username']
   connection mysql_connection_info
   database_name node['mysql_part']['app']['database']
   host '%'

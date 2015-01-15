@@ -1,0 +1,6 @@
+{
+  "service": {
+    "name": "puma",
+    "port": 8080
+  }
+}

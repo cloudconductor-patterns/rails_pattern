@@ -12,19 +12,19 @@ describe 'there is a the assumed key to consul_parameters' do
   if params[:mysql_part] && params[:mysql_part][:app] && params[:mysql_part][:app][:database]
     database = params[:mysql_part][:app][:database]
   else
-    database = 'rails'
+    database = 'application'
   end
 
   if params[:mysql_part] && params[:mysql_part][:app] && params[:mysql_part][:app][:username]
     username = params[:mysql_part][:app][:username]
   else
-    username = 'rails'
+    username = 'application'
   end
 
   if params[:mysql_part] && params[:mysql_part][:app] && params[:mysql_part][:app][:password]
     password = params[:mysql_part][:app][:password]
   else
-    password = 'todo_replace_randompassword'
+    password = generate_password('database')
   end
 
   describe command("mysql #{database} -u #{username} -p#{password} -e 'SHOW DATABASES;'") do

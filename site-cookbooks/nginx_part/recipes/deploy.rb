@@ -101,14 +101,14 @@ node['cloudconductor']['applications'].each do |app_name, app|
       }
     }
     options.merge(upstream_hash)
-    nginx_conf_file app['domain'] do
+    nginx_conf_file app_name do
       upstream upstream_hash
       locations locations_hash
       options options
       listen listen
     end
   else
-    nginx_conf_file app['domain'] do
+    nginx_conf_file app_name do
       root app_root
       options options
       site_type :static

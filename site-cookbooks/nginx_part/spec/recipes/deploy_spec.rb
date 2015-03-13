@@ -20,7 +20,6 @@ describe 'nginx_part::deploy' do
     app_name = 'application'
     app_version = '0.3'
     app_archive_url = 'http://cloudconductor.org/chefspec.tar.gz'
-    domain = 'cloudconductor.org'
     ap_server_ip = '172.0.0.5'
 
     before do
@@ -36,7 +35,6 @@ describe 'nginx_part::deploy' do
           version: app_version,
           force_update: false,
           url: app_archive_url,
-          domain: domain,
           parameters: {}
         }
       }
@@ -192,7 +190,7 @@ describe 'nginx_part::deploy' do
           expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
             :nginx_conf_file,
             :create,
-            domain
+            app_name
           ).with(
             upstream: {
               app_name => {
@@ -239,7 +237,7 @@ describe 'nginx_part::deploy' do
           expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
             :nginx_conf_file,
             :create,
-            domain
+            app_name
           ).with(
             root: "#{nginx_default_root}/#{app_name}/#{app_version}",
             site_type: :static,
@@ -258,7 +256,7 @@ describe 'nginx_part::deploy' do
             expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
               :nginx_conf_file,
               :create,
-              domain
+              app_name
             ).with(
               listen: '80 default_server'
             )
@@ -272,7 +270,7 @@ describe 'nginx_part::deploy' do
             expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
               :nginx_conf_file,
               :create,
-              domain
+              app_name
             ).with(
               options: {
                 server_tokens: 'off',
@@ -293,7 +291,7 @@ describe 'nginx_part::deploy' do
             expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
               :nginx_conf_file,
               :create,
-              domain
+              app_name
             ).with(
               options: {
                 server_tokens: 'off',

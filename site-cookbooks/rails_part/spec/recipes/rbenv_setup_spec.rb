@@ -32,11 +32,11 @@ describe 'rails_part::rbenv_setup' do
 
   it 'install bundler gem' do
     expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
-        :rbenv_gem,
-        :install,
-        'bundler'
-      ).with(
-        ruby_version: '2.1.2'
-      )
+      :rbenv_gem,
+      :install,
+      'bundler'
+    ).with(
+      ruby_version: '2.1.2'
+    )
   end
 end

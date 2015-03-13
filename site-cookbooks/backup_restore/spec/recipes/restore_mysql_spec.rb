@@ -51,7 +51,7 @@ describe 'backup_restore::restore_mysql' do
         chef_run.converge(described_recipe)
 
         expect(chef_run).to run_bash('delete_old_data').with(
-         code: "rm -rf #{data_dir}/*"
+          code: "rm -rf #{data_dir}/*"
         )
       end
     end

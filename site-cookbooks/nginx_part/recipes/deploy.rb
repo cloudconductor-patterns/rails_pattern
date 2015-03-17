@@ -60,7 +60,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
     end
   end
 
-  options = { server_tokens: 'off', error_page: '502 = /_errors/502.html' }
+  options = { server_tokens: 'off', error_page: "502 = /#{app_name}/_errors/502.html" }
   if app['parameters']['basic_auth']
     package 'httpd-tools'
     bash 'create_htpasswd' do
@@ -84,18 +84,18 @@ node['cloudconductor']['applications'].each do |app_name, app|
       }
     }
     locations_hash = {
-      '/' => {
+      "/#{app_name}" => {
         proxy_pass: "http://#{app_name}",
         'proxy_set_header Host' => '$http_host',
         'proxy_set_header X-Real-IP' => '$remote_addr',
         'proxy_set_header X-Forwarded-For' => '$proxy_add_x_forwarded_for',
         'proxy_set_header X-Forwarded-Proto' => '$scheme'
       },
-      '/static' => {
+      "/#{app_name}/static" => {
         'alias' => app_root,
         index: 'index.html'
       },
-      '/_errors/502.html' => {
+      "/#{app_name}/_errors/502.html" => {
         'alias' => maintenance_path,
         block: 'internal'
       }

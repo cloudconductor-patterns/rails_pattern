@@ -4,11 +4,11 @@ db:
       prepare_path: true
       schedule: "0 0 * * *"
       script:
-        pre_backup: "sudo -u mysql mysqldump -u root -x --all-databases > /var/cloudconductor/backups/mysql/dump.sql 2>/dev/null"
-        post_restore: "sudo -u mysql mysql -u root < /var/cloudconductor/backups/mysql/dump.sql 2>/dev/null"
+        pre_backup: ! '(source /opt/cloudconductor/config; CONSUL_SECRET_KEY_ENCODED="`ruby -e \"require ''cgi''; puts CGI::escape(''${CONSUL_SECRET_KEY}'')\"`"; SALT="`curl -X GET http://localhost:8500/v1/kv/cloudconductor/parameters | jq ''.[].Value'' | sed -e ''s/[^\"]*\"\([^\"]*\)\".*/\1/'' | base64 -d | jq ''.cloudconductor.salt'' | sed -e ''s/[^\"]*\"\([^\"]*\)\".*/\1/''`"; PASSWORD="`ruby -e \"require ''openssl''; puts OpenSSL::Digest::SHA256.hexdigest(''${SALT}'' + ''database'')\"`"; sudo -u mysql mysqldump -u application -p${PASSWORD} -x --all-databases > /var/cloudconductor/backups/mysql/dump.sql) >/dev/null 2>&1'
+        post_restore: ! '(source /opt/cloudconductor/config; CONSUL_SECRET_KEY_ENCODED="`ruby -e \"require ''cgi''; puts CGI::escape(''${CONSUL_SECRET_KEY}'')\"`"; SALT="`curl -X GET http://localhost:8500/v1/kv/cloudconductor/parameters | jq ''.[].Value'' | sed -e ''s/[^\"]*\"\([^\"]*\)\".*/\1/'' | base64 -d | jq ''.cloudconductor.salt'' | sed -e ''s/[^\"]*\"\([^\"]*\)\".*/\1/''`"; PASSWORD="`ruby -e \"require ''openssl''; puts OpenSSL::Digest::SHA256.hexdigest(''${SALT}'' + ''database'')\"`"; sudo -u mysql mysql -u application -p${PASSWORD} < /var/cloudconductor/backups/mysql/dump.sql) >/dev/null 2>&1;'
       restore_enabled: true
   privileges:
-    - user: postgresql
+    - user: mysql
       command: /usr/bin/mysql
     - user: mysql
       command: /usr/bin/mysqldump

@@ -51,6 +51,7 @@ end
 
 mysql_database 'flush the privileges' do
   connection mysql_connection_info
+  database_name node['mysql_part']['app']['database']
   sql 'flush privileges'
   action :query
 end

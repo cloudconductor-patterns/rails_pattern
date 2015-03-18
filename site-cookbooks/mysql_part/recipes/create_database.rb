@@ -40,6 +40,15 @@ mysql_database_user 'Grant database' do
   action :grant
 end
 
+mysql_database_user 'Grant reload privilege to user' do
+  username node['mysql_part']['app']['username']
+  connection mysql_connection_info
+  host '%'
+  privileges [:reload]
+  require_ssl node['mysql_part']['app']['require_ssl']
+  action :grant
+end
+
 mysql_database 'flush the privileges' do
   connection mysql_connection_info
   sql 'flush privileges'

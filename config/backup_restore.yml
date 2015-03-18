@@ -1,0 +1,14 @@
+db:
+  paths:
+    - path: /var/cloudconductor/backups/mysql
+      prepare_path: true
+      schedule: "0 0 * * *"
+      script:
+        pre_backup: "sudo -u mysql mysqldump -u root -x --all-databases > /var/cloudconductor/backups/mysql/dump.sql 2>/dev/null"
+        post_restore: "sudo -u mysql mysql -u root < /var/cloudconductor/backups/mysql/dump.sql 2>/dev/null"
+      restore_enabled: true
+  privileges:
+    - user: postgresql
+      command: /usr/bin/mysql
+    - user: mysql
+      command: /usr/bin/mysqldump

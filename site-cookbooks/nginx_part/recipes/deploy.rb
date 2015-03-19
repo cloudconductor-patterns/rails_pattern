@@ -89,10 +89,11 @@ node['cloudconductor']['applications'].each do |app_name, app|
         'proxy_set_header Host' => '$http_host',
         'proxy_set_header X-Real-IP' => '$remote_addr',
         'proxy_set_header X-Forwarded-For' => '$proxy_add_x_forwarded_for',
-        'proxy_set_header X-Forwarded-Proto' => '$scheme'
+        'proxy_set_header X-Forwarded-Proto' => '$scheme',
+        'rewrite' => "^/#{app_name}(/.*)$ $1 break;"
       },
       "/#{app_name}/static" => {
-        'alias' => app_root,
+        'alias' => current_root,
         index: 'index.html'
       },
       "/#{app_name}/_errors/502.html" => {

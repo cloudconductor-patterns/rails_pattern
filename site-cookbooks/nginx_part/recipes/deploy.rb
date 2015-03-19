@@ -90,7 +90,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
         'proxy_set_header X-Real-IP' => '$remote_addr',
         'proxy_set_header X-Forwarded-For' => '$proxy_add_x_forwarded_for',
         'proxy_set_header X-Forwarded-Proto' => '$scheme',
-        'rewrite' => "^/#{app_name}(/.*)$ $1 break;"
+        'rewrite' => "^/#{app_name}(/.*)$ $1 break"
       },
       "/#{app_name}/static" => {
         'alias' => current_root,

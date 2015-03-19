@@ -109,7 +109,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
   end
 
   service app_name do
-    action [:enable, :start]
+    action [:enable, :restart]
   end
 
   bash "post_deploy_script_#{app_name}" do

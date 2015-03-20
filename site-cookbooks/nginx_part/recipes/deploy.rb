@@ -30,11 +30,6 @@ node['cloudconductor']['applications'].each do |app_name, app|
   if !Dir.exist?(app_root) || app['force_update']
     protocol = app['protocol'] || 'http'
     case protocol
-    when 'http'
-      remote_file 'application_tarball' do
-        source app['url']
-        path "#{tmp_dir}/#{app_name}.tar.gz"
-      end
     when 'git'
       git 'application_repository' do
         repository app['url']
@@ -42,21 +37,25 @@ node['cloudconductor']['applications'].each do |app_name, app|
         destination "#{tmp_dir}/#{app_name}"
         action :export
       end
-    end
-
-    bash 'extract_static_files' do
-      code <<-EOS
-        tar -zxvf #{tmp_dir}/#{app_name}.tar.gz -C #{tmp_dir}
-        rm #{tmp_dir}/#{app_name}.tar.gz
-        cd #{tmp_dir}/*
-        if [ $? -eq 0 ]; then
-          if [ -d ./public ]; then
-            mv ./public/* #{app_root}/
-          else
-            mv ./* #{app_root}/
+    when 'http'
+      remote_file 'application_tarball' do
+        source app['url']
+        path "#{tmp_dir}/#{app_name}.tar.gz"
+      end
+      bash 'extract_static_files' do
+        code <<-EOS
+          tar -zxvf #{tmp_dir}/#{app_name}.tar.gz -C #{tmp_dir}
+          rm #{tmp_dir}/#{app_name}.tar.gz
+          cd #{tmp_dir}/*
+          if [ $? -eq 0 ]; then
+            if [ -d ./public ]; then
+              mv ./public/* #{app_root}/
+            else
+              mv ./* #{app_root}/
+            fi
           fi
-        fi
-      EOS
+        EOS
+      end
     end
   end
 

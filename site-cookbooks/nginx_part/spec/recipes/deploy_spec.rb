@@ -198,18 +198,19 @@ describe 'nginx_part::deploy' do
               }
             },
             locations: {
-              '/' => {
+              "/#{app_name}" => {
                 proxy_pass: "http://#{app_name}",
                 'proxy_set_header Host' => '$http_host',
                 'proxy_set_header X-Real-IP' => '$remote_addr',
                 'proxy_set_header X-Forwarded-For' => '$proxy_add_x_forwarded_for',
-                'proxy_set_header X-Forwarded-Proto' => '$scheme'
+                'proxy_set_header X-Forwarded-Proto' => '$scheme',
+                'rewrite' => "^/#{app_name}(/.*)$ $1 break"
               },
-              '/static' => {
-                'alias' => "#{nginx_default_root}/#{app_name}/#{app_version}",
+              "/#{app_name}/static" => {
+                'alias' => "#{nginx_default_root}/#{app_name}/current",
                 index: 'index.html'
               },
-              '/_errors/502.html' => {
+              "/#{app_name}/_errors/502.html" => {
                 'alias' => "#{nginx_default_root}/maintenance/index.html",
                 block: 'internal'
               }
@@ -217,7 +218,7 @@ describe 'nginx_part::deploy' do
             listen: '80',
             options: {
               server_tokens: 'off',
-              error_page: '502 = /_errors/502.html'
+              error_page: "502 = /#{app_name}/_errors/502.html"
             }
           )
         end
@@ -244,7 +245,7 @@ describe 'nginx_part::deploy' do
             listen: '80',
             options: {
               server_tokens: 'off',
-              error_page: '502 = /_errors/502.html'
+              error_page: "502 = /#{app_name}/_errors/502.html"
             }
           )
         end
@@ -274,7 +275,7 @@ describe 'nginx_part::deploy' do
             ).with(
               options: {
                 server_tokens: 'off',
-                error_page: '502 = /_errors/502.html',
+                error_page: "502 = /#{app_name}/_errors/502.html",
                 auth_basic: 'Restricted',
                 auth_basic_user_file: 'htpasswd'
               }
@@ -295,7 +296,7 @@ describe 'nginx_part::deploy' do
             ).with(
               options: {
                 server_tokens: 'off',
-                error_page: '502 = /_errors/502.html',
+                error_page: "502 = /#{app_name}/_errors/502.html",
                 client_max_body_size: max_body_size
               }
             )

@@ -188,8 +188,8 @@ describe 'rails_part::deploy' do
       )
     end
 
-    it 'start puma service' do
-      expect(chef_run).to start_service(application_name)
+    it 'restart puma service' do
+      expect(chef_run).to restart_service(application_name)
     end
 
     it 'run post_deploy script' do

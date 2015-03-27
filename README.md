@@ -2,7 +2,6 @@ About
 =====
 
 This is the platform pattern designed to build the system hosts Ruby on Rails based application.
-It also supports backup and recovery for MySQL or files. Currently supported:
 
 * CentOS (6.5)
 * Ruby (>= 2.1.2)
@@ -16,7 +15,7 @@ Requirements
 Prerequisites
 -------------
 
-- cloudconductor (>= 0.3)
+- cloudconductor (>= 1.0)
 
 How to use patterns
 ============
@@ -32,107 +31,6 @@ Attributes
 The attributes not described here have default values, and you can change the value of them if you need.
 Please see the attribute files if you want to know what kind of attributes are in this pattern.
 
-Mandatory parameters
---------------------
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|cloudconductor |plain         |Hash           |Common attributes|
-|backup\_restore|plain         |Hash           |Backup or restore information|
-
-
-* cloudconductor
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|applications   |plain         |Hash           |Applications information|
-
-* cloudconductor.applications
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|\<application\_name\>|plain   |Hash           |Application information|
-
-* cloudconductor.applications.\<application_name\>
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|domain         |plain         |String         |Domain of application (ex. app.rails.com)|
-|type           |plain         |String         |Application type (static or dynamic)
-|protocol       |plain         |String         |Service protocol type (http or https)|
-|url            |plain         |String         |URL of the application (ex. http://.app.com/app.tgz)|
-|revision       |plain         |String         |Revision of the application (ex. HEAD)|
-|pre_deploy     |plain         |String         |Command line executed before the application is deployed|
-|post_deploy    |plain         |String         |Command line executed after the application is deployed|
-|parameters     |plain         |Hash           |Parameters used by application|
-
-* backup_restore
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|sources        |plain         |Hash           |Source database information|
-|destinations   |plain         |Hash           |Destination storage to backup to, or to recovery from|
-
-* backup_restore.sources
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|mysql          |plain         |Hash           |MySQL database information|
-
-* backup_restore.sources.mysql
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|db_user        |plain         |String         |Database username|
-|db_password    |plain         |String         |Database password|
-
-* backup_restore.destinations
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|\<destination name\>|plain    |String         |Destination storage name (s3)|
-
-* backup_restore.destinations.s3
-
-|Parameter      |Style         |Type           |Description  |
-|:--------------|:-------------|:--------------|:------------|
-|bucket         |plain         |String         |S3 bucket name|
-|access\_key\_id|plain         |String         |AWS access key id|
-|secret\_access\_key|plain     |String         |AWS secret access key|
-|region         |plain         |String         |AWS region (ex. ap-northeast-1)|
-|prefix         |plain         |String         |Bucket prefix (ex. backup)|
-
-Example of parameters
----------------------
-
-    {
-      "name": "railsapp",
-      "domain": "app.rails.jp",
-      "type": "dynamic",
-      "protocol": "http",
-      "url": "https://app.repository.com/master.tar.gz",
-      "revision": "HEAD",
-      "pre_deploy": "yum install libxslt-devel",
-      "post_deploy": "cd /var/www/app/current; RAILS_ENV=production /opt/rbenv/shims/bundle exec rake assets:precompile",
-      "parameters": "{ \"port\": \"8080\", \"backup_directories\": [\"/var/www/shared/data\"] }"
-      "backup_restore": {
-        "sources": {
-          "mysql": {
-            "db_user": "root",
-            "db_password": "apppassword"
-          }
-        },
-        "destinations": {
-          "s3": {
-            "bucket": "appbucket",
-            "access_key_id": "AKI*****************",
-            "secret_access_key": "****************************************",
-            "region": "ap-northeast-1",
-            "prefix": "app_backup"
-          }
-        }
-      }
-    }
 
 Copyright and License
 =====================

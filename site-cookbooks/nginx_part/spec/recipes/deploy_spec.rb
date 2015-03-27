@@ -20,7 +20,6 @@ describe 'nginx_part::deploy' do
     app_name = 'application'
     app_version = '0.3'
     app_archive_url = 'http://cloudconductor.org/chefspec.tar.gz'
-    domain = 'cloudconductor.org'
     ap_server_ip = '172.0.0.5'
 
     before do
@@ -36,7 +35,6 @@ describe 'nginx_part::deploy' do
           version: app_version,
           force_update: false,
           url: app_archive_url,
-          domain: domain,
           parameters: {}
         }
       }
@@ -192,7 +190,7 @@ describe 'nginx_part::deploy' do
           expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
             :nginx_conf_file,
             :create,
-            domain
+            app_name
           ).with(
             upstream: {
               app_name => {
@@ -200,18 +198,19 @@ describe 'nginx_part::deploy' do
               }
             },
             locations: {
-              '/' => {
+              "/#{app_name}" => {
                 proxy_pass: "http://#{app_name}",
                 'proxy_set_header Host' => '$http_host',
                 'proxy_set_header X-Real-IP' => '$remote_addr',
                 'proxy_set_header X-Forwarded-For' => '$proxy_add_x_forwarded_for',
-                'proxy_set_header X-Forwarded-Proto' => '$scheme'
+                'proxy_set_header X-Forwarded-Proto' => '$scheme',
+                'rewrite' => "^/#{app_name}(/.*)$ $1 break"
               },
-              '/static' => {
-                'alias' => "#{nginx_default_root}/#{app_name}/#{app_version}",
+              "/#{app_name}/static" => {
+                'alias' => "#{nginx_default_root}/#{app_name}/current",
                 index: 'index.html'
               },
-              '/_errors/502.html' => {
+              "/#{app_name}/_errors/502.html" => {
                 'alias' => "#{nginx_default_root}/maintenance/index.html",
                 block: 'internal'
               }
@@ -219,7 +218,7 @@ describe 'nginx_part::deploy' do
             listen: '80',
             options: {
               server_tokens: 'off',
-              error_page: '502 = /_errors/502.html'
+              error_page: "502 = /#{app_name}/_errors/502.html"
             }
           )
         end
@@ -239,14 +238,14 @@ describe 'nginx_part::deploy' do
           expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
             :nginx_conf_file,
             :create,
-            domain
+            app_name
           ).with(
             root: "#{nginx_default_root}/#{app_name}/#{app_version}",
             site_type: :static,
             listen: '80',
             options: {
               server_tokens: 'off',
-              error_page: '502 = /_errors/502.html'
+              error_page: "502 = /#{app_name}/_errors/502.html"
             }
           )
         end
@@ -258,7 +257,7 @@ describe 'nginx_part::deploy' do
             expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
               :nginx_conf_file,
               :create,
-              domain
+              app_name
             ).with(
               listen: '80 default_server'
             )
@@ -272,11 +271,11 @@ describe 'nginx_part::deploy' do
             expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
               :nginx_conf_file,
               :create,
-              domain
+              app_name
             ).with(
               options: {
                 server_tokens: 'off',
-                error_page: '502 = /_errors/502.html',
+                error_page: "502 = /#{app_name}/_errors/502.html",
                 auth_basic: 'Restricted',
                 auth_basic_user_file: 'htpasswd'
               }
@@ -293,11 +292,11 @@ describe 'nginx_part::deploy' do
             expect(chef_run).to ChefSpec::Matchers::ResourceMatcher.new(
               :nginx_conf_file,
               :create,
-              domain
+              app_name
             ).with(
               options: {
                 server_tokens: 'off',
-                error_page: '502 = /_errors/502.html',
+                error_page: "502 = /#{app_name}/_errors/502.html",
                 client_max_body_size: max_body_size
               }
             )

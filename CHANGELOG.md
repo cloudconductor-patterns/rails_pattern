@@ -1,6 +1,11 @@
 CHANGELOG
 =========
 
+## version 1.0.0 (2015/03/27)
+
+  - Support CloudConductor v1.0.
+  - Backup features have been omitted from this pattern. Use optional pattern (e.g. amanda_pattern) in conjuction with this pattern if you need backup features.
+
 ## version 0.3.2 (2014/12/24)
 
   - Support latest serverspec.

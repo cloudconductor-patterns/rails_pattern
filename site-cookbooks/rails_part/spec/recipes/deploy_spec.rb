@@ -125,8 +125,7 @@ describe 'rails_part::deploy' do
       db_settings = {
         'adapter' => 'mysql2',
         'database' => 'rails',
-        'user' => 'rails',
-        'password' => 'app_passwd'
+        'user' => 'rails'
       }
       rails_env = 'production'
 
@@ -135,11 +134,12 @@ describe 'rails_part::deploy' do
       chef_run.converge(described_recipe)
 
       expect(chef_run).to create_template("#{base_path}/#{application_name}/releases/#{app_version}/config/database.yml").with(
-        variables: {
+        variables: hash_including(
           db: db_settings,
+          password: /[a-f0-9]{32}/,
           db_server: db_server_info,
           environment: rails_env
-        }
+        )
       )
     end
 
@@ -188,8 +188,8 @@ describe 'rails_part::deploy' do
       )
     end
 
-    it 'start puma service' do
-      expect(chef_run).to start_service(application_name)
+    it 'restart puma service' do
+      expect(chef_run).to restart_service(application_name)
     end
 
     it 'run post_deploy script' do

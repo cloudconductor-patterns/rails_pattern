@@ -6,8 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-
-::Chef::Recipe.send(:include, CloudConductor::CommonHelper)
 ap_server_info = server_info('ap').first
 
 file "#{node['nginx']['dir']}/conf.d/default.conf" do
@@ -32,11 +30,6 @@ node['cloudconductor']['applications'].each do |app_name, app|
   if !Dir.exist?(app_root) || app['force_update']
     protocol = app['protocol'] || 'http'
     case protocol
-    when 'http'
-      remote_file 'application_tarball' do
-        source app['url']
-        path "#{tmp_dir}/#{app_name}.tar.gz"
-      end
     when 'git'
       git 'application_repository' do
         repository app['url']
@@ -44,25 +37,29 @@ node['cloudconductor']['applications'].each do |app_name, app|
         destination "#{tmp_dir}/#{app_name}"
         action :export
       end
-    end
-
-    bash 'extract_static_files' do
-      code <<-EOS
-        tar -zxvf #{tmp_dir}/#{app_name}.tar.gz -C #{tmp_dir}
-        rm #{tmp_dir}/#{app_name}.tar.gz
-        cd #{tmp_dir}/*
-        if [ $? -eq 0 ]; then
-          if [ -d ./public ]; then
-            mv ./public/* #{app_root}/
-          else
-            mv ./* #{app_root}/
+    when 'http'
+      remote_file 'application_tarball' do
+        source app['url']
+        path "#{tmp_dir}/#{app_name}.tar.gz"
+      end
+      bash 'extract_static_files' do
+        code <<-EOS
+          tar -zxvf #{tmp_dir}/#{app_name}.tar.gz -C #{tmp_dir}
+          rm #{tmp_dir}/#{app_name}.tar.gz
+          cd #{tmp_dir}/*
+          if [ $? -eq 0 ]; then
+            if [ -d ./public ]; then
+              mv ./public/* #{app_root}/
+            else
+              mv ./* #{app_root}/
+            fi
           fi
-        fi
-      EOS
+        EOS
+      end
     end
   end
 
-  options = { server_tokens: 'off', error_page: '502 = /_errors/502.html' }
+  options = { server_tokens: 'off', error_page: "502 = /#{app_name}/_errors/502.html" }
   if app['parameters']['basic_auth']
     package 'httpd-tools'
     bash 'create_htpasswd' do
@@ -86,31 +83,32 @@ node['cloudconductor']['applications'].each do |app_name, app|
       }
     }
     locations_hash = {
-      '/' => {
+      "/#{app_name}" => {
         proxy_pass: "http://#{app_name}",
         'proxy_set_header Host' => '$http_host',
         'proxy_set_header X-Real-IP' => '$remote_addr',
         'proxy_set_header X-Forwarded-For' => '$proxy_add_x_forwarded_for',
-        'proxy_set_header X-Forwarded-Proto' => '$scheme'
+        'proxy_set_header X-Forwarded-Proto' => '$scheme',
+        'rewrite' => "^/#{app_name}(/.*)$ $1 break"
       },
-      '/static' => {
-        'alias' => app_root,
+      "/#{app_name}/static" => {
+        'alias' => current_root,
         index: 'index.html'
       },
-      '/_errors/502.html' => {
+      "/#{app_name}/_errors/502.html" => {
         'alias' => maintenance_path,
         block: 'internal'
       }
     }
     options.merge(upstream_hash)
-    nginx_conf_file app['domain'] do
+    nginx_conf_file app_name do
       upstream upstream_hash
       locations locations_hash
       options options
       listen listen
     end
   else
-    nginx_conf_file app['domain'] do
+    nginx_conf_file app_name do
       root app_root
       options options
       site_type :static

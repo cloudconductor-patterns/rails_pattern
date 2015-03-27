@@ -4,11 +4,6 @@
   "chef_type": "role",
   "json_class": "Chef::Role",
   "default_attributes": {
-    "backup_restore": {
-      "destinations": {
-        "enabled": ["s3"]
-      }
-    },
     "postfix" : {
       "main" : {
         "smtp_sasl_password_maps" : "hash:/etc/postfix/sasl_passwd",
@@ -24,7 +19,6 @@
     }
   },
   "run_list": [
-    "recipe[rails_part::configure]",
-    "recipe[backup_restore::configure]"
+    "recipe[rails_part::configure]"
   ]
 }

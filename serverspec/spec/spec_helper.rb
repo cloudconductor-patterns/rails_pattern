@@ -17,3 +17,8 @@ RSpec.configure do |c|
 
   set_property properties
 end
+
+def generate_password(key = '')
+  salt = property[:consul_parameters][:cloudconductor][:salt]
+  OpenSSL::Digest::SHA256.hexdigest(salt + key)
+end

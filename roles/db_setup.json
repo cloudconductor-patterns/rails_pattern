@@ -1,6 +1,6 @@
 {
   "name": "db_setup",
-  "description": "Setups mysql database and backup tools",
+  "description": "Setups mysql database",
   "chef_type": "role",
   "json_class": "Chef::Role",
   "default_attributes": {
@@ -12,7 +12,6 @@
   },
   "run_list": [
     "recipe[yum]",
-    "recipe[mysql_part::setup]",
-    "recipe[backup_restore::setup]"
+    "recipe[mysql_part::setup]"
   ]
 }

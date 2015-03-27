@@ -1,19 +1,9 @@
 {
   "name": "db_configure",
-  "description": "Configures cron job to backup mysql database using gem backup",
+  "description": "Create database",
   "chef_type": "role",
   "json_class": "Chef::Role",
-  "default_attributes": {
-    "backup_restore": {
-      "sources": {
-        "enabled": ["mysql"]
-      },
-      "destinations": {
-        "enabled": ["s3"]
-      }
-    }
-  },
   "run_list": [
-    "recipe[backup_restore::configure]"
+    "recipe[mysql_part::create_database]"
   ]
 }

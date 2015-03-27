@@ -16,9 +16,8 @@ default['rails_part']['app']['bundler'] = true
 default['rails_part']['app']['bundle_command'] = '/opt/rbenv/shims/bundle'
 
 default['rails_part']['db']['adapter'] = 'mysql2'
-default['rails_part']['db']['database'] = 'rails'
-default['rails_part']['db']['user'] = 'rails'
-default['rails_part']['db']['password'] = 'todo_replace_randompassword'
+default['rails_part']['db']['database'] = 'application'
+default['rails_part']['db']['user'] = 'application'
 
 default['rails_part']['puma']['bind'] = 'tcp://0.0.0.0:8080'
 default['rails_part']['puma']['output_append'] = true

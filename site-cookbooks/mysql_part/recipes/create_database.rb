@@ -6,7 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-
 include_recipe 'database::mysql'
 
 mysql_connection_info = {
@@ -26,7 +25,7 @@ mysql_database_user 'create database user' do
   username node['mysql_part']['app']['username']
   connection mysql_connection_info
   host '%'
-  password node['mysql_part']['app']['password']
+  password generate_password('database')
   action :create
 end
 
@@ -41,8 +40,18 @@ mysql_database_user 'Grant database' do
   action :grant
 end
 
+mysql_database_user 'Grant reload privilege to user' do
+  username node['mysql_part']['app']['username']
+  connection mysql_connection_info
+  host '%'
+  privileges [:reload]
+  require_ssl node['mysql_part']['app']['require_ssl']
+  action :grant
+end
+
 mysql_database 'flush the privileges' do
   connection mysql_connection_info
+  database_name node['mysql_part']['app']['database']
   sql 'flush privileges'
   action :query
 end

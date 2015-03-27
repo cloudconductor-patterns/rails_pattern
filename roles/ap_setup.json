@@ -4,7 +4,6 @@
   "chef_type": "role",
   "json_class":"Chef::Role",
   "run_list": [
-    "recipe[rails_part::setup]",
-    "recipe[backup_restore::setup]"
+    "recipe[rails_part::setup]"
   ]
 }

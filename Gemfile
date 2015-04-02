@@ -23,4 +23,5 @@ group :test do
   gem 'chefspec'
   gem 'chef'
   gem 'berkshelf'
+  gem 'foodcritic'
 end

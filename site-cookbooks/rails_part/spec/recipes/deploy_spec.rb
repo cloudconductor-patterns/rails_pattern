@@ -71,7 +71,7 @@ describe 'rails_part::deploy' do
           expect(chef_run).to create_remote_file("application_tarball_#{application_name}").with(
             source: url,
             path: "/tmp/#{application_name}/#{application_name}.tar.gz"
-           )
+          )
         end
 
         it 'extract the application from the archive file' do

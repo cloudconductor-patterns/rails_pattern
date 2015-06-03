@@ -38,6 +38,9 @@ describe 'nginx_part::deploy' do
           parameters: {}
         }
       }
+      chef_run.node.set['cloudconductor']['servers'] = {
+        'ap01' => { 'private_ip' => ap_server_ip, 'roles' => 'ap' }
+      }
       chef_run.converge(described_recipe)
     end
 

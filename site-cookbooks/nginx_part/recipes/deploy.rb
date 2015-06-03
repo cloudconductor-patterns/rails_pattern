@@ -6,7 +6,8 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-ap_server_info = server_info('ap').first
+
+Chef::Recipe.send(:include, NginxHelper)
 
 file "#{node['nginx']['dir']}/conf.d/default.conf" do
   action :delete
@@ -79,7 +80,7 @@ node['cloudconductor']['applications'].each do |app_name, app|
   if app['type'] == 'dynamic'
     upstream_hash = {
       app_name => {
-        server: "#{ap_server_info[:private_ip]}:#{app['parameters']['port'] || 8080}"
+        server: "#{first_ap_server[:private_ip]}:#{app['parameters']['port'] || 8080}"
       }
     }
     locations_hash = {

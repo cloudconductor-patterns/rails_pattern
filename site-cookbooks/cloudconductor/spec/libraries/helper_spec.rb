@@ -92,6 +92,28 @@ describe CloudConductor::Helper do
       )
     end
   end
+  describe '#db_servers' do
+    before do
+      @helper = Object.new
+      @helper.extend CloudConductor::Helper
+      node = {
+        'cloudconductor' => {
+          'servers' => {
+            'ap' => { 'roles' => 'ap', 'private_ip' => '127.0.0.2' },
+            'db1' => { 'roles' => 'db', 'private_ip' => '127.0.0.4' },
+            'db2' => { 'roles' => 'db', 'private_ip' => '127.0.0.5' }
+          }
+        }
+      }
+      allow(@helper).to receive(:node).and_return(node)
+    end
+    it 'return hash of ap roll only' do
+      expect(@helper.db_servers).to eq(
+        [{ 'roles' => 'db', 'private_ip' => '127.0.0.4', 'hostname' => 'db1' },
+         { 'roles' => 'db', 'private_ip' => '127.0.0.5', 'hostname' => 'db2' }]
+      )
+    end
+  end
   describe '#first_ap_server' do
     before do
       @helper = Object.new
@@ -109,6 +131,26 @@ describe CloudConductor::Helper do
     it 'return hash of ap roll of first' do
       expect(@helper.first_ap_server).to eq(
         'roles' => 'ap', 'private_ip' => '127.0.0.2', 'hostname' => 'ap1'
+      )
+    end
+  end
+  describe '#first_db_server' do
+    before do
+      @helper = Object.new
+      @helper.extend CloudConductor::Helper
+      node = {
+        'cloudconductor' => {
+          'servers' => {
+            'db1' => { 'roles' => 'db', 'private_ip' => '127.0.0.2' },
+            'db2' => { 'roles' => 'db', 'private_ip' => '127.0.0.3' }
+          }
+        }
+      }
+      allow(@helper).to receive(:node).and_return(node)
+    end
+    it 'return hash of ap roll of first' do
+      expect(@helper.first_db_server).to eq(
+        'roles' => 'db', 'private_ip' => '127.0.0.2', 'hostname' => 'db1'
       )
     end
   end

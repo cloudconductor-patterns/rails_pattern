@@ -52,8 +52,16 @@ module CloudConductor
       pick_servers_as_role('ap')
     end
 
+    def db_servers
+      pick_servers_as_role('db')
+    end
+
     def first_ap_server
       ap_servers.first
+    end
+
+    def first_db_server
+      db_servers.first
     end
   end
 end

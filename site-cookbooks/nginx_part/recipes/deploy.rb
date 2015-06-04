@@ -6,9 +6,6 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-
-Chef::Recipe.send(:include, NginxHelper)
-
 file "#{node['nginx']['dir']}/conf.d/default.conf" do
   action :delete
 end
@@ -78,9 +75,10 @@ node['cloudconductor']['applications'].each do |app_name, app|
   options[:client_max_body_size] = app['parameters']['client_max_body_size'] if app['parameters']['client_max_body_size']
 
   if app['type'] == 'dynamic'
+
     upstream_hash = {
       app_name => {
-        server: "#{first_ap_server[:private_ip]}:#{app['parameters']['port'] || 8080}"
+        server: "#{first_ap_server['private_ip']}:#{app['parameters']['port'] || 8080}"
       }
     }
     locations_hash = {

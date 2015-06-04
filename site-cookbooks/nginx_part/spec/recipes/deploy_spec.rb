@@ -23,9 +23,6 @@ describe 'nginx_part::deploy' do
     ap_server_ip = '172.0.0.5'
 
     before do
-      allow_any_instance_of(Chef::Recipe).to receive(:server_info)
-        .with('ap').and_return([{ hostname: 'ap_svr', roles: 'ap', private_ip: ap_server_ip }])
-
       allow(Dir).to receive(:exist?).and_call_original
       allow(File).to receive(:exist?).and_call_original
 

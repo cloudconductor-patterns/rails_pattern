@@ -10,6 +10,8 @@ group :development do
   gem 'pry-doc'
   gem 'pry-stack_explorer'
   gem 'guard-rubocop'
+  gem 'test-kitchen'
+  gem 'kitchen-docker'
 end
 
 group :test do

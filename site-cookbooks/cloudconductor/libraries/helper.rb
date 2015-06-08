@@ -38,12 +38,16 @@ module CloudConductor
     end
 
     def pick_servers_as_role(role)
-      servers = node['cloudconductor']['servers'].to_hash.select do |_, s|
-        s['roles'].include?(role)
-      end
-      result = servers.map do |hostname, server_info|
-        server_info['hostname'] = hostname
-        server_info
+      if node['cloudconductor'] && node['cloudconductor']['servers']
+        servers = node['cloudconductor']['servers'].to_hash.select do |_, s|
+          s['roles'].include?(role)
+        end
+        result = servers.map do |hostname, server_info|
+          server_info['hostname'] = hostname
+          server_info
+        end
+      else
+        result = {}
       end
       result
     end

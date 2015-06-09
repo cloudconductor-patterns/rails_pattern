@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'cloud_conductor_utils/consul'
 
 describe service('iptables') do
   it { should_not be_enabled }

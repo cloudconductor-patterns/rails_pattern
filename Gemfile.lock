@@ -1,11 +1,3 @@
-GIT
-  remote: https://github.com/cloudconductor/cloud_conductor_utils.git
-  revision: 45ca392b7ce85b85f188f4603d122838c15fd692
-  specs:
-    cloud_conductor_utils (1.0.0)
-      json
-      rest-client
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -323,7 +315,6 @@ DEPENDENCIES
   byebug
   chef
   chefspec
-  cloud_conductor_utils!
   factory_girl
   foodcritic
   guard

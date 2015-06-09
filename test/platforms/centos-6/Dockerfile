@@ -20,9 +20,26 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
 RUN mkdir -p /var/run/sshd
 
+RUN sed -ri 's/Defaults    requiretty/#Defaults    requiretty/g' /etc/sudoers
+RUN echo "Defaults    env_keep += \"http_proxy https_proxy no_proxy\"" >> /etc/sudoers
+
+
 RUN useradd -d /home/<%= @username %> -m -s /bin/bash <%= @username %>
 RUN echo <%= "#{@username}:#{@password}" %> | chpasswd
 RUN echo '<%= @username %> ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+<% if @http_proxy || @https_proxy %>
+RUN echo "export no_proxy=172.0.0.1,localhost" > /etc/profile.d/proxy.sh
+<% if @http_proxy %>
+RUN echo "export http_proxy=<%= @http_proxy %>" >> /etc/profile.d/proxy.sh
+RUN echo "http_proxy = <%= @http_proxy %>" >> /etc/wgetrc
+RUN echo 'proxy = "<%= @http_proxy %>"' >> /home/<%= @username %>/.curlrc
+<% end %>
+<% if @https_proxy %>
+RUN echo "export https_proxy=<%= @http_proxy %>" >> /etc/profile.d/proxy.sh
+RUN echo "https_proxy = <%= @https_proxy %>" >> /etc/wgetrc
+<% end %>
+<% end %>
 
 RUN curl -L http://www.opscode.com/chef/install.sh | bash
 RUN /opt/chef/embedded/bin/gem install berkshelf

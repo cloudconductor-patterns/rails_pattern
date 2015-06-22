@@ -16,7 +16,6 @@
 require 'yaml'
 require 'json'
 require 'active_support'
-require 'cloud_conductor_utils/consul'
 require_relative './pattern_logger'
 
 module CloudConductorPattern

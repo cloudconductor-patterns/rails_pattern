@@ -20,10 +20,6 @@ RUN ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key
 RUN mkdir -p /var/run/sshd
 
-RUN sed -ri 's/Defaults    requiretty/#Defaults    requiretty/g' /etc/sudoers
-RUN echo "Defaults    env_keep += \"http_proxy https_proxy no_proxy\"" >> /etc/sudoers
-
-
 RUN useradd -d /home/<%= @username %> -m -s /bin/bash <%= @username %>
 RUN echo <%= "#{@username}:#{@password}" %> | chpasswd
 RUN echo '<%= @username %> ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -44,41 +40,27 @@ RUN echo "https_proxy = <%= @https_proxy %>" >> /etc/wgetrc
 RUN curl -L http://www.opscode.com/chef/install.sh | bash
 RUN /opt/chef/embedded/bin/gem install berkshelf
 
-RUN git clone https://github.com/cloudconductor/cloudconductor_init.git /opt/cloudconductor
+RUN git clone https://github.com/cloudconductor/cloud_conductor_init.git /opt/cloudconductor
 RUN mkdir -p /opt/cloudconductor/logs
 RUN mkdir -p /opt/cloudconductor/tmp
-
-RUN git clone https://github.com/cloudconductor/cloud_conductor_utils.git /opt/cloudconductor/tmp/cloud_conductor_utils
 
 RUN touch ./dummy_iptables
 RUN cp ./dummy_iptables /etc/init.d/iptables
 
 ENV PATH /opt/chef/embedded/bin:${PATH}
 
-WORKDIR /opt/cloudconductor/tmp/cloud_conductor_utils
-
-RUN /opt/chef/embedded/bin/rake build
-RUN /opt/chef/embedded/bin/gem install ./pkg/*.gem
-
 WORKDIR /opt/cloudconductor/etc
-
-RUN berks vendor /opt/cloudconductor/tmp/cookbooks
 
 WORKDIR /opt/cloudconductor
 
+RUN echo 'cd /opt/cloudconductor' >> ./bootstrap.sh
+RUN echo 'git checkout feature/unused-ruby' >> ./bootstrap.sh
+RUN echo 'git pull' >> ./bootstrap.sh
 RUN echo 'export PATTERN_NAME="<%= @cc_pattern %>"' >> ./bootstrap.sh
 RUN echo 'export PATTERN_URL="https://github.com/cloudconductor-patterns/<%= @cc_pattern %>.git"' >> ./bootstrap.sh
 RUN echo 'export PATTERN_REVISION="develop"' >> ./bootstrap.sh
 RUN echo 'export ROLE="<%= @cc_role %>"' >> ./bootstrap.sh
 RUN echo 'export CONSUL_SECRET_KEY="<%= @cc_token %>"' >> ./bootstrap.sh
-RUN echo 'chef-solo -j ./etc/node_setup.json -c ./etc/solo.rb' >> ./bootstrap.sh
+RUN echo 'bash -x ./bin/setup.sh' >> ./bootstrap.sh
 
 RUN bash -x ./bootstrap.sh
-
-RUN echo '#!/bin/bash' > /etc/services.sh
-RUN echo '/sbin/service consul start' >> /etc/services.sh
-RUN echo '$*' >> /etc/services.sh
-
-RUN chmod 700 /etc/services.sh
-
-ENTRYPOINT ["/etc/services.sh"]

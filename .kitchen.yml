@@ -64,13 +64,6 @@ suites:
     run_list:
       - role[ap_setup]
 
-  - name: ap_deploy
-    driver:
-      cc_role: 'ap'
-    run_list:
-      - role[ap_setup]
-      - role[ap_deploy]
-
   - name: db_setup
     driver:
       cc_role: 'db'

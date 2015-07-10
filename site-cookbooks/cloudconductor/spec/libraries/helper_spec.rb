@@ -107,7 +107,7 @@ describe CloudConductor::Helper do
       }
       allow(@helper).to receive(:node).and_return(node)
     end
-    it 'return hash of ap roll only' do
+    it 'return hash of db roll only' do
       expect(@helper.db_servers).to eq(
         [{ 'roles' => 'db', 'private_ip' => '127.0.0.4', 'hostname' => 'db1' },
          { 'roles' => 'db', 'private_ip' => '127.0.0.5', 'hostname' => 'db2' }]
@@ -148,7 +148,7 @@ describe CloudConductor::Helper do
       }
       allow(@helper).to receive(:node).and_return(node)
     end
-    it 'return hash of ap roll of first' do
+    it 'return hash of db roll of first' do
       expect(@helper.first_db_server).to eq(
         'roles' => 'db', 'private_ip' => '127.0.0.2', 'hostname' => 'db1'
       )

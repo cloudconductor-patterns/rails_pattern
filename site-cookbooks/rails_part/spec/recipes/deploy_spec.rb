@@ -130,7 +130,7 @@ describe 'rails_part::deploy' do
       chef_run.node.set['rails_part']['db'] = db_settings
       chef_run.node.set['rails_part']['app']['rails_env'] = rails_env
       chef_run.node.set['cloudconductor']['servers'] = {
-        'db' => { 'roles' => 'db', private_ip => '127.0.0.10' }
+        'db' => { 'roles' => 'db', 'private_ip' => '127.0.0.10' }
       }
       chef_run.converge(described_recipe)
 
@@ -138,8 +138,7 @@ describe 'rails_part::deploy' do
         variables: hash_including(
           db: db_settings,
           password: /[a-f0-9]{32}/,
-          db_server: db_server_info,
-          db_serverdb: { 'roles' =>  'db', 'private_ip' => '127.0.0.10', 'hostname' => 'db' },
+          db_server: { 'roles' =>  'db', 'private_ip' => '127.0.0.10', 'hostname' => 'db' },
           environment: rails_env
         )
       )

@@ -1,0 +1,78 @@
+---
+driver:
+  name: docker
+  cc_pattern: "<%= File.basename(Dir.pwd) %>"
+  cc_token: "sFlR4E+4vFdu8yapAxbh/w=="
+
+provisioner:
+  name: chef_solo
+  attributes:
+    rails_part:
+      db:
+        adapter: sqlite3
+    cloudconductor:
+      servers:
+        ap_01:
+          private_ip: '127.0.0.1'
+          roles: 'ap'
+          weight: '0'
+        db_01:
+          private_ip: '127.0.0.1'
+          roles: 'db'
+      applications:
+        cloudconductor:
+          type: 'dynamic'
+          protocol: 'git'
+          url: 'https://github.com/cloudconductor/cloud_conductor.git'
+          revision: 'v1.0.0'
+          version: '1.0.0'
+          pre-deploy: 'cp config/config.rb.smp config/config.rb; echo "gem ''mysql2''" >> Gemfile; echo "gem ''rspec''" >> Gemfile; echo "gem ''puma''" >> Gemfile; sed -i -e ''s/# config.secret_key = / config.secret_key = /'' config/initializers/devise.rb; sed -i -e ''s/<%%= ENV\[\"SECRET_KEY_BASE\"\] %>/dummy_key/'' config/secrets.yml'
+          parameters:
+            default_server: true
+            port: 8080
+
+platforms:
+  - name: centos-6
+    driver:
+      dockerfile: test/platforms/centos-6/Dockerfile
+
+suites:
+  - name: web_setup
+    driver:
+      cc_role: 'web'
+    run_list:
+      - role[web_setup]
+
+  - name: web_configure
+    driver:
+      cc_role: 'web'
+    run_list:
+      - role[web_setup]
+      - role[web_configure]
+
+  - name: web_deploy
+    driver:
+      cc_role: 'web'
+    run_list:
+      - role[web_setup]
+      - role[web_configure]
+      - role[web_deploy]
+
+  - name: ap_setup
+    driver:
+      cc_role: 'ap'
+    run_list:
+      - role[ap_setup]
+
+  - name: db_setup
+    driver:
+      cc_role: 'db'
+    run_list:
+      - role[db_setup]
+
+  - name: db_configure
+    driver:
+      cc_role: 'db'
+    run_list:
+      - role[db_setup]
+      - role[db_configure]

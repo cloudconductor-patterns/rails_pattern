@@ -36,6 +36,33 @@ module CloudConductor
       end
       result
     end
+
+    def pick_servers_as_role(role)
+      servers = node['cloudconductor']['servers'].to_hash.select do |_, s|
+        s['roles'].include?(role)
+      end
+      result = servers.map do |hostname, server_info|
+        server_info['hostname'] = hostname
+        server_info
+      end
+      result
+    end
+
+    def ap_servers
+      pick_servers_as_role('ap')
+    end
+
+    def db_servers
+      pick_servers_as_role('db')
+    end
+
+    def first_ap_server
+      ap_servers.first
+    end
+
+    def first_db_server
+      db_servers.first
+    end
   end
 end
 

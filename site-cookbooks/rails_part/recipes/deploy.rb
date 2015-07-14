@@ -10,8 +10,6 @@ def dynamic?
   -> (_, application) { application[:type] == 'dynamic' }
 end
 
-db_server_info = server_info('db').first
-
 node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
   app_root = "#{node['rails_part']['app']['base_path']}/#{app_name}"
   app_dir = "#{app_root}/releases/#{app['version']}"
@@ -60,7 +58,7 @@ node['cloudconductor']['applications'].select(&dynamic?).each do |app_name, app|
     variables(
       db: node['rails_part']['db'],
       password: generate_password('database'),
-      db_server: db_server_info,
+      db_server: first_db_server,
       environment: node['rails_part']['app']['rails_env']
     )
   end

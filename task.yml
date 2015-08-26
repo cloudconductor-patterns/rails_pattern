@@ -74,29 +74,13 @@ tasks:
   backup:
     description: Backup database
     operations:
-      - consul-kvs:
-          action: get
-          key: cloudconductor/parameters
-          name: parameters_json
-      - execute:
-          script: |
-            sudo mkdir -p {{backup_directory}}
-            sudo chmod 777 {{backup_directory}}
-            SALT=`echo '{{parameters_json}}' | jq '.cloudconductor.salt'`
-            PASSWORD=`/opt/chefdk/embedded/bin/ruby -e "require 'openssl'; puts OpenSSL::Digest::SHA256.hexdigest('${SALT}' + 'database')"`
-            sudo -u mysql mysqldump -u application -p${PASSWORD} -x --all-databases > /var/cloudconductor/backups/mysql/dump.sql
+      - chef:
+          run_list:
+            - role[{{role}}_backup]
 
   restore:
     description: Restore database
     operations:
-      - consul-kvs:
-          action: get
-          key: cloudconductor/parameters
-          name: parameters_json
-      - execute:
-          script: |
-            if [ -f {{backup_directory}}/dump.sql ]; then
-              SALT=`echo '{{parameters_json}}' | jq '.cloudconductor.salt'`
-              PASSWORD=`/opt/chefdk/embedded/bin/ruby -e "require 'openssl'; puts OpenSSL::Digest::SHA256.hexdigest('${SALT}' + 'database')"`
-              sudo -u mysql mysql -u application -p${PASSWORD} < /var/cloudconductor/backups/mysql/dump.sql
-            fi
+      - chef:
+          run_list:
+            - role[{{role}}_restore]

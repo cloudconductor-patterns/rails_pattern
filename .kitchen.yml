@@ -10,6 +10,8 @@ provisioner:
     rails_part:
       db:
         adapter: sqlite3
+    nginx_part:
+      maintenance: '<!DOCTYPE html><html><head></head><body>dummy</body></html>'
     cloudconductor:
       servers:
         ap_01:

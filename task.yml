@@ -5,7 +5,6 @@ environments:
   CONSUL_SECRET_KEY: '{{config.token}}'
 
 variables:
-  backup_directory: /var/cloudconductor/backups/mysql
 
 default:
   timeout: 1800

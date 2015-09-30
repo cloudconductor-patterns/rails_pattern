@@ -7,9 +7,9 @@ end
 describe 'connect ap_svr' do
   params = property[:consul_parameters]
   servers = property[:servers]
-  ap_host = servers.each_value.select do |server|
+  ap_host = servers.each_value.find do |server|
     server[:roles].include?('ap')
-  end.first
+  end
   apps = params[:cloudconductor][:applications]
 
   apps.each do |_app_name, app|

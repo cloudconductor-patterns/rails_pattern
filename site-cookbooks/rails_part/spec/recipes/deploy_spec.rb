@@ -17,6 +17,7 @@ describe 'rails_part::deploy' do
         }
       }
       chef_run.node.set['rails_part']['app']['base_path'] = base_path
+      chef_run.node.set['cloudconductor']['servers'] = {}
       chef_run.converge(described_recipe)
     end
 
@@ -71,7 +72,7 @@ describe 'rails_part::deploy' do
           expect(chef_run).to create_remote_file("application_tarball_#{application_name}").with(
             source: url,
             path: "/tmp/#{application_name}/#{application_name}.tar.gz"
-           )
+          )
         end
 
         it 'extract the application from the archive file' do
@@ -119,9 +120,6 @@ describe 'rails_part::deploy' do
     end
 
     it 'create database.yml' do
-      db_server_info = { hostname: 'db', roles: 'db', private_ip: '127.0.0.10' }
-      allow_any_instance_of(Chef::Recipe).to receive(:server_info).with('db').and_return([db_server_info])
-
       db_settings = {
         'adapter' => 'mysql2',
         'database' => 'rails',
@@ -131,13 +129,16 @@ describe 'rails_part::deploy' do
 
       chef_run.node.set['rails_part']['db'] = db_settings
       chef_run.node.set['rails_part']['app']['rails_env'] = rails_env
+      chef_run.node.set['cloudconductor']['servers'] = {
+        'db' => { 'roles' => 'db', 'private_ip' => '127.0.0.10' }
+      }
       chef_run.converge(described_recipe)
 
       expect(chef_run).to create_template("#{base_path}/#{application_name}/releases/#{app_version}/config/database.yml").with(
         variables: hash_including(
           db: db_settings,
           password: /[a-f0-9]{32}/,
-          db_server: db_server_info,
+          db_server: { 'roles' =>  'db', 'private_ip' => '127.0.0.10', 'hostname' => 'db' },
           environment: rails_env
         )
       )

@@ -74,7 +74,7 @@
         [from, platform, base, custom, ssh_key, ''].join("\n")
 %>
 
-RUN yum install -y git
+RUN yum install -y git which
 
 RUN mkdir -p /tmp/kitchen-platform
 WORKDIR /tmp/kitchen-platform
@@ -101,6 +101,8 @@ RUN echo 'git checkout feature/support-centos7' >> ./bootstrap.sh
 
 RUN echo 'git pull' >> ./bootstrap.sh && \
     echo 'bash -x prepare.sh' >> ./bootstrap.sh
+
+RUN echo 'which systemctl && systemctl start consul ||  service consul start' >> ./bootstrap.sh
 
 RUN bash -x ./bootstrap.sh
 

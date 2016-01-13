@@ -79,7 +79,7 @@ describe 'nginx_part::deploy' do
 
         before do
           chef_run.node.set['cloudconductor']['applications'][app_name]['protocol'] = 'git'
-          chef_run.node.set['cloudconductor']['applications'][app_name]['url'] =  repository_url
+          chef_run.node.set['cloudconductor']['applications'][app_name]['url'] = repository_url
           chef_run.converge(described_recipe)
         end
 
@@ -316,7 +316,7 @@ describe 'nginx_part::deploy' do
 
     describe 'the application status is force update' do
       before do
-        chef_run.node.set['cloudconductor']['applications'][app_name]['force_update'] =  true
+        chef_run.node.set['cloudconductor']['applications'][app_name]['force_update'] = true
         chef_run.converge(described_recipe)
       end
 

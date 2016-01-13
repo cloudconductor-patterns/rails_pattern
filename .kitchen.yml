@@ -1,6 +1,7 @@
 ---
 driver:
   name: docker
+  dockerfile: test/platforms/Dockerfile
   cc_pattern: "<%= File.basename(Dir.pwd) %>"
   cc_token: "sFlR4E+4vFdu8yapAxbh/w=="
 
@@ -36,7 +37,12 @@ provisioner:
 platforms:
   - name: centos-6.6
     driver:
-      dockerfile: test/platforms/centos-6.6/Dockerfile
+      image: centos:centos6
+  - name: centos-7
+    driver:
+      image: centos:centos7
+      privileged: true
+      run_command: /sbin/init
 
 suites:
   - name: web_setup

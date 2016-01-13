@@ -96,10 +96,21 @@ RUN bash -x ./bootstrap.sh
 RUN echo 'git clone https://github.com/cloudconductor-patterns/<%= @cc_pattern %>.git /opt/cloudconductor/patterns/<%= @cc_pattern %>' > ./bootstrap.sh && \
     echo 'cd /opt/cloudconductor/patterns/<%= @cc_pattern %>' >> ./bootstrap.sh
 
-RUN echo 'git checkout develop' >> ./bootstrap.sh
-# RUN echo 'git checkout feature/add_prepare' >> ./bootstrap.sh
+#RUN echo 'git checkout develop' >> ./bootstrap.sh
+RUN echo 'git checkout feature/support-centos7' >> ./bootstrap.sh
 
 RUN echo 'git pull' >> ./bootstrap.sh && \
     echo 'bash -x prepare.sh' >> ./bootstrap.sh
 
 RUN bash -x ./bootstrap.sh
+
+# support proxy
+<% if @http_proxy || @https_proxy %>
+RUN echo "export no_proxy=172.0.0.1,localhost" > /etc/profile.d/proxy.sh
+<% if @http_proxy %>
+RUN echo "export http_proxy=<%= @http_proxy %>" >> /etc/profile.d/proxy.sh
+<% end %>
+<% if @https_proxy %>
+RUN echo "export https_proxy=<%= @http_proxy %>" >> /etc/profile.d/proxy.sh
+<% end %>
+<% end %>

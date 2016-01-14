@@ -31,7 +31,9 @@ describe 'web_deploy' do
           .to be_file
           .and be_mode(755)
           .and be_owned_by(chef_run.node['nginx']['user'])
-          .and be_grouped_into(chef_run.node['nginx']['group'] == chef_run.node['nginx']['user'] ? 'root' : chef_run.node['nginx']['group'])
+          .and be_grouped_into(
+            chef_run.node['nginx']['group'] == chef_run.node['nginx']['user'] ? 'root' : chef_run.node['nginx']['group']
+          )
       end
 
       it "is sites-enabled conf link to sites-available conf" do

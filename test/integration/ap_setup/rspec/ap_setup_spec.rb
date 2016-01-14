@@ -34,7 +34,8 @@ describe 'ap_setup' do
   end
 
   it 'is installed ruby' do
-    expect(command('source /etc/profile.d/rbenv.sh; ruby -v').stdout).to match(/#{chef_run.node['rails_part']['ruby']['version']}/)
+    expect(command('source /etc/profile.d/rbenv.sh; ruby -v').stdout)
+      .to match(/#{chef_run.node['rails_part']['ruby']['version']}/)
   end
 
   it 'is installed bundler gem' do

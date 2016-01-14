@@ -10,7 +10,7 @@ describe 'db_configure' do
   end
 
   it 'is listen mysql port' do
-    expect(port(3306)).to be_listening.with('tcp')
+    expect(port(3306)).to be_listening # .with('tcp') # ...TCP(ipv4 or ipv6)
   end
 
   it 'is create db and database user is settings from attributes' do

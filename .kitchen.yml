@@ -37,7 +37,8 @@ provisioner:
 platforms:
   - name: centos-6.6
     driver:
-      image: centos:centos6
+      image: centos:centos6.6
+      run_command: /sbin/init
   - name: centos-7
     driver:
       image: centos:centos7

@@ -102,8 +102,6 @@ RUN echo 'git checkout feature/support-centos7' >> ./bootstrap.sh
 RUN echo 'git pull' >> ./bootstrap.sh && \
     echo 'bash -x prepare.sh' >> ./bootstrap.sh
 
-RUN echo 'which systemctl && systemctl start consul ||  service consul start' >> ./bootstrap.sh
-
 RUN bash -x ./bootstrap.sh
 
 # support proxy

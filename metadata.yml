@@ -10,6 +10,13 @@ type:      "platform"
 depends:   []
 conflicts: []
 
+providers:
+    aws:
+      - cloud_formation
+      - terraform
+    openstack:
+      - terraform
+
 supports:
   - platform: "centos"
     platform_version: "6.5"

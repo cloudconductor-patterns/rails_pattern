@@ -6,4 +6,5 @@
 #
 # All rights reserved - Do Not Redistribute
 #
+yum_package 'openssl'
 include_recipe 'nginx'

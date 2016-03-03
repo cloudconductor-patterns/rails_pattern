@@ -13,6 +13,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+script_root=$(cd $(dirname $0) && pwd)
+
 RUBY_VERSION=2.3.0
 RUBY_URL="https://cache.ruby-lang.org/pub/ruby/${RUBY_VERSION%\.*}/ruby-${RUBY_VERSION}.tar.gz"
 
@@ -107,9 +109,11 @@ setup_python_env() {
   fi
 }
 
+yum install -y tar bzip2
+
 install_ruby
 install_chef
 install_berkshelf
 install_serverspec
 
-setup_python_env ./lib/python-packages.txt
+setup_python_env ${script_root}/lib/python-packages.txt

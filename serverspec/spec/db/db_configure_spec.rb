@@ -2,7 +2,7 @@ require 'spec_helper'
 
 # Check listen port
 describe port(3306) do
-  it { should be_listening.with('tcp') }
+  it { should be_listening } # tcp on ipv4 or ipv6
 end
 
 # Check mysql databases for consul kvs

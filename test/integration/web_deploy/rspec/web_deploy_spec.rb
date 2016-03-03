@@ -18,15 +18,15 @@ describe 'web_deploy' do
     chef_run.converge('role[web_deploy]')
 
     chef_run.node['cloudconductor']['applications'].each do |app_name, app|
-      it "is create temp directory of application" do
+      it 'is create temp directory of application' do
         expect(file("#{chef_run.node['nginx_part']['tmp_dir']}/#{app_name}")).to exist
       end
 
-      it "is create application root directory of application" do
+      it 'is create application root directory of application' do
         expect(file("#{chef_run.node['nginx']['default_root']}/#{app_name}/#{app['version']}")).to exist
       end
 
-      it "is create conf file" do
+      it 'is create conf file' do
         expect(file("#{chef_run.node['nginx']['dir']}/sites-available/#{app_name}"))
           .to be_file
           .and be_mode(755)
@@ -36,14 +36,14 @@ describe 'web_deploy' do
           )
       end
 
-      it "is sites-enabled conf link to sites-available conf" do
+      it 'is sites-enabled conf link to sites-available conf' do
         expect(file("#{chef_run.node['nginx']['dir']}/sites-enabled/#{app_name}"))
           .to be_linked_to("#{chef_run.node['nginx']['dir']}/sites-available/#{app_name}")
       end
 
-      it "is current root link to application root" do
+      it 'is current root link to application root' do
         expect(file("#{chef_run.node['nginx']['default_root']}/#{app_name}/current"))
-         .to be_linked_to("#{chef_run.node['nginx']['default_root']}/#{app_name}/#{app['version']}")
+          .to be_linked_to("#{chef_run.node['nginx']['default_root']}/#{app_name}/#{app['version']}")
       end
     end
   end

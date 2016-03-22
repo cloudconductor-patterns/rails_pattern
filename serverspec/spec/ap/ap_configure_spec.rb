@@ -12,11 +12,10 @@ describe 'connect to the server have a key that [:roles] to db' do
 
   if db_host[:private_ip]
     hostname = db_host[:private_ip]
-    describe command("hping3 -S #{hostname} -p 3306 -c 5") do
-      its(:stdout) { should match(/sport=3306 flags=SA/) }
+    describe host(hostname) do
+      it { should be_reachable.with(port: 3306) }
     end
   else
-
     it 'consul parameter is missing: cloudconductor or cloudconductor/servers' do
       fail
     end

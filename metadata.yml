@@ -20,6 +20,7 @@ providers:
       - cloud_formation
       - terraform
     openstack:
+      - cloud_formation
       - terraform
 
 supports:

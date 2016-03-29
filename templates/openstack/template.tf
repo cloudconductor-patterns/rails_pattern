@@ -3,7 +3,7 @@ resource "openstack_compute_floatingip_v2" "main" {
 }
 
 resource "openstack_compute_secgroup_v2" "web_security_group" {
-  name = "WebSecurityGroup"
+  name = "WebSecurityGroup${var.environment_id}"
   description = "Enable SSH access, HTTP access via port 80"
   rule {
     from_port = 80
@@ -14,7 +14,7 @@ resource "openstack_compute_secgroup_v2" "web_security_group" {
 }
 
 resource "openstack_compute_secgroup_v2" "ap_security_group" {
-  name = "APSecurityGroup"
+  name = "APSecurityGroup${var.environment_id}"
   description = "Enable SSH access and HTTP access via port 8080"
   rule {
     from_port = 8080
@@ -25,7 +25,7 @@ resource "openstack_compute_secgroup_v2" "ap_security_group" {
 }
 
 resource "openstack_compute_secgroup_v2" "db_security_group" {
-  name = "DBSecurityGroup"
+  name = "DBSecurityGroup${var.environment_id}"
   description = "Enable SSH access and DB access via port 3306"
   rule {
     from_port = 3306

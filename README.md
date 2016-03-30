@@ -3,7 +3,7 @@ About
 
 This is the platform pattern designed to build the system hosts Ruby on Rails based application.
 
-* CentOS (6.5)
+* CentOS (>=6.5,<7.2)
 * Ruby (>= 2.1.2)
 * MySQL (>= 5.6)
 
@@ -15,7 +15,7 @@ Requirements
 Prerequisites
 -------------
 
-- cloudconductor (>= 1.1)
+- cloudconductor (>= 2.0)
 
 How to use patterns
 ============
@@ -35,7 +35,7 @@ Please see the attribute files if you want to know what kind of attributes are i
 Copyright and License
 =====================
 
-Copyright 2014 TIS inc.
+Copyright 2014-2016 TIS inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
